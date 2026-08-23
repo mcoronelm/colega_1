@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡La Casa! 🏠</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF8ED;
+    --coral:#FF6B5A;
+    --teal:#1E9E90;
+    --marigold:#FFC857;
+    --indigo:#3D348B;
+    --pink:#FF8FA3;
+    --ink:#2D1E2F;
+    --paper:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--cream);
+    font-family:'Nunito',sans-serif;
+    color:var(--ink);
+    padding-bottom:60px;
+  }
+  h1,h2,h3{font-family:'Baloo 2',cursive;margin:0;}
+
+  /* ---------- PAPEL PICADO HEADER ---------- */
+  .banner{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:6px;
+    padding:18px 10px 0;
+    background:var(--indigo);
+  }
+  .flag{
+    width:70px;height:56px;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    display:flex;align-items:flex-start;justify-content:center;
+    font-family:'Baloo 2';
+    font-weight:700;
+    font-size:10.5px;
+    color:white;
+    padding-top:8px;
+    text-align:center;
+    line-height:1.05;
+  }
+  .flag:nth-child(6n+1){background:var(--coral);}
+  .flag:nth-child(6n+2){background:var(--teal);}
+  .flag:nth-child(6n+3){background:var(--marigold);color:var(--ink);}
+  .flag:nth-child(6n+4){background:var(--pink);}
+  .flag:nth-child(6n+5){background:#7FB069;}
+  .flag:nth-child(6n+6){background:#5EA0D0;}
+
+  header{
+    background:var(--indigo);
+    color:white;
+    text-align:center;
+    padding:14px 20px 34px;
+  }
+  header h1{
+    font-size:clamp(30px,7vw,46px);
+    color:var(--marigold);
+    text-shadow:3px 3px 0 rgba(0,0,0,0.15);
+  }
+  header p{
+    font-family:'Baloo 2';
+    font-size:18px;
+    color:white;
+    margin-top:6px;
+  }
+  .dog{
+    font-size:54px;
+    display:inline-block;
+    animation:wag 1.6s ease-in-out infinite;
+  }
+  @keyframes wag{
+    0%,100%{transform:rotate(-8deg);}
+    50%{transform:rotate(8deg);}
+  }
+
+  /* ---------- PROGRESS STARS ---------- */
+  .progress-wrap{
+    max-width:760px;
+    margin:-20px auto 0;
+    background:var(--paper);
+    border-radius:20px;
+    box-shadow:0 8px 0 rgba(0,0,0,0.08);
+    padding:14px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .progress-wrap span{font-family:'Baloo 2';font-weight:700;color:var(--indigo);}
+  .stars{font-size:26px;letter-spacing:4px;}
+  .star{opacity:0.25;transition:transform .25s, opacity .25s;}
+  .star.on{opacity:1;transform:scale(1.15);}
+
+  main{
+    max-width:760px;
+    margin:26px auto;
+    padding:0 16px;
+    display:flex;
+    flex-direction:column;
+    gap:26px;
+  }
+
+  .card{
+    background:var(--paper);
+    border-radius:22px;
+    padding:22px 20px 26px;
+    box-shadow:0 6px 0 rgba(61,52,139,0.15);
+    border:3px solid transparent;
+  }
+  .card h2{
+    color:var(--coral);
+    font-size:24px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:4px;
+  }
+  .badge{
+    background:var(--marigold);
+    color:var(--ink);
+    font-family:'Baloo 2';
+    font-weight:700;
+    font-size:13px;
+    border-radius:999px;
+    padding:3px 12px;
+    display:inline-block;
+  }
+  .instructions{
+    font-size:15px;
+    color:#5b4b63;
+    margin:6px 0 16px;
+  }
+
+  /* ---------- EX 1: SORT OBJECTS INTO ROOMS ---------- */
+  .objects-pool{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:14px;
+    min-height:44px;
+  }
+  .object-chip{
+    font-family:'Baloo 2';
+    font-weight:700;
+    background:var(--teal);
+    color:white;
+    border:none;
+    border-radius:12px;
+    padding:8px 14px;
+    font-size:15px;
+    cursor:pointer;
+    transition:transform .15s;
+  }
+  .object-chip:hover{transform:translateY(-2px);}
+  .object-chip:disabled{
+    background:#d7d7d7;
+    color:#a3a3a3;
+    cursor:not-allowed;
+  }
+  .rooms-board{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:10px;
+  }
+  .room-slot{
+    border:2px dashed #c9c1e0;
+    border-radius:14px;
+    min-height:96px;
+    padding:8px 10px;
+    background:#faf9ff;
+    cursor:pointer;
+    transition:border-color .15s, background .15s;
+  }
+  .room-slot.active{
+    border-color:var(--marigold);
+    border-style:solid;
+    background:#fff8e6;
+  }
+  .room-slot h3{
+    font-family:'Baloo 2';
+    font-size:14px;
+    color:var(--indigo);
+    margin:0 0 6px;
+  }
+  .room-slot .items{
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px;
+  }
+  .room-slot .item-tag{
+    font-family:'Baloo 2';
+    font-size:11px;
+    font-weight:700;
+    color:white;
+    background:var(--teal);
+    border-radius:8px;
+    padding:3px 7px;
+  }
+  .room-slot .item-tag.correct{background:#4CAF50;}
+  .room-slot .item-tag.wrong{background:var(--coral);}
+  .hint-select{
+    font-family:'Baloo 2';
+    font-size:13px;
+    color:#9b8fb0;
+    margin-top:4px;
+  }
+
+  /* ---------- EX 2: NAME THE ROOM ---------- */
+  .num-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:12px;
+  }
+  .num-item{
+    background:#fdf3e2;
+    border-radius:14px;
+    padding:10px 12px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .num-item .digit{
+    font-family:'Baloo 2';
+    font-weight:800;
+    font-size:26px;
+    color:var(--coral);
+    width:36px;
+    text-align:center;
+  }
+  .num-item input{
+    flex:1;
+    min-width:0;
+    border:2px solid #e8d6ad;
+    border-radius:10px;
+    padding:6px 8px;
+    font-family:'Nunito';
+    font-size:14px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .num-item input.correct{border-color:#4CAF50;background:#eafbe9;}
+  .num-item input.wrong{border-color:var(--coral);background:#ffecea;}
+
+  /* ---------- EX 3: HOUSE SENTENCE BUILDER ---------- */
+  .birthday-box{
+    background:linear-gradient(135deg,#fff1e6,#ffe4ec);
+    border-radius:18px;
+    padding:18px;
+    text-align:center;
+  }
+  .birthday-box select{
+    font-family:'Baloo 2';
+    font-weight:700;
+    font-size:16px;
+    padding:8px 10px;
+    border-radius:10px;
+    border:2px solid var(--pink);
+    margin:6px;
+    color:var(--indigo);
+  }
+  .birthday-sentence{
+    margin-top:14px;
+    font-family:'Baloo 2';
+    font-size:19px;
+    color:var(--indigo);
+    min-height:30px;
+  }
+  .birthday-sentence b{color:var(--coral);}
+  .cake{font-size:40px;}
+
+  /* ---------- EX 4: MISSING LETTERS ---------- */
+  .fill-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    gap:12px;
+  }
+  .fill-item{
+    background:#eef7f5;
+    border-radius:14px;
+    padding:10px 12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family:'Baloo 2';
+    font-size:17px;
+    color:var(--indigo);
+  }
+  .fill-item input{
+    width:34px;
+    text-align:center;
+    border:2px solid #bfe3dc;
+    border-radius:8px;
+    padding:4px;
+    font-family:'Baloo 2';
+    font-weight:700;
+    font-size:16px;
+    color:var(--ink);
+  }
+  .fill-item input.correct{border-color:#4CAF50;background:#eafbe9;}
+  .fill-item input.wrong{border-color:var(--coral);background:#ffecea;}
+
+  /* ---------- CHECK BUTTONS ---------- */
+  .check-btn{
+    font-family:'Baloo 2';
+    font-weight:700;
+    font-size:15px;
+    background:var(--coral);
+    color:white;
+    border:none;
+    border-radius:12px;
+    padding:10px 22px;
+    cursor:pointer;
+    margin-top:16px;
+    box-shadow:0 4px 0 #c94d3f;
+    transition:transform .1s;
+  }
+  .check-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #c94d3f;}
+  .feedback{
+    margin-top:10px;
+    font-family:'Baloo 2';
+    font-weight:700;
+    font-size:15px;
+    min-height:20px;
+  }
+  .feedback.good{color:#2f9e44;}
+  .feedback.bad{color:var(--coral);}
+
+  footer{
+    text-align:center;
+    font-family:'Baloo 2';
+    color:var(--indigo);
+    padding:20px;
+    font-size:14px;
+  }
+
+  .confetti-layer{
+    position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:999;
+  }
+  .confetti-piece{
+    position:absolute;top:-20px;
+    width:10px;height:10px;
+    opacity:0.9;
+    animation:fall linear forwards;
+  }
+  @keyframes fall{
+    to{transform:translateY(110vh) rotate(360deg);opacity:1;}
+  }
+
+  /* ---------- EX 5: UNSCRAMBLE ---------- */
+  .scramble-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+    gap:14px;
+  }
+  .scramble-item{
+    background:#fff0f2;
+    border-radius:14px;
+    padding:12px 14px;
+  }
+  .scramble-word{
+    font-family:'Baloo 2';
+    font-weight:800;
+    font-size:20px;
+    letter-spacing:3px;
+    color:var(--pink);
+    margin-bottom:8px;
+  }
+  .scramble-item input{
+    width:100%;
+    border:2px solid #f3c1cc;
+    border-radius:10px;
+    padding:7px 9px;
+    font-family:'Nunito';
+    font-weight:700;
+    font-size:14px;
+    color:var(--ink);
+  }
+  .scramble-item input.correct{border-color:#4CAF50;background:#eafbe9;}
+  .scramble-item input.wrong{border-color:var(--coral);background:#ffecea;}
+
+  /* ---------- EX 6: WORD SEARCH ---------- */
+  .wordsearch-wrap{
+    display:flex;
+    gap:22px;
+    flex-wrap:wrap;
+    align-items:flex-start;
+  }
+  .ws-grid{
+    display:grid;
+    grid-template-columns:repeat(10, 32px);
+    grid-auto-rows:32px;
+    gap:3px;
+    user-select:none;
+  }
+  .ws-cell{
+    background:#f4f0ff;
+    border-radius:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Baloo 2';
+    font-weight:700;
+    font-size:14px;
+    color:var(--indigo);
+    cursor:pointer;
+    transition:background .1s;
+  }
+  .ws-cell.selected{background:var(--marigold);}
+  .ws-cell.found{background:#a8e6a1;color:var(--ink);cursor:default;}
+  .ws-words{
+    font-family:'Baloo 2';
+    font-size:15px;
+    color:var(--indigo);
+    min-width:140px;
+  }
+  .ws-words div{margin-bottom:6px;}
+  .ws-words .found-word{text-decoration:line-through;color:#4CAF50;}
+
+  /* ---------- EX 7: MEMORY GAME ---------- */
+  .memory-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(78px,1fr));
+    gap:8px;
+  }
+  .mem-card{
+    aspect-ratio:1/1;
+    background:var(--indigo);
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Baloo 2';
+    font-weight:700;
+    font-size:13px;
+    color:white;
+    cursor:pointer;
+    text-align:center;
+    padding:4px;
+    transition:transform .2s, background .2s;
+  }
+  .mem-card.flipped{background:var(--marigold);color:var(--ink);}
+  .mem-card.matched{background:#a8e6a1;color:var(--ink);cursor:default;}
+  .memory-status{
+    font-family:'Baloo 2';
+    color:var(--indigo);
+    margin-top:12px;
+    font-size:15px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .dog{animation:none;}
+    .confetti-piece{animation:none;display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="banner" id="banner"></div>
+
+<header>
+  <span class="dog">🐶</span>
+  <h1>¡La Casa!</h1>
+  <p>Practice with Coco the puppy · Spanish for kids</p>
+</header>
+
+<div class="progress-wrap">
+  <span>Your progress</span>
+  <div class="stars" id="stars">
+    <span class="star" data-i="1">⭐</span>
+    <span class="star" data-i="2">⭐</span>
+    <span class="star" data-i="3">⭐</span>
+    <span class="star" data-i="4">⭐</span>
+    <span class="star" data-i="5">⭐</span>
+    <span class="star" data-i="6">⭐</span>
+    <span class="star" data-i="7">⭐</span>
+  </div>
+</div>
+
+<main>
+
+  <!-- EXERCISE 1 -->
+  <section class="card" id="card1">
+    <h2>1. 🏠 Sort the Objects <span class="badge">Which room?</span></h2>
+    <p class="instructions">Click a room to select it, then click the objects that belong there. Place all 12 objects!</p>
+    <div class="objects-pool" id="objectsPool"></div>
+    <div class="rooms-board" id="roomsBoard"></div>
+    <button class="check-btn" onclick="checkRooms()">Check</button>
+    <div class="feedback" id="fb1"></div>
+  </section>
+
+  <!-- EXERCISE 2 -->
+  <section class="card" id="card2">
+    <h2>2. ✍️ Name the Room <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Look at each picture and write which room it belongs to, in Spanish.</p>
+    <div class="num-grid" id="numGrid"></div>
+    <button class="check-btn" onclick="checkNumbers()">Check</button>
+    <div class="feedback" id="fb2"></div>
+  </section>
+
+  <!-- EXERCISE 3 -->
+  <section class="card" id="card3">
+    <h2>3. 🛋️ Build a House Sentence</h2>
+    <p class="instructions">Choose an object and a room, and see the complete sentence.</p>
+    <div class="birthday-box">
+      <div class="cake">🏠🐶</div>
+      <div>
+        <select id="daySelect"></select>
+        <select id="monthSelect"></select>
+      </div>
+      <div class="birthday-sentence" id="birthdaySentence">En mi casa, tengo ___ en ___.</div>
+    </div>
+  </section>
+
+  <!-- EXERCISE 4 -->
+  <section class="card" id="card4">
+    <h2>4. ✏️ Complete the Missing Letter</h2>
+    <p class="instructions">Write the letter that's missing in each word.</p>
+    <div class="fill-grid" id="fillGrid"></div>
+    <button class="check-btn" onclick="checkFill()">Check</button>
+    <div class="feedback" id="fb4"></div>
+  </section>
+
+  <!-- EXERCISE 5 -->
+  <section class="card" id="card5">
+    <h2>5. 🔤 Unscramble the Letters</h2>
+    <p class="instructions">The letters of each word are mixed up. Write the correct word!</p>
+    <div class="scramble-grid" id="scrambleGrid"></div>
+    <button class="check-btn" onclick="checkScramble()">Check</button>
+    <div class="feedback" id="fb5"></div>
+  </section>
+
+  <!-- EXERCISE 6 -->
+  <section class="card" id="card6">
+    <h2>6. 🔎 Word Search</h2>
+    <p class="instructions">Click the letters, in order, to spell out each word on the list. If you make a mistake, click the last letter again to remove it.</p>
+    <div class="wordsearch-wrap">
+      <div class="ws-grid" id="wsGrid"></div>
+      <div class="ws-words" id="wsWords"></div>
+    </div>
+    <button class="check-btn" onclick="clearSelection()">Clear selection</button>
+    <div class="feedback" id="fb6"></div>
+  </section>
+
+  <!-- EXERCISE 7 -->
+  <section class="card" id="card7">
+    <h2>7. 🃏 Memory Match: Room and Icon</h2>
+    <p class="instructions">Find the pairs: the room with its icon.</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="memory-status" id="memoryStatus">Pairs found: 0 / 6</div>
+  </section>
+
+</main>
+
+<footer>Great job! 🐾 Keep practicing every day.</footer>
+
+<script>
+const ROOMS = ["cocina","dormitorio","salón","baño","jardín","garaje"];
+const ROOM_LABELS = {
+  "cocina":"La cocina","dormitorio":"El dormitorio","salón":"El salón",
+  "baño":"El baño","jardín":"El jardín","garaje":"El garaje"
+};
+const ROOM_ICONS = {
+  "cocina":"🍳","dormitorio":"🛏️","salón":"🛋️",
+  "baño":"🚿","jardín":"🌳","garaje":"🚗"
+};
+
+/* ---------- BANNER ---------- */
+const BANNER_WORDS = ["COCINA","DORMITORIO","SALÓN","BAÑO","JARDÍN","GARAJE","SOFÁ","CAMA","VENTANA","LÁMPARA","ESPEJO","COCHE"];
+const bannerEl = document.getElementById('banner');
+BANNER_WORDS.forEach(w=>{
+  const f = document.createElement('div');
+  f.className='flag';
+  f.textContent = w;
+  bannerEl.appendChild(f);
+});
+
+/* ---------- STARS ---------- */
+let starsEarned = 0;
+function earnStar(n){
+  if(n<=starsEarned) return;
+  starsEarned = n;
+  document.querySelectorAll('.star').forEach(s=>{
+    if(parseInt(s.dataset.i) <= starsEarned) s.classList.add('on');
+  });
+  launchConfetti();
+}
+
+/* ---------- CONFETTI ---------- */
+function launchConfetti(){
+  const layer = document.createElement('div');
+  layer.className='confetti-layer';
+  document.body.appendChild(layer);
+  const colors = ['#FF6B5A','#1E9E90','#FFC857','#FF8FA3','#5EA0D0'];
+  for(let i=0;i<40;i++){
+    const p = document.createElement('div');
+    p.className='confetti-piece';
+    p.style.left = Math.random()*100+'vw';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration = (2+Math.random()*1.5)+'s';
+    p.style.borderRadius = Math.random()>0.5 ? '50%':'2px';
+    layer.appendChild(p);
+  }
+  setTimeout(()=>layer.remove(),3600);
+}
+
+function normalize(str){
+  return str.trim().toLowerCase()
+    .replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i").replace(/ó/g,"o").replace(/ú/g,"u");
+}
+
+/* ---------- EXERCISE 1: SORT OBJECTS INTO ROOMS ---------- */
+const OBJECTS = [
+  {word:"almohada", room:"dormitorio"},
+  {word:"cama", room:"dormitorio"},
+  {word:"lámpara", room:"dormitorio"},
+  {word:"refri", room:"cocina"},
+  {word:"olla", room:"cocina"},
+  {word:"sofá", room:"salón"},
+  {word:"televisión", room:"salón"},
+  {word:"ventana", room:"salón"},
+  {word:"ducha", room:"baño"},
+  {word:"espejo", room:"baño"},
+  {word:"flores", room:"jardín"},
+  {word:"coche", room:"garaje"},
+];
+const objectsPool = document.getElementById('objectsPool');
+const roomsBoard = document.getElementById('roomsBoard');
+let selectedRoom = null;
+let placements = {}; // word -> room
+
+const shuffledObjects = [...OBJECTS].sort(()=>Math.random()-0.5);
+shuffledObjects.forEach(o=>{
+  const btn = document.createElement('button');
+  btn.className='object-chip';
+  btn.textContent = o.word;
+  btn.dataset.word = o.word;
+  btn.onclick = ()=>placeObject(o.word, btn);
+  objectsPool.appendChild(btn);
+});
+
+const roomSlotEls = {};
+ROOMS.forEach(r=>{
+  const slot = document.createElement('div');
+  slot.className='room-slot';
+  slot.dataset.room = r;
+  slot.innerHTML = `<h3>${ROOM_ICONS[r]} ${ROOM_LABELS[r]}</h3><div class="items"></div><div class="hint-select">click to select</div>`;
+  slot.onclick = ()=>selectRoom(r, slot);
+  roomsBoard.appendChild(slot);
+  roomSlotEls[r] = slot;
+});
+
+function selectRoom(r, slot){
+  Object.values(roomSlotEls).forEach(s=>s.classList.remove('active'));
+  slot.classList.add('active');
+  selectedRoom = r;
+}
+
+function placeObject(word, btn){
+  if(!selectedRoom){
+    const fb = document.getElementById('fb1');
+    fb.textContent = "First click a room, then click the object. 🏠";
+    fb.className='feedback bad';
+    return;
+  }
+  const slot = roomSlotEls[selectedRoom];
+  const tag = document.createElement('span');
+  tag.className='item-tag';
+  tag.dataset.word = word;
+  tag.textContent = word;
+  slot.querySelector('.items').appendChild(tag);
+  placements[word] = selectedRoom;
+  btn.disabled = true;
+}
+
+function checkRooms(){
+  const fb = document.getElementById('fb1');
+  if(Object.keys(placements).length < OBJECTS.length){
+    fb.textContent = "Place all 12 objects first. 🐶";
+    fb.className='feedback bad';
+    return;
+  }
+  let correct = 0;
+  OBJECTS.forEach(o=>{
+    const tag = document.querySelector(`.item-tag[data-word="${o.word}"]`);
+    if(placements[o.word] === o.room){
+      tag.classList.add('correct'); tag.classList.remove('wrong');
+      correct++;
+    } else {
+      tag.classList.add('wrong'); tag.classList.remove('correct');
+    }
+  });
+  if(correct === OBJECTS.length){
+    fb.textContent = "Perfect! 🎉 Every object is in the right room.";
+    fb.className='feedback good';
+    earnStar(1);
+  } else {
+    fb.textContent = `You have ${correct} out of ${OBJECTS.length} correct. Try again!`;
+    fb.className='feedback bad';
+  }
+}
+
+/* ---------- EXERCISE 2: NAME THE ROOM ---------- */
+const numGrid = document.getElementById('numGrid');
+const roomPictures = [
+  {icon:"🛏️", answer:"dormitorio"},
+  {icon:"🚿", answer:"baño"},
+  {icon:"🚗", answer:"garaje"},
+  {icon:"📺", answer:"salón"},
+  {icon:"🌸", answer:"jardín"},
+  {icon:"🍲", answer:"cocina"},
+  {icon:"🪞", answer:"baño"},
+  {icon:"🛋️", answer:"salón"},
+];
+roomPictures.forEach(p=>{
+  const item = document.createElement('div');
+  item.className='num-item';
+  item.innerHTML = `<div class="digit">${p.icon}</div><input type="text" data-answer="${p.answer}" placeholder="write here...">`;
+  numGrid.appendChild(item);
+});
+
+function checkNumbers(){
+  const inputs = numGrid.querySelectorAll('input');
+  let correct = 0;
+  inputs.forEach(inp=>{
+    const ans = normalize(inp.dataset.answer);
+    if(normalize(inp.value)===ans){
+      inp.classList.add('correct'); inp.classList.remove('wrong');
+      correct++;
+    } else {
+      inp.classList.add('wrong'); inp.classList.remove('correct');
+    }
+  });
+  const fb = document.getElementById('fb2');
+  if(correct===inputs.length){
+    fb.textContent = "Excellent! You know your rooms really well. 🏠";
+    fb.className='feedback good';
+    earnStar(2);
+  } else {
+    fb.textContent = `${correct} out of ${inputs.length} correct. The red ones need review.`;
+    fb.className='feedback bad';
+  }
+}
+
+/* ---------- EXERCISE 3: HOUSE SENTENCE BUILDER ---------- */
+const daySelect = document.getElementById('daySelect');
+const monthSelect = document.getElementById('monthSelect');
+const SENTENCE_OBJECTS = [
+  {value:"la cama", label:"la cama"},
+  {value:"el sofá", label:"el sofá"},
+  {value:"la ducha", label:"la ducha"},
+  {value:"el coche", label:"el coche"},
+  {value:"las flores", label:"las flores"},
+  {value:"la televisión", label:"la televisión"},
+  {value:"la olla", label:"la olla"},
+  {value:"el espejo", label:"el espejo"},
+];
+SENTENCE_OBJECTS.forEach(o=>{
+  const opt = document.createElement('option');
+  opt.value = o.value;
+  opt.textContent = o.label;
+  daySelect.appendChild(opt);
+});
+ROOMS.forEach(r=>{
+  const opt = document.createElement('option');
+  opt.value = ROOM_LABELS[r].toLowerCase();
+  opt.textContent = ROOM_LABELS[r];
+  monthSelect.appendChild(opt);
+});
+function updateBirthday(){
+  const obj = daySelect.value;
+  const room = monthSelect.value;
+  document.getElementById('birthdaySentence').innerHTML =
+    `En mi casa, tengo <b>${obj}</b> en <b>${room}</b>.`;
+  earnStar(3);
+}
+daySelect.onchange = updateBirthday;
+monthSelect.onchange = updateBirthday;
+updateBirthday();
+
+/* ---------- EXERCISE 4: MISSING LETTERS ---------- */
+const fillGrid = document.getElementById('fillGrid');
+const fillWords = [
+  {word:"cocina", blankIndex:2},
+  {word:"dormitorio", blankIndex:4},
+  {word:"salón", blankIndex:3},
+  {word:"baño", blankIndex:1},
+  {word:"jardín", blankIndex:4},
+  {word:"garaje", blankIndex:4},
+  {word:"sofá", blankIndex:3},
+  {word:"ducha", blankIndex:2},
+  {word:"espejo", blankIndex:4},
+  {word:"lavabo", blankIndex:2},
+];
+fillWords.forEach(fw=>{
+  const chars = fw.word.split('');
+  const answer = chars[fw.blankIndex];
+  chars[fw.blankIndex] = '_';
+  const displayWord = chars.join('');
+  const before = displayWord.slice(0, fw.blankIndex);
+  const after = displayWord.slice(fw.blankIndex+1);
+
+  const item = document.createElement('div');
+  item.className='fill-item';
+  item.innerHTML = `<span>${before}</span><input maxlength="1" data-answer="${answer}"><span>${after}</span>`;
+  fillGrid.appendChild(item);
+});
+
+function checkFill(){
+  const inputs = fillGrid.querySelectorAll('input');
+  let correct = 0;
+  inputs.forEach(inp=>{
+    if(normalize(inp.value)===normalize(inp.dataset.answer)){
+      inp.classList.add('correct'); inp.classList.remove('wrong');
+      correct++;
+    } else {
+      inp.classList.add('wrong'); inp.classList.remove('correct');
+    }
+  });
+  const fb = document.getElementById('fb4');
+  if(correct===inputs.length){
+    fb.textContent = "Amazing! You know all the words. 🏆";
+    fb.className='feedback good';
+    earnStar(4);
+  } else {
+    fb.textContent = `${correct} out of ${inputs.length} correct. You're almost there!`;
+    fb.className='feedback bad';
+  }
+}
+
+/* ---------- EXERCISE 5: UNSCRAMBLE ---------- */
+function scramble(word){
+  let letters, result;
+  do{
+    letters = word.split('');
+    for(let i=letters.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [letters[i],letters[j]] = [letters[j],letters[i]];
+    }
+    result = letters.join('');
+  } while(result===word);
+  return result;
+}
+const scrambleWords = ["cocina","garaje","ducha","cama","espejo","coche"];
+const scrambleGrid = document.getElementById('scrambleGrid');
+scrambleWords.forEach(w=>{
+  const item = document.createElement('div');
+  item.className='scramble-item';
+  item.innerHTML = `<div class="scramble-word">${scramble(w).toUpperCase()}</div>
+    <input type="text" data-answer="${w}" placeholder="write the word...">`;
+  scrambleGrid.appendChild(item);
+});
+function checkScramble(){
+  const inputs = scrambleGrid.querySelectorAll('input');
+  let correct = 0;
+  inputs.forEach(inp=>{
+    if(normalize(inp.value)===normalize(inp.dataset.answer)){
+      inp.classList.add('correct'); inp.classList.remove('wrong');
+      correct++;
+    } else {
+      inp.classList.add('wrong'); inp.classList.remove('correct');
+    }
+  });
+  const fb = document.getElementById('fb5');
+  if(correct===inputs.length){
+    fb.textContent = "You unscrambled them all! 🌟";
+    fb.className='feedback good';
+    earnStar(5);
+  } else {
+    fb.textContent = `${correct} out of ${inputs.length} correct. Look closely at the letters.`;
+    fb.className='feedback bad';
+  }
+}
+
+/* ---------- EXERCISE 6: WORD SEARCH ---------- */
+const WS_SIZE = 10;
+const wsWordsToFind = ["casa","cama","sofa","bano"];
+const wsDisplayWords = {"casa":"casa","cama":"cama","sofa":"sofá","bano":"baño"};
+function buildWordSearch(){
+  const grid = Array.from({length:WS_SIZE},()=>Array(WS_SIZE).fill(null));
+  const directions = [[0,1],[1,0],[1,1]]; // right, down, diagonal
+  const placements = {};
+
+  wsWordsToFind.forEach(word=>{
+    let placed = false;
+    let attempts = 0;
+    while(!placed && attempts<200){
+      attempts++;
+      const dir = directions[Math.floor(Math.random()*directions.length)];
+      const row = Math.floor(Math.random()* (dir[0] ? WS_SIZE-word.length+1 : WS_SIZE));
+      const col = Math.floor(Math.random()* (dir[1] ? WS_SIZE-word.length+1 : WS_SIZE));
+
+      let fits = true;
+      const cells = [];
+      for(let i=0;i<word.length;i++){
+        const r = row + dir[0]*i;
+        const c = col + dir[1]*i;
+        if(r>=WS_SIZE || c>=WS_SIZE){ fits=false; break; }
+        const existing = grid[r][c];
+        if(existing && existing !== word[i]){ fits=false; break; }
+        cells.push([r,c]);
+      }
+      if(fits){
+        cells.forEach(([r,c],i)=> grid[r][c] = word[i]);
+        placements[word] = cells;
+        placed = true;
+      }
+    }
+  });
+
+  const alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+  for(let r=0;r<WS_SIZE;r++){
+    for(let c=0;c<WS_SIZE;c++){
+      if(!grid[r][c]) grid[r][c] = alphabet[Math.floor(Math.random()*alphabet.length)];
+    }
+  }
+  return {grid, placements};
+}
+
+const {grid: wsGridData, placements: wsPlacements} = buildWordSearch();
+const wsGridEl = document.getElementById('wsGrid');
+const wsCells = [];
+let wsSelection = [];
+let wsFoundWords = new Set();
+
+for(let r=0;r<WS_SIZE;r++){
+  wsCells.push([]);
+  for(let c=0;c<WS_SIZE;c++){
+    const cell = document.createElement('div');
+    cell.className = 'ws-cell';
+    cell.textContent = wsGridData[r][c].toUpperCase();
+    cell.dataset.r = r; cell.dataset.c = c;
+    cell.onclick = ()=>toggleCell(r,c,cell);
+    wsGridEl.appendChild(cell);
+    wsCells[r].push(cell);
+  }
+}
+
+const wsWordsEl = document.getElementById('wsWords');
+wsWordsToFind.forEach(w=>{
+  const d = document.createElement('div');
+  d.id = 'wsword-'+w;
+  d.textContent = '• ' + wsDisplayWords[w];
+  wsWordsEl.appendChild(d);
+});
+
+function toggleCell(r,c,cell){
+  if(cell.classList.contains('found')) return;
+  const idx = wsSelection.findIndex(s=>s[0]===r && s[1]===c);
+  if(idx === wsSelection.length-1 && idx !== -1){
+    // clicking last selected cell again removes it
+    wsSelection.pop();
+    cell.classList.remove('selected');
+    return;
+  }
+  wsSelection.push([r,c]);
+  cell.classList.add('selected');
+  checkWordSelection();
+}
+
+function checkWordSelection(){
+  const word = wsSelection.map(([r,c])=>wsGridData[r][c]).join('');
+  if(wsWordsToFind.includes(word) && !wsFoundWords.has(word)){
+    wsFoundWords.add(word);
+    wsSelection.forEach(([r,c])=>{
+      wsCells[r][c].classList.remove('selected');
+      wsCells[r][c].classList.add('found');
+    });
+    document.getElementById('wsword-'+word).classList.add('found-word');
+    wsSelection = [];
+    const fb = document.getElementById('fb6');
+    if(wsFoundWords.size === wsWordsToFind.length){
+      fb.textContent = "You found all the hidden words! 🔎🎉";
+      fb.className='feedback good';
+      earnStar(6);
+    } else {
+      fb.textContent = `Nice! You found "${wsDisplayWords[word]}". Keep looking.`;
+      fb.className='feedback good';
+    }
+  }
+}
+
+function clearSelection(){
+  wsSelection.forEach(([r,c])=> wsCells[r][c].classList.remove('selected'));
+  wsSelection = [];
+}
+
+/* ---------- EXERCISE 7: MEMORY GAME ---------- */
+const memoryPairs = [
+  {a:"🛏️", b:"dormitorio"},
+  {a:"🍳", b:"cocina"},
+  {a:"🛋️", b:"salón"},
+  {a:"🚿", b:"baño"},
+  {a:"🌳", b:"jardín"},
+  {a:"🚗", b:"garaje"},
+];
+let memCards = [];
+memoryPairs.forEach((p,i)=>{
+  memCards.push({id:i+'a', pair:i, label:p.a});
+  memCards.push({id:i+'b', pair:i, label:p.b});
+});
+memCards.sort(()=>Math.random()-0.5);
+
+const memoryGrid = document.getElementById('memoryGrid');
+let memFlipped = [];
+let memMatches = 0;
+let memLock = false;
+
+memCards.forEach(card=>{
+  const el = document.createElement('div');
+  el.className='mem-card';
+  el.dataset.pair = card.pair;
+  el.dataset.state = 'hidden';
+  el.textContent = '?';
+  el.onclick = ()=>flipCard(el, card);
+  memoryGrid.appendChild(el);
+});
+
+function flipCard(el, card){
+  if(memLock || el.dataset.state !== 'hidden') return;
+  el.textContent = card.label;
+  el.classList.add('flipped');
+  el.dataset.state = 'flipped';
+  memFlipped.push({el, card});
+
+  if(memFlipped.length === 2){
+    memLock = true;
+    const [f1, f2] = memFlipped;
+    if(f1.card.pair === f2.card.pair){
+      f1.el.classList.add('matched'); f1.el.classList.remove('flipped');
+      f2.el.classList.add('matched'); f2.el.classList.remove('flipped');
+      f1.el.dataset.state='matched'; f2.el.dataset.state='matched';
+      memMatches++;
+      document.getElementById('memoryStatus').textContent = `Pairs found: ${memMatches} / ${memoryPairs.length}`;
+      memFlipped = [];
+      memLock = false;
+      if(memMatches === memoryPairs.length){
+        document.getElementById('memoryStatus').textContent = "You found all the pairs! 🃏🎉";
+        earnStar(7);
+      }
+    } else {
+      setTimeout(()=>{
+        f1.el.textContent='?'; f1.el.classList.remove('flipped'); f1.el.dataset.state='hidden';
+        f2.el.textContent='?'; f2.el.classList.remove('flipped'); f2.el.dataset.state='hidden';
+        memFlipped = [];
+        memLock = false;
+      }, 800);
+    }
+  }
+}
+</script>
+</body>
+</html>

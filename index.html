@@ -1,993 +1,407 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>¡Los Meses del Año! 🎉</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --cream:#FFF8ED;
-    --coral:#FF6B5A;
-    --teal:#1E9E90;
-    --marigold:#FFC857;
-    --indigo:#3D348B;
-    --pink:#FF8FA3;
-    --ink:#2D1E2F;
-    --paper:#ffffff;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--cream);
-    font-family:'Nunito',sans-serif;
-    color:var(--ink);
-    padding-bottom:60px;
-  }
-  h1,h2,h3{font-family:'Baloo 2',cursive;margin:0;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MUNDO ELE - Aprende Español</title>
+  
+  <!-- Fuentes extraídas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
 
-  /* ---------- PAPEL PICADO HEADER ---------- */
-  .banner{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:6px;
-    padding:18px 10px 0;
-    background:var(--indigo);
-  }
-  .flag{
-    width:70px;height:56px;
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
-    display:flex;align-items:flex-start;justify-content:center;
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:10.5px;
-    color:white;
-    padding-top:8px;
-    text-align:center;
-    line-height:1.05;
-  }
-  .flag:nth-child(6n+1){background:var(--coral);}
-  .flag:nth-child(6n+2){background:var(--teal);}
-  .flag:nth-child(6n+3){background:var(--marigold);color:var(--ink);}
-  .flag:nth-child(6n+4){background:var(--pink);}
-  .flag:nth-child(6n+5){background:#7FB069;}
-  .flag:nth-child(6n+6){background:#5EA0D0;}
+  <style>
+    /* VARIABLES DE COLOR */
+    :root {
+      --cream: #FFF8ED;
+      --coral: #FF6B5A;
+      --teal: #1E9E90;
+      --marigold: #FFC857;
+      --indigo: #3D348B;
+      --pink: #FF8FA3;
+      --ink: #2D1E2F;
+      --paper: #ffffff;
+    }
 
-  header{
-    background:var(--indigo);
-    color:white;
-    text-align:center;
-    padding:14px 20px 34px;
-  }
-  header h1{
-    font-size:clamp(30px,7vw,46px);
-    color:var(--marigold);
-    text-shadow:3px 3px 0 rgba(0,0,0,0.15);
-  }
-  header p{
-    font-family:'Baloo 2';
-    font-size:18px;
-    color:white;
-    margin-top:6px;
-  }
-  .dog{
-    font-size:54px;
-    display:inline-block;
-    animation:wag 1.6s ease-in-out infinite;
-  }
-  @keyframes wag{
-    0%,100%{transform:rotate(-8deg);}
-    50%{transform:rotate(8deg);}
-  }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* ---------- PROGRESS STARS ---------- */
-  .progress-wrap{
-    max-width:760px;
-    margin:-20px auto 0;
-    background:var(--paper);
-    border-radius:20px;
-    box-shadow:0 8px 0 rgba(0,0,0,0.08);
-    padding:14px 20px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    flex-wrap:wrap;
-  }
-  .progress-wrap span{font-family:'Baloo 2';font-weight:700;color:var(--indigo);}
-  .stars{font-size:26px;letter-spacing:4px;}
-  .star{opacity:0.25;transition:transform .25s, opacity .25s;}
-  .star.on{opacity:1;transform:scale(1.15);}
+    body {
+      background: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-  main{
-    max-width:760px;
-    margin:26px auto;
-    padding:0 16px;
-    display:flex;
-    flex-direction:column;
-    gap:26px;
-  }
+    h1, h2, h3, h4 {
+      font-family: 'Baloo 2', cursive;
+    }
 
-  .card{
-    background:var(--paper);
-    border-radius:22px;
-    padding:22px 20px 26px;
-    box-shadow:0 6px 0 rgba(61,52,139,0.15);
-    border:3px solid transparent;
-  }
-  .card h2{
-    color:var(--coral);
-    font-size:24px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:4px;
-  }
-  .badge{
-    background:var(--marigold);
-    color:var(--ink);
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:13px;
-    border-radius:999px;
-    padding:3px 12px;
-    display:inline-block;
-  }
-  .instructions{
-    font-size:15px;
-    color:#5b4b63;
-    margin:6px 0 16px;
-  }
+    /* ---------- BANNER PAPEL PICADO ---------- */
+    .banner {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 14px 10px 0;
+      background: var(--indigo);
+    }
 
-  /* ---------- EX 1: ORDER THE MONTHS ---------- */
-  .months-pool{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin-bottom:14px;
-    min-height:44px;
-  }
-  .month-chip{
-    font-family:'Baloo 2';
-    font-weight:700;
-    background:var(--teal);
-    color:white;
-    border:none;
-    border-radius:12px;
-    padding:8px 14px;
-    font-size:15px;
-    cursor:pointer;
-    transition:transform .15s;
-  }
-  .month-chip:hover{transform:translateY(-2px);}
-  .month-chip:disabled{
-    background:#d7d7d7;
-    color:#a3a3a3;
-    cursor:not-allowed;
-  }
-  .slots{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
-    gap:8px;
-  }
-  .slot{
-    border:2px dashed #c9c1e0;
-    border-radius:12px;
-    min-height:46px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:13px;
-    color:var(--indigo);
-    background:#faf9ff;
-    position:relative;
-    padding:2px 4px;
-    text-align:center;
-  }
-  .slot .num{
-    position:absolute;
-    top:2px;left:6px;
-    font-size:10px;
-    color:#b3aacb;
-  }
-  .slot.filled{background:var(--marigold);border-style:solid;border-color:var(--marigold);color:var(--ink);}
+    .flag {
+      width: 60px;
+      height: 48px;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      font-family: 'Baloo 2', cursive;
+      font-weight: 700;
+      font-size: 11px;
+      color: white;
+      padding-top: 6px;
+      text-align: center;
+    }
 
-  /* ---------- EX 2: NUMBER WORDS ---------- */
-  .num-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-    gap:12px;
-  }
-  .num-item{
-    background:#fdf3e2;
-    border-radius:14px;
-    padding:10px 12px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-  .num-item .digit{
-    font-family:'Baloo 2';
-    font-weight:800;
-    font-size:26px;
-    color:var(--coral);
-    width:36px;
-    text-align:center;
-  }
-  .num-item input{
-    flex:1;
-    min-width:0;
-    border:2px solid #e8d6ad;
-    border-radius:10px;
-    padding:6px 8px;
-    font-family:'Nunito';
-    font-size:14px;
-    font-weight:700;
-    color:var(--ink);
-  }
-  .num-item input.correct{border-color:#4CAF50;background:#eafbe9;}
-  .num-item input.wrong{border-color:var(--coral);background:#ffecea;}
+    .flag:nth-child(6n+1) { background: var(--coral); }
+    .flag:nth-child(6n+2) { background: var(--teal); }
+    .flag:nth-child(6n+3) { background: var(--marigold); color: var(--ink); }
+    .flag:nth-child(6n+4) { background: var(--pink); }
+    .flag:nth-child(6n+5) { background: #7FB069; }
+    .flag:nth-child(6n+6) { background: #5EA0D0; }
 
-  /* ---------- EX 3: BIRTHDAY BUILDER ---------- */
-  .birthday-box{
-    background:linear-gradient(135deg,#fff1e6,#ffe4ec);
-    border-radius:18px;
-    padding:18px;
-    text-align:center;
-  }
-  .birthday-box select{
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:16px;
-    padding:8px 10px;
-    border-radius:10px;
-    border:2px solid var(--pink);
-    margin:6px;
-    color:var(--indigo);
-  }
-  .birthday-sentence{
-    margin-top:14px;
-    font-family:'Baloo 2';
-    font-size:19px;
-    color:var(--indigo);
-    min-height:30px;
-  }
-  .birthday-sentence b{color:var(--coral);}
-  .cake{font-size:40px;}
+    /* ---------- HEADER ---------- */
+    header {
+      background: var(--indigo);
+      color: white;
+      text-align: center;
+      padding: 10px 20px 25px;
+    }
 
-  /* ---------- EX 4: MISSING LETTERS ---------- */
-  .fill-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-    gap:12px;
-  }
-  .fill-item{
-    background:#eef7f5;
-    border-radius:14px;
-    padding:10px 12px;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-family:'Baloo 2';
-    font-size:17px;
-    color:var(--indigo);
-  }
-  .fill-item input{
-    width:34px;
-    text-align:center;
-    border:2px solid #bfe3dc;
-    border-radius:8px;
-    padding:4px;
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:16px;
-    color:var(--ink);
-  }
-  .fill-item input.correct{border-color:#4CAF50;background:#eafbe9;}
-  .fill-item input.wrong{border-color:var(--coral);background:#ffecea;}
+    header h1 {
+      font-size: clamp(36px, 8vw, 54px);
+      color: var(--marigold);
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+      letter-spacing: 1px;
+    }
 
-  /* ---------- CHECK BUTTONS ---------- */
-  .check-btn{
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:15px;
-    background:var(--coral);
-    color:white;
-    border:none;
-    border-radius:12px;
-    padding:10px 22px;
-    cursor:pointer;
-    margin-top:16px;
-    box-shadow:0 4px 0 #c94d3f;
-    transition:transform .1s;
-  }
-  .check-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #c94d3f;}
-  .feedback{
-    margin-top:10px;
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:15px;
-    min-height:20px;
-  }
-  .feedback.good{color:#2f9e44;}
-  .feedback.bad{color:var(--coral);}
+    header p {
+      font-family: 'Baloo 2', cursive;
+      font-size: 18px;
+      color: white;
+      margin-top: 4px;
+    }
 
-  footer{
-    text-align:center;
-    font-family:'Baloo 2';
-    color:var(--indigo);
-    padding:20px;
-    font-size:14px;
-  }
+    /* ---------- NAVBAR DE NAVEGACIÓN ---------- */
+    .navbar {
+      background: var(--paper);
+      box-shadow: 0 4px 0 rgba(61, 52, 139, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-  .confetti-layer{
-    position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:999;
-  }
-  .confetti-piece{
-    position:absolute;top:-20px;
-    width:10px;height:10px;
-    opacity:0.9;
-    animation:fall linear forwards;
-  }
-  @keyframes fall{
-    to{transform:translateY(110vh) rotate(360deg);opacity:1;}
-  }
+    .nav-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 10px;
+    }
 
-  /* ---------- EX 5: UNSCRAMBLE ---------- */
-  .scramble-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
-    gap:14px;
-  }
-  .scramble-item{
-    background:#fff0f2;
-    border-radius:14px;
-    padding:12px 14px;
-  }
-  .scramble-word{
-    font-family:'Baloo 2';
-    font-weight:800;
-    font-size:20px;
-    letter-spacing:3px;
-    color:var(--pink);
-    margin-bottom:8px;
-  }
-  .scramble-item input{
-    width:100%;
-    border:2px solid #f3c1cc;
-    border-radius:10px;
-    padding:7px 9px;
-    font-family:'Nunito';
-    font-weight:700;
-    font-size:14px;
-    color:var(--ink);
-  }
-  .scramble-item input.correct{border-color:#4CAF50;background:#eafbe9;}
-  .scramble-item input.wrong{border-color:var(--coral);background:#ffecea;}
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 10px;
+    }
 
-  /* ---------- EX 6: WORD SEARCH ---------- */
-  .wordsearch-wrap{
-    display:flex;
-    gap:22px;
-    flex-wrap:wrap;
-    align-items:flex-start;
-  }
-  .ws-grid{
-    display:grid;
-    grid-template-columns:repeat(10, 32px);
-    grid-auto-rows:32px;
-    gap:3px;
-    user-select:none;
-  }
-  .ws-cell{
-    background:#f4f0ff;
-    border-radius:6px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:14px;
-    color:var(--indigo);
-    cursor:pointer;
-    transition:background .1s;
-  }
-  .ws-cell.selected{background:var(--marigold);}
-  .ws-cell.found{background:#a8e6a1;color:var(--ink);cursor:default;}
-  .ws-words{
-    font-family:'Baloo 2';
-    font-size:15px;
-    color:var(--indigo);
-    min-width:140px;
-  }
-  .ws-words div{margin-bottom:6px;}
-  .ws-words .found-word{text-decoration:line-through;color:#4CAF50;}
+    .nav-item {
+      position: relative;
+    }
 
-  /* ---------- EX 7: MEMORY GAME ---------- */
-  .memory-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(78px,1fr));
-    gap:8px;
-  }
-  .mem-card{
-    aspect-ratio:1/1;
-    background:var(--indigo);
-    border-radius:12px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:13px;
-    color:white;
-    cursor:pointer;
-    text-align:center;
-    padding:4px;
-    transition:transform .2s, background .2s;
-  }
-  .mem-card.flipped{background:var(--marigold);color:var(--ink);}
-  .mem-card.matched{background:#a8e6a1;color:var(--ink);cursor:default;}
-  .memory-status{
-    font-family:'Baloo 2';
-    color:var(--indigo);
-    margin-top:12px;
-    font-size:15px;
-  }
+    .nav-link {
+      display: block;
+      padding: 14px 16px;
+      font-family: 'Baloo 2', cursive;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--indigo);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
 
-  @media (prefers-reduced-motion: reduce){
-    .dog{animation:none;}
-    .confetti-piece{animation:none;display:none;}
-  }
-</style>
+    .nav-link:hover {
+      color: var(--coral);
+    }
+
+    /* Menú Desplegable (Dropdown) */
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--paper);
+      min-width: 180px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      border: 2px solid var(--cream);
+      overflow: hidden;
+      list-style: none;
+      padding: 6px 0;
+      z-index: 200;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .dropdown-menu a:hover {
+      background: var(--cream);
+      color: var(--teal);
+    }
+
+    /* HOVER en Desktop */
+    @media (min-width: 769px) {
+      .nav-item:hover .dropdown-menu {
+        display: block;
+      }
+    }
+
+    /* MÓVIL (CLICK INTERMITENTE) */
+    @media (max-width: 768px) {
+      .nav-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0;
+      }
+      .nav-link {
+        padding: 10px 10px;
+        font-size: 15px;
+      }
+      .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        border: none;
+        background: #FAF7F2;
+        width: 100%;
+      }
+      .nav-item.active .dropdown-menu {
+        display: block;
+      }
+    }
+
+    /* ---------- MAIN CONTENT ---------- */
+    main {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 0 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .hero-card {
+      background: var(--paper);
+      border-radius: 22px;
+      padding: 28px 24px;
+      box-shadow: 0 6px 0 rgba(61, 52, 139, 0.15);
+      text-align: center;
+    }
+
+    .hero-card h2 {
+      color: var(--coral);
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .hero-card p {
+      font-size: 16px;
+      color: #5b4b63;
+      line-height: 1.5;
+    }
+
+    /* ---------- FOOTER SOLICITADO ---------- */
+    .site-footer {
+      text-align: center;
+      font-family: 'Baloo 2', cursive;
+      color: var(--indigo);
+      padding: 24px 20px;
+      font-size: 15px;
+      background: transparent;
+      margin-top: auto;
+    }
+
+    .site-footer .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 8px;
+    }
+
+    .site-footer .footer-links a {
+      color: var(--teal);
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.2s;
+    }
+
+    .site-footer .footer-links a:hover {
+      color: var(--coral);
+    }
+
+    .site-footer .credit {
+      margin: 0;
+      color: var(--indigo);
+    }
+
+    .site-footer .credit span {
+      margin: 0 4px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="banner" id="banner"></div>
-
-<header>
-  <span class="dog">🐶</span>
-  <h1>¡Los Meses del Año!</h1>
-  <p>Practice with Coco the puppy · Spanish for kids</p>
-</header>
-
-<div class="progress-wrap">
-  <span>Your progress</span>
-  <div class="stars" id="stars">
-    <span class="star" data-i="1">⭐</span>
-    <span class="star" data-i="2">⭐</span>
-    <span class="star" data-i="3">⭐</span>
-    <span class="star" data-i="4">⭐</span>
-    <span class="star" data-i="5">⭐</span>
-    <span class="star" data-i="6">⭐</span>
-    <span class="star" data-i="7">⭐</span>
+  <!-- BANDERINES DE PAPEL PICADO -->
+  <div class="banner">
+    <div class="flag">¡HOLA!</div>
+    <div class="flag">ELE</div>
+    <div class="flag">CURSO</div>
+    <div class="flag">NIÑOS</div>
+    <div class="flag">JUEGA</div>
+    <div class="flag">APRENDE</div>
   </div>
-</div>
 
-<main>
+  <!-- HEADER -->
+  <header>
+    <h1>MUNDO ELE</h1>
+    <p>Aprende español de forma divertida 🌟</p>
+  </header>
 
-  <!-- EXERCISE 1 -->
-  <section class="card" id="card1">
-    <h2>1. 🎵 Sing and Order <span class="badge">The months</span></h2>
-    <p class="instructions">Click the months in the correct order — from <b>enero</b> to <b>diciembre</b>.</p>
-    <div class="months-pool" id="monthsPool"></div>
-    <div class="slots" id="monthsSlots"></div>
-    <button class="check-btn" onclick="checkMonths()">Check</button>
-    <div class="feedback" id="fb1"></div>
-  </section>
+  <!-- NAVBAR DE 6 UNIDADES CON DROPDOWN -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <ul class="nav-menu">
+        
+        <li class="nav-item">
+          <a class="nav-link">Unidad 1 ▾</a>
+          <ul class="dropdown-menu">
+            <li><a href="laCasa.html">Lección 1: Vocabulario</a></li>
+            <li><a href="#">Lección 2: Gramática</a></li>
+            <li><a href="#">Ejercicios</a></li>
+          </ul>
+        </li>
 
-  <!-- EXERCISE 2 -->
-  <section class="card" id="card2">
-    <h2>2. 🔢 Write the Number <span class="badge">1–31</span></h2>
-    <p class="instructions">Write how each calendar number is said in Spanish.</p>
-    <div class="num-grid" id="numGrid"></div>
-    <button class="check-btn" onclick="checkNumbers()">Check</button>
-    <div class="feedback" id="fb2"></div>
-  </section>
+        <li class="nav-item">
+          <a class="nav-link">Unidad 2 ▾</a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Lección 1: Vocabulario</a></li>
+            <li><a href="#">Lección 2: Gramática</a></li>
+            <li><a href="#">Ejercicios</a></li>
+          </ul>
+        </li>
 
-  <!-- EXERCISE 3 -->
-  <section class="card" id="card3">
-    <h2>3. 🎂 When Is Your Birthday?</h2>
-    <p class="instructions">Choose the day and month, and see the complete sentence.</p>
-    <div class="birthday-box">
-      <div class="cake">🎂🎉</div>
-      <div>
-        <select id="daySelect"></select>
-        <select id="monthSelect"></select>
-      </div>
-      <div class="birthday-sentence" id="birthdaySentence">Mi cumpleaños es el ___ de ___.</div>
+        <li class="nav-item">
+          <a class="nav-link">Unidad 3 ▾</a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Lección 1: Vocabulario</a></li>
+            <li><a href="#">Lección 2: Gramática</a></li>
+            <li><a href="#">Ejercicios</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link">Unidad 4 ▾</a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Lección 1: Vocabulario</a></li>
+            <li><a href="#">Lección 2: Gramática</a></li>
+            <li><a href="#">Ejercicios</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link">Unidad 5 ▾</a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Lección 1: Vocabulario</a></li>
+            <li><a href="#">Lección 2: Gramática</a></li>
+            <li><a href="#">Ejercicios</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link">Unidad 6 ▾</a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Lección 1: Vocabulario</a></li>
+            <li><a href="#">Lección 2: Gramática</a></li>
+            <li><a href="#">Ejercicios</a></li>
+          </ul>
+        </li>
+
+      </ul>
     </div>
-  </section>
+  </nav>
 
-  <!-- EXERCISE 4 -->
-  <section class="card" id="card4">
-    <h2>4. ✏️ Complete the Missing Letter</h2>
-    <p class="instructions">Write the letter that's missing in each month.</p>
-    <div class="fill-grid" id="fillGrid"></div>
-    <button class="check-btn" onclick="checkFill()">Check</button>
-    <div class="feedback" id="fb4"></div>
-  </section>
+  <!-- CONTENIDO PRINCIPAL (HOME) -->
+  <main>
+    <section class="hero-card">
+      <h2>¡Bienvenidos a Mundo ELE! 🎉</h2>
+      <p>Selecciona una unidad en el menú para comenzar tu viaje de aprendizaje de español con juegos, ejercicios interactivos y muchas sorpresas.</p>
+    </section>
+  </main>
 
-  <!-- EXERCISE 5 -->
-  <section class="card" id="card5">
-    <h2>5. 🔤 Unscramble the Letters</h2>
-    <p class="instructions">The letters of each month are mixed up. Write the correct month!</p>
-    <div class="scramble-grid" id="scrambleGrid"></div>
-    <button class="check-btn" onclick="checkScramble()">Check</button>
-    <div class="feedback" id="fb5"></div>
-  </section>
-
-  <!-- EXERCISE 6 -->
-  <section class="card" id="card6">
-    <h2>6. 🔎 Word Search</h2>
-    <p class="instructions">Click the letters, in order, to spell out each month on the list. If you make a mistake, click the last letter again to remove it.</p>
-    <div class="wordsearch-wrap">
-      <div class="ws-grid" id="wsGrid"></div>
-      <div class="ws-words" id="wsWords"></div>
+  <!-- FOOTER (Estructura exacta solicitada) -->
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="contact.html">Contact</a>
     </div>
-    <button class="check-btn" onclick="clearSelection()">Clear selection</button>
-    <div class="feedback" id="fb6"></div>
-  </section>
+    <p class="credit">Moises Coronel <span>·</span> Spanish Course</p>
+  </footer>
 
-  <!-- EXERCISE 7 -->
-  <section class="card" id="card7">
-    <h2>7. 🃏 Memory Match: Month and Number</h2>
-    <p class="instructions">Find the pairs: the month with its number (1 = enero, 2 = febrero...).</p>
-    <div class="memory-grid" id="memoryGrid"></div>
-    <div class="memory-status" id="memoryStatus">Pairs found: 0 / 6</div>
-  </section>
+  <!-- SCRIPT PARA INTERACCIÓN CLICK EN MÓVIL -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navItems = document.querySelectorAll('.nav-item');
 
-</main>
+      navItems.forEach(item => {
+        const link = item.querySelector('.nav-link');
 
-<footer>Great job! 🐾 Keep practicing every day.</footer>
+        link.addEventListener('click', (e) => {
+          // Detectar pantalla móvil
+          if (window.innerWidth <= 768) {
+            e.preventDefault();
+            
+            // Cerrar los otros menús
+            navItems.forEach(otherItem => {
+              if (otherItem !== item) {
+                otherItem.classList.remove('active');
+              }
+            });
 
-<script>
-const MONTHS = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
-const NUM_WORDS = {1:"uno",2:"dos",3:"tres",4:"cuatro",5:"cinco",6:"seis",7:"siete",8:"ocho",9:"nueve",10:"diez",
-11:"once",12:"doce",13:"trece",14:"catorce",15:"quince",16:"dieciséis",17:"diecisiete",18:"dieciocho",19:"diecinueve",20:"veinte",
-21:"veintiuno",22:"veintidós",23:"veintitrés",24:"veinticuatro",25:"veinticinco",26:"veintiséis",27:"veintisiete",28:"veintiocho",29:"veintinueve",30:"treinta",31:"treinta y uno"};
+            // Alternar estado activo del clic
+            item.classList.toggle('active');
+          }
+        });
+      });
 
-/* ---------- BANNER ---------- */
-const bannerEl = document.getElementById('banner');
-MONTHS.forEach(m=>{
-  const f = document.createElement('div');
-  f.className='flag';
-  f.textContent = m.toUpperCase();
-  bannerEl.appendChild(f);
-});
-
-/* ---------- STARS ---------- */
-let starsEarned = 0;
-function earnStar(n){
-  if(n<=starsEarned) return;
-  starsEarned = n;
-  document.querySelectorAll('.star').forEach(s=>{
-    if(parseInt(s.dataset.i) <= starsEarned) s.classList.add('on');
-  });
-  launchConfetti();
-}
-
-/* ---------- CONFETTI ---------- */
-function launchConfetti(){
-  const layer = document.createElement('div');
-  layer.className='confetti-layer';
-  document.body.appendChild(layer);
-  const colors = ['#FF6B5A','#1E9E90','#FFC857','#FF8FA3','#5EA0D0'];
-  for(let i=0;i<40;i++){
-    const p = document.createElement('div');
-    p.className='confetti-piece';
-    p.style.left = Math.random()*100+'vw';
-    p.style.background = colors[Math.floor(Math.random()*colors.length)];
-    p.style.animationDuration = (2+Math.random()*1.5)+'s';
-    p.style.borderRadius = Math.random()>0.5 ? '50%':'2px';
-    layer.appendChild(p);
-  }
-  setTimeout(()=>layer.remove(),3600);
-}
-
-/* ---------- EXERCISE 1: ORDER MONTHS ---------- */
-const pool = document.getElementById('monthsPool');
-const slotsEl = document.getElementById('monthsSlots');
-let placed = new Array(12).fill(null);
-let nextSlot = 0;
-
-const shuffled = [...MONTHS].sort(()=>Math.random()-0.5);
-shuffled.forEach(m=>{
-  const btn = document.createElement('button');
-  btn.className='month-chip';
-  btn.textContent = m;
-  btn.onclick = ()=>placeMonth(m, btn);
-  pool.appendChild(btn);
-});
-
-for(let i=0;i<12;i++){
-  const s = document.createElement('div');
-  s.className='slot';
-  s.innerHTML = `<span class="num">${i+1}</span>`;
-  slotsEl.appendChild(s);
-}
-
-function placeMonth(m, btn){
-  if(nextSlot>=12) return;
-  const slot = slotsEl.children[nextSlot];
-  slot.textContent = m;
-  slot.classList.add('filled');
-  const numTag = document.createElement('span');
-  numTag.className='num';
-  numTag.textContent = nextSlot+1;
-  slot.prepend(numTag);
-  placed[nextSlot] = m;
-  nextSlot++;
-  btn.disabled = true;
-}
-
-function checkMonths(){
-  const fb = document.getElementById('fb1');
-  if(nextSlot<12){
-    fb.textContent = "Place all 12 months first. 🐶";
-    fb.className='feedback bad';
-    return;
-  }
-  let correct = 0;
-  for(let i=0;i<12;i++){
-    const slot = slotsEl.children[i];
-    if(placed[i]===MONTHS[i]){
-      slot.style.background='#c9f2c9';
-      correct++;
-    } else {
-      slot.style.background='#ffd3cd';
-    }
-  }
-  if(correct===12){
-    fb.textContent = "Perfect! 🎉 All 12 months in order.";
-    fb.className='feedback good';
-    earnStar(1);
-  } else {
-    fb.textContent = `You have ${correct} out of 12 correct. Try again!`;
-    fb.className='feedback bad';
-  }
-}
-
-/* ---------- EXERCISE 2: NUMBERS ---------- */
-const numGrid = document.getElementById('numGrid');
-const sampleNums = [3,7,11,15,20,24,28,31];
-sampleNums.forEach(n=>{
-  const item = document.createElement('div');
-  item.className='num-item';
-  item.innerHTML = `<div class="digit">${n}</div><input type="text" data-answer="${NUM_WORDS[n]}" placeholder="write here...">`;
-  numGrid.appendChild(item);
-});
-
-function normalize(str){
-  return str.trim().toLowerCase()
-    .replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i").replace(/ó/g,"o").replace(/ú/g,"u");
-}
-
-function checkNumbers(){
-  const inputs = numGrid.querySelectorAll('input');
-  let correct = 0;
-  inputs.forEach(inp=>{
-    const ans = normalize(inp.dataset.answer);
-    if(normalize(inp.value)===ans){
-      inp.classList.add('correct'); inp.classList.remove('wrong');
-      correct++;
-    } else {
-      inp.classList.add('wrong'); inp.classList.remove('correct');
-    }
-  });
-  const fb = document.getElementById('fb2');
-  if(correct===inputs.length){
-    fb.textContent = "Excellent! You count really well. 🔢";
-    fb.className='feedback good';
-    earnStar(2);
-  } else {
-    fb.textContent = `${correct} out of ${inputs.length} correct. The red ones need review.`;
-    fb.className='feedback bad';
-  }
-}
-
-/* ---------- EXERCISE 3: BIRTHDAY BUILDER ---------- */
-const daySelect = document.getElementById('daySelect');
-const monthSelect = document.getElementById('monthSelect');
-for(let d=1; d<=31; d++){
-  const opt = document.createElement('option');
-  opt.value = NUM_WORDS[d];
-  opt.textContent = `${d} (${NUM_WORDS[d]})`;
-  daySelect.appendChild(opt);
-}
-MONTHS.forEach(m=>{
-  const opt = document.createElement('option');
-  opt.value = m;
-  opt.textContent = m;
-  monthSelect.appendChild(opt);
-});
-function updateBirthday(){
-  const d = daySelect.value;
-  const m = monthSelect.value;
-  document.getElementById('birthdaySentence').innerHTML =
-    `Mi cumpleaños es el <b>${d}</b> de <b>${m}</b>.`;
-  earnStar(3);
-}
-daySelect.onchange = updateBirthday;
-monthSelect.onchange = updateBirthday;
-updateBirthday();
-
-/* ---------- EXERCISE 4: MISSING LETTERS ---------- */
-const fillGrid = document.getElementById('fillGrid');
-const fillWords = [
-  {word:"enero", blankIndex:1},
-  {word:"febrero", blankIndex:2},
-  {word:"marzo", blankIndex:3},
-  {word:"abril", blankIndex:1},
-  {word:"mayo", blankIndex:2},
-  {word:"junio", blankIndex:1},
-  {word:"julio", blankIndex:2},
-  {word:"agosto", blankIndex:1},
-  {word:"septiembre", blankIndex:3},
-  {word:"octubre", blankIndex:1},
-  {word:"noviembre", blankIndex:2},
-  {word:"diciembre", blankIndex:1},
-];
-fillWords.forEach(fw=>{
-  const chars = fw.word.split('');
-  const answer = chars[fw.blankIndex];
-  chars[fw.blankIndex] = '_';
-  const displayWord = chars.join('');
-  const before = displayWord.slice(0, fw.blankIndex);
-  const after = displayWord.slice(fw.blankIndex+1);
-
-  const item = document.createElement('div');
-  item.className='fill-item';
-  item.innerHTML = `<span>${before}</span><input maxlength="1" data-answer="${answer}"><span>${after}</span>`;
-  fillGrid.appendChild(item);
-});
-
-function checkFill(){
-  const inputs = fillGrid.querySelectorAll('input');
-  let correct = 0;
-  inputs.forEach(inp=>{
-    if(normalize(inp.value)===normalize(inp.dataset.answer)){
-      inp.classList.add('correct'); inp.classList.remove('wrong');
-      correct++;
-    } else {
-      inp.classList.add('wrong'); inp.classList.remove('correct');
-    }
-  });
-  const fb = document.getElementById('fb4');
-  if(correct===inputs.length){
-    fb.textContent = "Amazing! You know all the months. 🏆";
-    fb.className='feedback good';
-    earnStar(4);
-  } else {
-    fb.textContent = `${correct} out of ${inputs.length} correct. You're almost there!`;
-    fb.className='feedback bad';
-  }
-}
-
-/* ---------- EXERCISE 5: UNSCRAMBLE ---------- */
-function scramble(word){
-  let letters, result;
-  do{
-    letters = word.split('');
-    for(let i=letters.length-1;i>0;i--){
-      const j = Math.floor(Math.random()*(i+1));
-      [letters[i],letters[j]] = [letters[j],letters[i]];
-    }
-    result = letters.join('');
-  } while(result===word);
-  return result;
-}
-const scrambleWords = ["marzo","junio","julio","agosto","octubre","enero"];
-const scrambleGrid = document.getElementById('scrambleGrid');
-scrambleWords.forEach(w=>{
-  const item = document.createElement('div');
-  item.className='scramble-item';
-  item.innerHTML = `<div class="scramble-word">${scramble(w).toUpperCase()}</div>
-    <input type="text" data-answer="${w}" placeholder="write the month...">`;
-  scrambleGrid.appendChild(item);
-});
-function checkScramble(){
-  const inputs = scrambleGrid.querySelectorAll('input');
-  let correct = 0;
-  inputs.forEach(inp=>{
-    if(normalize(inp.value)===normalize(inp.dataset.answer)){
-      inp.classList.add('correct'); inp.classList.remove('wrong');
-      correct++;
-    } else {
-      inp.classList.add('wrong'); inp.classList.remove('correct');
-    }
-  });
-  const fb = document.getElementById('fb5');
-  if(correct===inputs.length){
-    fb.textContent = "You unscrambled them all! 🌟";
-    fb.className='feedback good';
-    earnStar(5);
-  } else {
-    fb.textContent = `${correct} out of ${inputs.length} correct. Look closely at the letters.`;
-    fb.className='feedback bad';
-  }
-}
-
-/* ---------- EXERCISE 6: WORD SEARCH ---------- */
-const WS_SIZE = 10;
-const wsWordsToFind = ["mayo","abril","junio","julio"];
-function buildWordSearch(){
-  const grid = Array.from({length:WS_SIZE},()=>Array(WS_SIZE).fill(null));
-  const directions = [[0,1],[1,0],[1,1]]; // right, down, diagonal
-  const placements = {};
-
-  wsWordsToFind.forEach(word=>{
-    let placed = false;
-    let attempts = 0;
-    while(!placed && attempts<200){
-      attempts++;
-      const dir = directions[Math.floor(Math.random()*directions.length)];
-      const maxRow = WS_SIZE - (dir[0]*word.length) - (dir[0]?0:0);
-      const maxCol = WS_SIZE - (dir[1]*word.length) - (dir[1]?0:0);
-      const row = Math.floor(Math.random()* (dir[0] ? WS_SIZE-word.length+1 : WS_SIZE));
-      const col = Math.floor(Math.random()* (dir[1] ? WS_SIZE-word.length+1 : WS_SIZE));
-
-      let fits = true;
-      const cells = [];
-      for(let i=0;i<word.length;i++){
-        const r = row + dir[0]*i;
-        const c = col + dir[1]*i;
-        if(r>=WS_SIZE || c>=WS_SIZE){ fits=false; break; }
-        const existing = grid[r][c];
-        if(existing && existing !== word[i]){ fits=false; break; }
-        cells.push([r,c]);
-      }
-      if(fits){
-        cells.forEach(([r,c],i)=> grid[r][c] = word[i]);
-        placements[word] = cells;
-        placed = true;
-      }
-    }
-  });
-
-  const alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-  for(let r=0;r<WS_SIZE;r++){
-    for(let c=0;c<WS_SIZE;c++){
-      if(!grid[r][c]) grid[r][c] = alphabet[Math.floor(Math.random()*alphabet.length)];
-    }
-  }
-  return {grid, placements};
-}
-
-const {grid: wsGridData, placements: wsPlacements} = buildWordSearch();
-const wsGridEl = document.getElementById('wsGrid');
-const wsCells = [];
-let wsSelection = [];
-let wsFoundWords = new Set();
-
-for(let r=0;r<WS_SIZE;r++){
-  wsCells.push([]);
-  for(let c=0;c<WS_SIZE;c++){
-    const cell = document.createElement('div');
-    cell.className = 'ws-cell';
-    cell.textContent = wsGridData[r][c].toUpperCase();
-    cell.dataset.r = r; cell.dataset.c = c;
-    cell.onclick = ()=>toggleCell(r,c,cell);
-    wsGridEl.appendChild(cell);
-    wsCells[r].push(cell);
-  }
-}
-
-const wsWordsEl = document.getElementById('wsWords');
-wsWordsToFind.forEach(w=>{
-  const d = document.createElement('div');
-  d.id = 'wsword-'+w;
-  d.textContent = '• ' + w;
-  wsWordsEl.appendChild(d);
-});
-
-function toggleCell(r,c,cell){
-  if(cell.classList.contains('found')) return;
-  const idx = wsSelection.findIndex(s=>s[0]===r && s[1]===c);
-  if(idx === wsSelection.length-1 && idx !== -1){
-    // clicking last selected cell again removes it
-    wsSelection.pop();
-    cell.classList.remove('selected');
-    return;
-  }
-  wsSelection.push([r,c]);
-  cell.classList.add('selected');
-  checkWordSelection();
-}
-
-function checkWordSelection(){
-  const word = wsSelection.map(([r,c])=>wsGridData[r][c]).join('');
-  if(wsWordsToFind.includes(word) && !wsFoundWords.has(word)){
-    wsFoundWords.add(word);
-    wsSelection.forEach(([r,c])=>{
-      wsCells[r][c].classList.remove('selected');
-      wsCells[r][c].classList.add('found');
+      // Cerrar menú desplegable al hacer clic fuera
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.nav-item')) {
+          navItems.forEach(item => item.classList.remove('active'));
+        }
+      });
     });
-    document.getElementById('wsword-'+word).classList.add('found-word');
-    wsSelection = [];
-    const fb = document.getElementById('fb6');
-    if(wsFoundWords.size === wsWordsToFind.length){
-      fb.textContent = "You found all the hidden months! 🔎🎉";
-      fb.className='feedback good';
-      earnStar(6);
-    } else {
-      fb.textContent = `Nice! You found "${word}". Keep looking.`;
-      fb.className='feedback good';
-    }
-  }
-}
-
-function clearSelection(){
-  wsSelection.forEach(([r,c])=> wsCells[r][c].classList.remove('selected'));
-  wsSelection = [];
-}
-
-/* ---------- EXERCISE 7: MEMORY GAME ---------- */
-const memoryPairs = [
-  {a:"1", b:"enero"},
-  {a:"2", b:"febrero"},
-  {a:"3", b:"marzo"},
-  {a:"4", b:"abril"},
-  {a:"5", b:"mayo"},
-  {a:"6", b:"junio"},
-];
-let memCards = [];
-memoryPairs.forEach((p,i)=>{
-  memCards.push({id:i+'a', pair:i, label:p.a});
-  memCards.push({id:i+'b', pair:i, label:p.b});
-});
-memCards.sort(()=>Math.random()-0.5);
-
-const memoryGrid = document.getElementById('memoryGrid');
-let memFlipped = [];
-let memMatches = 0;
-let memLock = false;
-
-memCards.forEach(card=>{
-  const el = document.createElement('div');
-  el.className='mem-card';
-  el.dataset.pair = card.pair;
-  el.dataset.state = 'hidden';
-  el.textContent = '?';
-  el.onclick = ()=>flipCard(el, card);
-  memoryGrid.appendChild(el);
-});
-
-function flipCard(el, card){
-  if(memLock || el.dataset.state !== 'hidden') return;
-  el.textContent = card.label;
-  el.classList.add('flipped');
-  el.dataset.state = 'flipped';
-  memFlipped.push({el, card});
-
-  if(memFlipped.length === 2){
-    memLock = true;
-    const [f1, f2] = memFlipped;
-    if(f1.card.pair === f2.card.pair){
-      f1.el.classList.add('matched'); f1.el.classList.remove('flipped');
-      f2.el.classList.add('matched'); f2.el.classList.remove('flipped');
-      f1.el.dataset.state='matched'; f2.el.dataset.state='matched';
-      memMatches++;
-      document.getElementById('memoryStatus').textContent = `Pairs found: ${memMatches} / ${memoryPairs.length}`;
-      memFlipped = [];
-      memLock = false;
-      if(memMatches === memoryPairs.length){
-        document.getElementById('memoryStatus').textContent = "You found all the pairs! 🃏🎉";
-        earnStar(7);
-      }
-    } else {
-      setTimeout(()=>{
-        f1.el.textContent='?'; f1.el.classList.remove('flipped'); f1.el.dataset.state='hidden';
-        f2.el.textContent='?'; f2.el.classList.remove('flipped'); f2.el.dataset.state='hidden';
-        memFlipped = [];
-        memLock = false;
-      }, 800);
-    }
-  }
-}
-</script>
+  </script>
 </body>
 </html>
