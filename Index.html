@@ -8,267 +8,10 @@
   <!-- Fuentes extraídas -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 
   <style>
-    /* VARIABLES DE COLOR */
-    :root {
-      --cream: #FFF8ED;
-      --coral: #FF6B5A;
-      --teal: #1E9E90;
-      --marigold: #FFC857;
-      --indigo: #3D348B;
-      --pink: #FF8FA3;
-      --ink: #2D1E2F;
-      --paper: #ffffff;
-    }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: var(--cream);
-      font-family: 'Nunito', sans-serif;
-      color: var(--ink);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    h1, h2, h3, h4 {
-      font-family: 'Baloo 2', cursive;
-    }
-
-    /* ---------- BANNER PAPEL PICADO ---------- */
-    .banner {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 6px;
-      padding: 14px 10px 0;
-      background: var(--indigo);
-    }
-
-    .flag {
-      width: 60px;
-      height: 48px;
-      clip-path: polygon(0 0, 100% 0, 50% 100%);
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      font-family: 'Baloo 2', cursive;
-      font-weight: 700;
-      font-size: 11px;
-      color: white;
-      padding-top: 6px;
-      text-align: center;
-    }
-
-    .flag:nth-child(6n+1) { background: var(--coral); }
-    .flag:nth-child(6n+2) { background: var(--teal); }
-    .flag:nth-child(6n+3) { background: var(--marigold); color: var(--ink); }
-    .flag:nth-child(6n+4) { background: var(--pink); }
-    .flag:nth-child(6n+5) { background: #7FB069; }
-    .flag:nth-child(6n+6) { background: #5EA0D0; }
-
-    /* ---------- HEADER ---------- */
-    header {
-      background: var(--indigo);
-      color: white;
-      text-align: center;
-      padding: 10px 20px 25px;
-    }
-
-    header h1 {
-      font-size: clamp(36px, 8vw, 54px);
-      color: var(--marigold);
-      text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
-      letter-spacing: 1px;
-    }
-
-    header p {
-      font-family: 'Baloo 2', cursive;
-      font-size: 18px;
-      color: white;
-      margin-top: 4px;
-    }
-
-    /* ---------- NAVBAR DE NAVEGACIÓN ---------- */
-    .navbar {
-      background: var(--paper);
-      box-shadow: 0 4px 0 rgba(61, 52, 139, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .nav-container {
-      max-width: 1000px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0 10px;
-    }
-
-    .nav-menu {
-      display: flex;
-      list-style: none;
-      gap: 10px;
-    }
-
-    .nav-item {
-      position: relative;
-    }
-
-    .nav-link {
-      display: block;
-      padding: 14px 16px;
-      font-family: 'Baloo 2', cursive;
-      font-weight: 700;
-      font-size: 16px;
-      color: var(--indigo);
-      text-decoration: none;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-
-    .nav-link:hover {
-      color: var(--coral);
-    }
-
-    /* Menú Desplegable (Dropdown) */
-    .dropdown-menu {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: var(--paper);
-      min-width: 180px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      border-radius: 12px;
-      border: 2px solid var(--cream);
-      overflow: hidden;
-      list-style: none;
-      padding: 6px 0;
-      z-index: 200;
-    }
-
-    .dropdown-menu a {
-      display: block;
-      padding: 10px 16px;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--ink);
-      text-decoration: none;
-      transition: background 0.2s, color 0.2s;
-    }
-
-    .dropdown-menu a:hover {
-      background: var(--cream);
-      color: var(--teal);
-    }
-
-    /* HOVER en Desktop */
-    @media (min-width: 769px) {
-      .nav-item:hover .dropdown-menu {
-        display: block;
-      }
-    }
-
-    /* MÓVIL (CLICK INTERMITENTE) */
-    @media (max-width: 768px) {
-      .nav-menu {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0;
-      }
-      .nav-link {
-        padding: 10px 10px;
-        font-size: 15px;
-      }
-      .dropdown-menu {
-        position: static;
-        box-shadow: none;
-        border: none;
-        background: #FAF7F2;
-        width: 100%;
-      }
-      .nav-item.active .dropdown-menu {
-        display: block;
-      }
-    }
-
-    /* ---------- MAIN CONTENT ---------- */
-    main {
-      max-width: 800px;
-      margin: 30px auto;
-      padding: 0 16px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .hero-card {
-      background: var(--paper);
-      border-radius: 22px;
-      padding: 28px 24px;
-      box-shadow: 0 6px 0 rgba(61, 52, 139, 0.15);
-      text-align: center;
-    }
-
-    .hero-card h2 {
-      color: var(--coral);
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-
-    .hero-card p {
-      font-size: 16px;
-      color: #5b4b63;
-      line-height: 1.5;
-    }
-
-    /* ---------- FOOTER SOLICITADO ---------- */
-    .site-footer {
-      text-align: center;
-      font-family: 'Baloo 2', cursive;
-      color: var(--indigo);
-      padding: 24px 20px;
-      font-size: 15px;
-      background: transparent;
-      margin-top: auto;
-    }
-
-    .site-footer .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 8px;
-    }
-
-    .site-footer .footer-links a {
-      color: var(--teal);
-      text-decoration: none;
-      font-weight: 700;
-      transition: color 0.2s;
-    }
-
-    .site-footer .footer-links a:hover {
-      color: var(--coral);
-    }
-
-    .site-footer .credit {
-      margin: 0;
-      color: var(--indigo);
-    }
-
-    .site-footer .credit span {
-      margin: 0 4px;
-    }
   </style>
 </head>
 <body>
@@ -284,90 +27,115 @@
   </div>
 
   <!-- HEADER -->
-  <header>
-    <h1>MUNDO ELE</h1>
-    <p>Aprende español de forma divertida 🌟</p>
-  </header>
+<header>
+  <h1><a href="index.html" class="logo-link">MUNDO ELE</a></h1>
+  <p>Aprende español de forma divertida 🌟</p>
+</header>
 
   <!-- NAVBAR DE 6 UNIDADES CON DROPDOWN -->
-  <nav class="navbar">
-    <div class="nav-container">
-      <ul class="nav-menu">
-        
-        <li class="nav-item">
-          <a class="nav-link">Unidad 1 ▾</a>
-          <ul class="dropdown-menu">
-            <li><a href="laCasa.html">Lección 1: Vocabulario</a></li>
-            <li><a href="#">Lección 2: Gramática</a></li>
-            <li><a href="#">Ejercicios</a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link">Unidad 2 ▾</a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Lección 1: Vocabulario</a></li>
-            <li><a href="#">Lección 2: Gramática</a></li>
-            <li><a href="#">Ejercicios</a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link">Unidad 3 ▾</a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Lección 1: Vocabulario</a></li>
-            <li><a href="#">Lección 2: Gramática</a></li>
-            <li><a href="#">Ejercicios</a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link">Unidad 4 ▾</a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Lección 1: Vocabulario</a></li>
-            <li><a href="#">Lección 2: Gramática</a></li>
-            <li><a href="#">Ejercicios</a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link">Unidad 5 ▾</a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Lección 1: Vocabulario</a></li>
-            <li><a href="#">Lección 2: Gramática</a></li>
-            <li><a href="#">Ejercicios</a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link">Unidad 6 ▾</a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Lección 1: Vocabulario</a></li>
-            <li><a href="#">Lección 2: Gramática</a></li>
-            <li><a href="#">Ejercicios</a></li>
-          </ul>
-        </li>
-
-      </ul>
-    </div>
-  </nav>
+  <!-- NAVBAR CONTENEDOR VACIÓ PARA IMPORTAR -->
+<nav class="navbar" id="navbar-container"></nav>
 
   <!-- CONTENIDO PRINCIPAL (HOME) -->
-  <main>
-    <section class="hero-card">
-      <h2>¡Bienvenidos a Mundo ELE! 🎉</h2>
-      <p>Selecciona una unidad en el menú para comenzar tu viaje de aprendizaje de español con juegos, ejercicios interactivos y muchas sorpresas.</p>
-    </section>
-  </main>
+<main>
+  <section class="hero-card">
+    <h2>¡Bienvenidos a Mundo ELE! 🎉</h2>
+    <p>Selecciona una unidad en el menú para comenzar tu viaje de aprendizaje de español con juegos, ejercicios interactivos y muchas sorpresas.</p>
+  </section>
+
+  <!-- CARRUSEL DE VIDEOS INFANTILES -->
+  <section class="video-carousel-section card">
+    <h2>🎬 ¡Videos Divertidos para Aprender! 🌟</h2>
+    
+    <div class="carousel-container" id="videoCarousel">
+      <div class="carousel-track">
+        
+        <!-- Video 1 -->
+        <div class="carousel-slide active">
+          <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY" title="Video 1" allowfullscreen></iframe>
+        </div>
+        
+        <!-- Video 2 -->
+        <div class="carousel-slide">
+          <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 2" allowfullscreen></iframe>
+        </div>
+        
+        <!-- Video 3 -->
+        <div class="carousel-slide">
+          <iframe src="https://www.youtube.com/embed/L_LUpnjgPso" title="Video 3" allowfullscreen></iframe>
+        </div>
+
+        <!-- Video 4 -->
+        <div class="carousel-slide">
+          <iframe src="https://www.youtube.com/embed/3JZ_D3ELwOQ" title="Video 4" allowfullscreen></iframe>
+        </div>
+
+        <!-- Video 5 -->
+        <div class="carousel-slide">
+          <iframe src="https://www.youtube.com/embed/2Vv-BfVoq4g" title="Video 5" allowfullscreen></iframe>
+        </div>
+
+        <!-- Video 6 -->
+        <div class="carousel-slide">
+          <iframe src="https://www.youtube.com/embed/fJ9rUzIMcZQ" title="Video 6" allowfullscreen></iframe>
+        </div>
+
+      </div>
+
+      <!-- Controles del Carrusel -->
+      <button class="carousel-btn prev-btn" id="prevBtn">❮</button>
+      <button class="carousel-btn next-btn" id="nextBtn">❯</button>
+
+      <!-- Indicadores de puntos -->
+      <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+  </section>
+</main>
 
   <!-- FOOTER (Estructura exacta solicitada) -->
-  <footer class="site-footer">
-    <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="contact.html">Contact</a>
-    </div>
-    <p class="credit">Moises Coronel <span>·</span> Spanish Course</p>
-  </footer>
+<div id="footer-container"></div>
+
+  <!-- SCRIPT PARA IMPORTAR LA NAVBAR E INICIALIZAR EVENTOS -->
+<script>
+  // Cargar Navbar
+  fetch('navbar.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('navbar-container').innerHTML = data;
+      
+      // Activar comportamiento desplegable en dispositivos móviles
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        const link = item.querySelector('.nav-link');
+        if (link) {
+          link.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+              e.preventDefault();
+              navItems.forEach(otherItem => {
+                if (otherItem !== item) otherItem.classList.remove('active');
+              });
+              item.classList.toggle('active');
+            }
+          });
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.nav-item')) {
+          navItems.forEach(item => item.classList.remove('active'));
+        }
+      });
+    })
+    .catch(error => console.error('Error al cargar la navbar:', error));
+
+  // Cargar Footer
+  fetch('footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-container').innerHTML = data;
+    })
+    .catch(error => console.error('Error al cargar el footer:', error));
+</script>
 
   <!-- SCRIPT PARA INTERACCIÓN CLICK EN MÓVIL -->
   <script>
@@ -403,5 +171,77 @@
       });
     });
   </script>
+
+  <script>
+  const slides = document.querySelectorAll('.carousel-slide');
+  const dotsContainer = document.getElementById('carouselDots');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const carousel = document.getElementById('videoCarousel');
+
+  let currentIndex = 0;
+  let autoSlideTimer = null;
+  let isUserInteracting = false;
+
+  // 1. Crear los puntos de navegación dinámicamente
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = `dot ${i === 0 ? 'active' : ''}`;
+    dot.onclick = () => {
+      userInteracted();
+      goToSlide(i);
+    };
+    dotsContainer.appendChild(dot);
+  });
+
+  const dots = document.querySelectorAll('.dot');
+
+  // 2. Función para cambiar de slide
+  function goToSlide(index) {
+    slides[currentIndex].classList.remove('active');
+    dots[currentIndex].classList.remove('active');
+
+    currentIndex = (index + slides.length) % slides.length;
+
+    slides[currentIndex].classList.add('active');
+    dots[currentIndex].classList.add('active');
+  }
+
+  // 3. Pasar al siguiente slide
+  function nextSlide() {
+    goToSlide(currentIndex + 1);
+  }
+
+  // 4. Iniciar temporizador automático (cada 5s)
+  function startAutoSlide() {
+    if (!isUserInteracting) {
+      autoSlideTimer = setInterval(nextSlide, 5000);
+    }
+  }
+
+  // 5. Detener el carrusel cuando se interactúa
+  function userInteracted() {
+    isUserInteracting = true;
+    clearInterval(autoSlideTimer);
+  }
+
+  // Eventos de botones prev/next
+  nextBtn.addEventListener('click', () => {
+    userInteracted();
+    nextSlide();
+  });
+
+  prevBtn.addEventListener('click', () => {
+    userInteracted();
+    goToSlide(currentIndex - 1);
+  });
+
+  // Detener el auto-slide si el usuario hace click en el contenedor o reproduce un video
+  carousel.addEventListener('click', userInteracted);
+  carousel.addEventListener('touchstart', userInteracted);
+
+  // Iniciar la rotación automática al cargar la página
+  startAutoSlide();
+</script>
 </body>
 </html>

@@ -1,0 +1,849 @@
+    /* VARIABLES DE COLOR */
+    :root {
+      --cream: #FFF8ED;
+      --coral: #FF6B5A;
+      --teal: #1E9E90;
+      --marigold: #FFC857;
+      --indigo: #3D348B;
+      --pink: #FF8FA3;
+      --ink: #2D1E2F;
+      --paper: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Baloo 2', cursive;
+    }
+
+    /* ---------- BANNER PAPEL PICADO ---------- */
+    .banner {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 14px 10px 0;
+      background: var(--indigo);
+    }
+
+    .flag {
+      width: 60px;
+      height: 48px;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      font-family: 'Baloo 2', cursive;
+      font-weight: 700;
+      font-size: 11px;
+      color: white;
+      padding-top: 6px;
+      text-align: center;
+    }
+
+    .flag:nth-child(6n+1) { background: var(--coral); }
+    .flag:nth-child(6n+2) { background: var(--teal); }
+    .flag:nth-child(6n+3) { background: var(--marigold); color: var(--ink); }
+    .flag:nth-child(6n+4) { background: var(--pink); }
+    .flag:nth-child(6n+5) { background: #7FB069; }
+    .flag:nth-child(6n+6) { background: #5EA0D0; }
+
+    /* ---------- HEADER ---------- */
+    header {
+      background: var(--indigo);
+      color: white;
+      text-align: center;
+      padding: 10px 20px 25px;
+    }
+
+    header h1 {
+      font-size: clamp(36px, 8vw, 54px);
+      color: var(--marigold);
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+      letter-spacing: 1px;
+    }
+
+    header p {
+      font-family: 'Baloo 2', cursive;
+      font-size: 18px;
+      color: white;
+      margin-top: 4px;
+    }
+
+    /* ---------- NAVBAR DE NAVEGACIÓN ---------- */
+    .navbar {
+      background: var(--paper);
+      box-shadow: 0 4px 0 rgba(61, 52, 139, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 10px;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 10px;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-link {
+      display: block;
+      padding: 14px 16px;
+      font-family: 'Baloo 2', cursive;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--indigo);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--coral);
+    }
+
+    /* Menú Desplegable (Dropdown) */
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--paper);
+      min-width: 180px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      border: 2px solid var(--cream);
+      overflow: hidden;
+      list-style: none;
+      padding: 6px 0;
+      z-index: 200;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .dropdown-menu a:hover {
+      background: var(--cream);
+      color: var(--teal);
+    }
+
+    /* HOVER en Desktop */
+    @media (min-width: 769px) {
+      .nav-item:hover .dropdown-menu {
+        display: block;
+      }
+    }
+
+    /* MÓVIL (CLICK INTERMITENTE) */
+    @media (max-width: 768px) {
+      .nav-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0;
+      }
+      .nav-link {
+        padding: 10px 10px;
+        font-size: 15px;
+      }
+      .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        border: none;
+        background: #FAF7F2;
+        width: 100%;
+      }
+      .nav-item.active .dropdown-menu {
+        display: block;
+      }
+    }
+
+    /* ---------- MAIN CONTENT ---------- */
+    main {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 0 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .hero-card {
+      background: var(--paper);
+      border-radius: 22px;
+      padding: 28px 24px;
+      box-shadow: 0 6px 0 rgba(61, 52, 139, 0.15);
+      text-align: center;
+    }
+
+    .hero-card h2 {
+      color: var(--coral);
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .hero-card p {
+      font-size: 16px;
+      color: #5b4b63;
+      line-height: 1.5;
+    }
+
+    /* ---------- FOOTER SOLICITADO ---------- */
+    .site-footer {
+      text-align: center;
+      font-family: 'Baloo 2', cursive;
+      color: var(--indigo);
+      padding: 24px 20px;
+      font-size: 15px;
+      background: transparent;
+      margin-top: auto;
+    }
+
+    .site-footer .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 8px;
+    }
+
+    .site-footer .footer-links a {
+      color: var(--teal);
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.2s;
+    }
+
+    .site-footer .footer-links a:hover {
+      color: var(--coral);
+    }
+
+    .site-footer .credit {
+      margin: 0;
+      color: var(--indigo);
+    }
+
+    .site-footer .credit span {
+      margin: 0 4px;
+    }
+
+    /* ==========================================================================
+   ESTILOS COMPARTIDOS (EJERCICIOS: LA CASA Y LA FECHA)
+   ========================================================================== */
+
+/* Mascotas y Animaciones Header */
+.dog {
+  font-size: 54px;
+  display: inline-block;
+  animation: wag 1.6s ease-in-out infinite;
+}
+
+@keyframes wag {
+  0%, 100% { transform: rotate(-8deg); }
+  50% { transform: rotate(8deg); }
+}
+
+/* Progress Stars */
+.progress-wrap {
+  max-width: 760px;
+  margin: -20px auto 0;
+  background: var(--paper);
+  border-radius: 20px;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.08);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 10;
+}
+
+.progress-wrap span {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  color: var(--indigo);
+}
+
+.stars {
+  font-size: 26px;
+  letter-spacing: 4px;
+}
+
+.star {
+  opacity: 0.25;
+  transition: transform .25s, opacity .25s;
+}
+
+.star.on {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* Cards & Instructions */
+.card {
+  background: var(--paper);
+  border-radius: 22px;
+  padding: 22px 20px 26px;
+  box-shadow: 0 6px 0 rgba(61, 52, 139, 0.15);
+  border: 3px solid transparent;
+}
+
+.card h2 {
+  color: var(--coral);
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.badge {
+  background: var(--marigold);
+  color: var(--ink);
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  font-size: 13px;
+  border-radius: 999px;
+  padding: 3px 12px;
+  display: inline-block;
+}
+
+.instructions {
+  font-size: 15px;
+  color: #5b4b63;
+  margin: 6px 0 16px;
+}
+
+/* Buttons & Feedback */
+.check-btn {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  font-size: 15px;
+  background: var(--coral);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 22px;
+  cursor: pointer;
+  margin-top: 16px;
+  box-shadow: 0 4px 0 #c94d3f;
+  transition: transform .1s;
+}
+
+.check-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #c94d3f;
+}
+
+.feedback {
+  margin-top: 10px;
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  font-size: 15px;
+  min-height: 20px;
+}
+
+.feedback.good { color: #2f9e44; }
+.feedback.bad { color: var(--coral); }
+
+/* Confetti */
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 999;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -20px;
+  width: 10px;
+  height: 10px;
+  opacity: 0.9;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(360deg); opacity: 1; }
+}
+
+/* Exercise 1: Sort / Order (Chips & Slots) */
+.objects-pool, .months-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+  min-height: 44px;
+}
+
+.object-chip, .month-chip {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  background: var(--teal);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform .15s;
+}
+
+.object-chip:hover, .month-chip:hover { transform: translateY(-2px); }
+.object-chip:disabled, .month-chip:disabled {
+  background: #d7d7d7;
+  color: #a3a3a3;
+  cursor: not-allowed;
+}
+
+.rooms-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.room-slot {
+  border: 2px dashed #c9c1e0;
+  border-radius: 14px;
+  min-height: 96px;
+  padding: 8px 10px;
+  background: #faf9ff;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+
+.room-slot.active {
+  border-color: var(--marigold);
+  border-style: solid;
+  background: #fff8e6;
+}
+
+.room-slot h3 {
+  font-family: 'Baloo 2', cursive;
+  font-size: 14px;
+  color: var(--indigo);
+  margin: 0 0 6px;
+}
+
+.room-slot .items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.room-slot .item-tag {
+  font-family: 'Baloo 2', cursive;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  background: var(--teal);
+  border-radius: 8px;
+  padding: 3px 7px;
+}
+
+.room-slot .item-tag.correct { background: #4CAF50; }
+.room-slot .item-tag.wrong { background: var(--coral); }
+
+.hint-select {
+  font-family: 'Baloo 2', cursive;
+  font-size: 13px;
+  color: #9b8fb0;
+  margin-top: 4px;
+}
+
+.slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 8px;
+}
+
+.slot {
+  border: 2px dashed #c9c1e0;
+  border-radius: 12px;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--indigo);
+  background: #faf9ff;
+  position: relative;
+  padding: 2px 4px;
+  text-align: center;
+}
+
+.slot .num {
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  font-size: 10px;
+  color: #b3aacb;
+}
+
+.slot.filled {
+  background: var(--marigold);
+  border-style: solid;
+  border-color: var(--marigold);
+  color: var(--ink);
+}
+
+/* Exercise 2: Number Words & Names */
+.num-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.num-item {
+  background: #fdf3e2;
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.num-item .digit {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 800;
+  font-size: 26px;
+  color: var(--coral);
+  width: 36px;
+  text-align: center;
+}
+
+.num-item input {
+  flex: 1;
+  min-width: 0;
+  border: 2px solid #e8d6ad;
+  border-radius: 10px;
+  padding: 6px 8px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.num-item input.correct { border-color: #4CAF50; background: #eafbe9; }
+.num-item input.wrong { border-color: var(--coral); background: #ffecea; }
+
+/* Exercise 3: Sentence Builder */
+.birthday-box {
+  background: linear-gradient(135deg, #fff1e6, #ffe4ec);
+  border-radius: 18px;
+  padding: 18px;
+  text-align: center;
+}
+
+.birthday-box select {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  font-size: 16px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 2px solid var(--pink);
+  margin: 6px;
+  color: var(--indigo);
+}
+
+.birthday-sentence {
+  margin-top: 14px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 19px;
+  color: var(--indigo);
+  min-height: 30px;
+}
+
+.birthday-sentence b { color: var(--coral); }
+.cake { font-size: 40px; }
+
+/* Exercise 4: Missing Letters */
+.fill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.fill-item {
+  background: #eef7f5;
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 17px;
+  color: var(--indigo);
+}
+
+.fill-item input {
+  width: 34px;
+  text-align: center;
+  border: 2px solid #bfe3dc;
+  border-radius: 8px;
+  padding: 4px;
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ink);
+}
+
+.fill-item input.correct { border-color: #4CAF50; background: #eafbe9; }
+.fill-item input.wrong { border-color: var(--coral); background: #ffecea; }
+
+/* Exercise 5: Unscramble */
+.scramble-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 14px;
+}
+
+.scramble-item {
+  background: #fff0f2;
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.scramble-word {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: 3px;
+  color: var(--pink);
+  margin-bottom: 8px;
+}
+
+.scramble-item input {
+  width: 100%;
+  border: 2px solid #f3c1cc;
+  border-radius: 10px;
+  padding: 7px 9px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.scramble-item input.correct { border-color: #4CAF50; background: #eafbe9; }
+.scramble-item input.wrong { border-color: var(--coral); background: #ffecea; }
+
+/* Exercise 6: Word Search */
+.wordsearch-wrap {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.ws-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 32px);
+  grid-auto-rows: 32px;
+  gap: 3px;
+  user-select: none;
+}
+
+.ws-cell {
+  background: #f4f0ff;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--indigo);
+  cursor: pointer;
+  transition: background .1s;
+}
+
+.ws-cell.selected { background: var(--marigold); }
+.ws-cell.found { background: #a8e6a1; color: var(--ink); cursor: default; }
+
+.ws-words {
+  font-family: 'Baloo 2', cursive;
+  font-size: 15px;
+  color: var(--indigo);
+  min-width: 140px;
+}
+
+.ws-words div { margin-bottom: 6px; }
+.ws-words .found-word { text-decoration: line-through; color: #4CAF50; }
+
+/* Exercise 7: Memory Match */
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+  gap: 8px;
+}
+
+.mem-card {
+  aspect-ratio: 1/1;
+  background: var(--indigo);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  font-size: 13px;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+  padding: 4px;
+  transition: transform .2s, background .2s;
+}
+
+.mem-card.flipped { background: var(--marigold); color: var(--ink); }
+.mem-card.matched { background: #a8e6a1; color: var(--ink); cursor: default; }
+
+.memory-status {
+  font-family: 'Baloo 2', cursive;
+  color: var(--indigo);
+  margin-top: 12px;
+  font-size: 15px;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .dog { animation: none; }
+  .confetti-piece { animation: none; display: none; }
+}
+
+.logo-link {
+  color: inherit; /* Hereda el color que ya tenía tu <h1> */
+  text-decoration: none; /* Elimina el subrayado por defecto */
+}
+
+.logo-link:hover {
+  opacity: 0.9; /* Efecto sutil al pasar el cursor */
+}
+
+/* --- Carrusel de Videos Infantil --- */
+.video-carousel-section {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.carousel-container {
+  position: relative;
+  max-width: 720px;
+  margin: 1.5rem auto 0;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  border: 5px solid #FFC857; /* Marco amarillo infantil */
+  background: #FFF;
+}
+
+.carousel-track {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* Relación de aspecto 16:9 */
+}
+
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+  pointer-events: none;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.carousel-slide iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Botones de navegación */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #FF6B5A;
+  color: white;
+  border: 3px solid #FFF;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.carousel-btn:hover {
+  background: #1E9E90;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.prev-btn { left: 10px; }
+.next-btn { right: 10px; }
+
+/* Indicadores de Puntos */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 0;
+  background: #FFF9EC;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #CBD5E1;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.dot.active {
+  background: #1E9E90;
+  transform: scale(1.2);
+}

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Los Meses del Año! 🎉</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- CONTENEDOR NAVBAR CARGADO DINÁMICAMENTE -->
+  <nav class="navbar" id="navbar-container"></nav>
+
+  <!-- HEADER -->
+  <header>
+    <h1><a href="index.html" class="logo-link">MUNDO ELE</a></h1>
+    <p>Aprende español de forma divertida 🌟</p>
+  </header>
+
+  <main>
+
+    <!-- EXERCISE 1 -->
+    <section class="card" id="card1">
+      <h2>1. 🎵 Sing and Order <span class="badge">The months</span></h2>
+      <p class="instructions">Click the months in the correct order — from <b>enero</b> to <b>diciembre</b>.</p>
+      <div class="months-pool" id="monthsPool"></div>
+      <div class="slots" id="monthsSlots"></div>
+      <button class="check-btn" onclick="checkMonths()">Check</button>
+      <div class="feedback" id="fb1"></div>
+    </section>
+
+    <!-- EXERCISE 2 -->
+    <section class="card" id="card2">
+      <h2>2. 🔢 Write the Number <span class="badge">1–31</span></h2>
+      <p class="instructions">Write how each calendar number is said in Spanish.</p>
+      <div class="num-grid" id="numGrid"></div>
+      <button class="check-btn" onclick="checkNumbers()">Check</button>
+      <div class="feedback" id="fb2"></div>
+    </section>
+
+    <!-- EXERCISE 3 -->
+    <section class="card" id="card3">
+      <h2>3. 🎂 When Is Your Birthday?</h2>
+      <p class="instructions">Choose the day and month, and see the complete sentence.</p>
+      <div class="birthday-box">
+        <div class="cake">🎂🎉</div>
+        <div>
+          <select id="daySelect"></select>
+          <select id="monthSelect"></select>
+        </div>
+        <div class="birthday-sentence" id="birthdaySentence">Mi cumpleaños es el ___ de ___.</div>
+      </div>
+    </section>
+
+    <!-- EXERCISE 4 -->
+    <section class="card" id="card4">
+      <h2>4. ✏️ Complete the Missing Letter</h2>
+      <p class="instructions">Write the letter that's missing in each month.</p>
+      <div class="fill-grid" id="fillGrid"></div>
+      <button class="check-btn" onclick="checkFill()">Check</button>
+      <div class="feedback" id="fb4"></div>
+    </section>
+
+    <!-- EXERCISE 5 -->
+    <section class="card" id="card5">
+      <h2>5. 🔤 Unscramble the Letters</h2>
+      <p class="instructions">The letters of each month are mixed up. Write the correct month!</p>
+      <div class="scramble-grid" id="scrambleGrid"></div>
+      <button class="check-btn" onclick="checkScramble()">Check</button>
+      <div class="feedback" id="fb5"></div>
+    </section>
+
+    <!-- EXERCISE 6 -->
+    <section class="card" id="card6">
+      <h2>6. 🔎 Word Search</h2>
+      <p class="instructions">Click the letters, in order, to spell out each month on the list. If you make a mistake, click the last letter again to remove it.</p>
+      <div class="wordsearch-wrap">
+        <div class="ws-grid" id="wsGrid"></div>
+        <div class="ws-words" id="wsWords"></div>
+      </div>
+      <button class="check-btn" onclick="clearSelection()">Clear selection</button>
+      <div class="feedback" id="fb6"></div>
+    </section>
+
+    <!-- EXERCISE 7 -->
+    <section class="card" id="card7">
+      <h2>7. 🃏 Memory Match: Month and Number</h2>
+      <p class="instructions">Find the pairs: the month with its number (1 = enero, 2 = febrero...).</p>
+      <div class="memory-grid" id="memoryGrid"></div>
+      <div class="memory-status" id="memoryStatus">Pairs found: 0 / 6</div>
+    </section>
+
+  </main>
+
+  <!-- CONTENEDOR FOOTER CARGADO DINÁMICAMENTE -->
+  <div id="footer-container"></div>
+
+  <!-- SCRIPT PARA IMPORTAR NAVBAR Y FOOTER -->
+  <script>
+    // Cargar Navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('navbar-container').innerHTML = data;
+        
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+          const link = item.querySelector('.nav-link');
+          if (link) {
+            link.addEventListener('click', (e) => {
+              if (window.innerWidth <= 768) {
+                e.preventDefault();
+                navItems.forEach(otherItem => {
+                  if (otherItem !== item) otherItem.classList.remove('active');
+                });
+                item.classList.toggle('active');
+              }
+            });
+          }
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.nav-item')) {
+            navItems.forEach(item => item.classList.remove('active'));
+          }
+        });
+      })
+      .catch(error => console.error('Error al cargar la navbar:', error));
+
+    // Cargar Footer
+    fetch('footer.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('footer-container').innerHTML = data;
+      })
+      .catch(error => console.error('Error al cargar el footer:', error));
+  </script>
+
+  <!-- SCRIPT DE LOS EJERCICIOS -->
+  <script>
+  const MONTHS = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  const NUM_WORDS = {1:"uno",2:"dos",3:"tres",4:"cuatro",5:"cinco",6:"seis",7:"siete",8:"ocho",9:"nueve",10:"diez",
+  11:"once",12:"doce",13:"trece",14:"catorce",15:"quince",16:"dieciséis",17:"diecisiete",18:"dieciocho",19:"diecinueve",20:"veinte",
+  21:"veintiuno",22:"veintidós",23:"veintitrés",24:"veinticuatro",25:"veinticinco",26:"veintiséis",27:"veintisiete",28:"veintiocho",29:"veintinueve",30:"treinta",31:"treinta y uno"};
+
+  /* ---------- STARS ---------- */
+  let starsEarned = 0;
+  function earnStar(n){
+    if(n<=starsEarned) return;
+    starsEarned = n;
+    document.querySelectorAll('.star').forEach(s=>{
+      if(parseInt(s.dataset.i) <= starsEarned) s.classList.add('on');
+    });
+    launchConfetti();
+  }
+
+  /* ---------- CONFETTI ---------- */
+  function launchConfetti(){
+    const layer = document.createElement('div');
+    layer.className='confetti-layer';
+    document.body.appendChild(layer);
+    const colors = ['#FF6B5A','#1E9E90','#FFC857','#FF8FA3','#5EA0D0'];
+    for(let i=0;i<40;i++){
+      const p = document.createElement('div');
+      p.className='confetti-piece';
+      p.style.left = Math.random()*100+'vw';
+      p.style.background = colors[Math.floor(Math.random()*colors.length)];
+      p.style.animationDuration = (2+Math.random()*1.5)+'s';
+      p.style.borderRadius = Math.random()>0.5 ? '50%':'2px';
+      layer.appendChild(p);
+    }
+    setTimeout(()=>layer.remove(),3600);
+  }
+
+  /* ---------- EXERCISE 1: ORDER MONTHS ---------- */
+  const pool = document.getElementById('monthsPool');
+  const slotsEl = document.getElementById('monthsSlots');
+  let placed = new Array(12).fill(null);
+  let nextSlot = 0;
+
+  const shuffled = [...MONTHS].sort(()=>Math.random()-0.5);
+  shuffled.forEach(m=>{
+    const btn = document.createElement('button');
+    btn.className='month-chip';
+    btn.textContent = m;
+    btn.onclick = ()=>placeMonth(m, btn);
+    pool.appendChild(btn);
+  });
+
+  for(let i=0;i<12;i++){
+    const s = document.createElement('div');
+    s.className='slot';
+    s.innerHTML = `<span class="num">${i+1}</span>`;
+    slotsEl.appendChild(s);
+  }
+
+  function placeMonth(m, btn){
+    if(nextSlot>=12) return;
+    const slot = slotsEl.children[nextSlot];
+    slot.textContent = m;
+    slot.classList.add('filled');
+    const numTag = document.createElement('span');
+    numTag.className='num';
+    numTag.textContent = nextSlot+1;
+    slot.prepend(numTag);
+    placed[nextSlot] = m;
+    nextSlot++;
+    btn.disabled = true;
+  }
+
+  function checkMonths(){
+    const fb = document.getElementById('fb1');
+    if(nextSlot<12){
+      fb.textContent = "Place all 12 months first. 🐶";
+      fb.className='feedback bad';
+      return;
+    }
+    let correct = 0;
+    for(let i=0;i<12;i++){
+      const slot = slotsEl.children[i];
+      if(placed[i]===MONTHS[i]){
+        slot.style.background='#c9f2c9';
+        correct++;
+      } else {
+        slot.style.background='#ffd3cd';
+      }
+    }
+    if(correct===12){
+      fb.textContent = "Perfect! 🎉 All 12 months in order.";
+      fb.className='feedback good';
+      earnStar(1);
+    } else {
+      fb.textContent = `You have ${correct} out of 12 correct. Try again!`;
+      fb.className='feedback bad';
+    }
+  }
+
+  /* ---------- EXERCISE 2: NUMBERS ---------- */
+  const numGrid = document.getElementById('numGrid');
+  const sampleNums = [3,7,11,15,20,24,28,31];
+  sampleNums.forEach(n=>{
+    const item = document.createElement('div');
+    item.className='num-item';
+    item.innerHTML = `<div class="digit">${n}</div><input type="text" data-answer="${NUM_WORDS[n]}" placeholder="write here...">`;
+    numGrid.appendChild(item);
+  });
+
+  function normalize(str){
+    return str.trim().toLowerCase()
+      .replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i").replace(/ó/g,"o").replace(/ú/g,"u");
+  }
+
+  function checkNumbers(){
+    const inputs = numGrid.querySelectorAll('input');
+    let correct = 0;
+    inputs.forEach(inp=>{
+      const ans = normalize(inp.dataset.answer);
+      if(normalize(inp.value)===ans){
+        inp.classList.add('correct'); inp.classList.remove('wrong');
+        correct++;
+      } else {
+        inp.classList.add('wrong'); inp.classList.remove('correct');
+      }
+    });
+    const fb = document.getElementById('fb2');
+    if(correct===inputs.length){
+      fb.textContent = "Excellent! You count really well. 🔢";
+      fb.className='feedback good';
+      earnStar(2);
+    } else {
+      fb.textContent = `${correct} out of ${inputs.length} correct. The red ones need review.`;
+      fb.className='feedback bad';
+    }
+  }
+
+  /* ---------- EXERCISE 3: BIRTHDAY BUILDER ---------- */
+  const daySelect = document.getElementById('daySelect');
+  const monthSelect = document.getElementById('monthSelect');
+  for(let d=1; d<=31; d++){
+    const opt = document.createElement('option');
+    opt.value = NUM_WORDS[d];
+    opt.textContent = `${d} (${NUM_WORDS[d]})`;
+    daySelect.appendChild(opt);
+  }
+  MONTHS.forEach(m=>{
+    const opt = document.createElement('option');
+    opt.value = m;
+    opt.textContent = m;
+    monthSelect.appendChild(opt);
+  });
+  function updateBirthday(){
+    const d = daySelect.value;
+    const m = monthSelect.value;
+    document.getElementById('birthdaySentence').innerHTML =
+      `Mi cumpleaños es el <b>${d}</b> de <b>${m}</b>.`;
+    earnStar(3);
+  }
+  daySelect.onchange = updateBirthday;
+  monthSelect.onchange = updateBirthday;
+  updateBirthday();
+
+  /* ---------- EXERCISE 4: MISSING LETTERS ---------- */
+  const fillGrid = document.getElementById('fillGrid');
+  const fillWords = [
+    {word:"enero", blankIndex:1},
+    {word:"febrero", blankIndex:2},
+    {word:"marzo", blankIndex:3},
+    {word:"abril", blankIndex:1},
+    {word:"mayo", blankIndex:2},
+    {word:"junio", blankIndex:1},
+    {word:"julio", blankIndex:2},
+    {word:"agosto", blankIndex:1},
+    {word:"septiembre", blankIndex:3},
+    {word:"octubre", blankIndex:1},
+    {word:"noviembre", blankIndex:2},
+    {word:"diciembre", blankIndex:1},
+  ];
+  fillWords.forEach(fw=>{
+    const chars = fw.word.split('');
+    const answer = chars[fw.blankIndex];
+    chars[fw.blankIndex] = '_';
+    const displayWord = chars.join('');
+    const before = displayWord.slice(0, fw.blankIndex);
+    const after = displayWord.slice(fw.blankIndex+1);
+
+    const item = document.createElement('div');
+    item.className='fill-item';
+    item.innerHTML = `<span>${before}</span><input maxlength="1" data-answer="${answer}"><span>${after}</span>`;
+    fillGrid.appendChild(item);
+  });
+
+  function checkFill(){
+    const inputs = fillGrid.querySelectorAll('input');
+    let correct = 0;
+    inputs.forEach(inp=>{
+      if(normalize(inp.value)===normalize(inp.dataset.answer)){
+        inp.classList.add('correct'); inp.classList.remove('wrong');
+        correct++;
+      } else {
+        inp.classList.add('wrong'); inp.classList.remove('correct');
+      }
+    });
+    const fb = document.getElementById('fb4');
+    if(correct===inputs.length){
+      fb.textContent = "Amazing! You know all the months. 🏆";
+      fb.className='feedback good';
+      earnStar(4);
+    } else {
+      fb.textContent = `${correct} out of ${inputs.length} correct. You're almost there!`;
+      fb.className='feedback bad';
+    }
+  }
+
+  /* ---------- EXERCISE 5: UNSCRAMBLE ---------- */
+  function scramble(word){
+    let letters, result;
+    do{
+      letters = word.split('');
+      for(let i=letters.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [letters[i],letters[j]] = [letters[j],letters[i]];
+      }
+      result = letters.join('');
+    } while(result===word);
+    return result;
+  }
+  const scrambleWords = ["marzo","junio","julio","agosto","octubre","enero"];
+  const scrambleGrid = document.getElementById('scrambleGrid');
+  scrambleWords.forEach(w=>{
+    const item = document.createElement('div');
+    item.className='scramble-item';
+    item.innerHTML = `<div class="scramble-word">${scramble(w).toUpperCase()}</div>
+      <input type="text" data-answer="${w}" placeholder="write the month...">`;
+    scrambleGrid.appendChild(item);
+  });
+  function checkScramble(){
+    const inputs = scrambleGrid.querySelectorAll('input');
+    let correct = 0;
+    inputs.forEach(inp=>{
+      if(normalize(inp.value)===normalize(inp.dataset.answer)){
+        inp.classList.add('correct'); inp.classList.remove('wrong');
+        correct++;
+      } else {
+        inp.classList.add('wrong'); inp.classList.remove('correct');
+      }
+    });
+    const fb = document.getElementById('fb5');
+    if(correct===inputs.length){
+      fb.textContent = "You unscrambled them all! 🌟";
+      fb.className='feedback good';
+      earnStar(5);
+    } else {
+      fb.textContent = `${correct} out of ${inputs.length} correct. Look closely at the letters.`;
+      fb.className='feedback bad';
+    }
+  }
+
+  /* ---------- EXERCISE 6: WORD SEARCH ---------- */
+  const WS_SIZE = 10;
+  const wsWordsToFind = ["mayo","abril","junio","julio"];
+  function buildWordSearch(){
+    const grid = Array.from({length:WS_SIZE},()=>Array(WS_SIZE).fill(null));
+    const directions = [[0,1],[1,0],[1,1]]; 
+    const placements = {};
+
+    wsWordsToFind.forEach(word=>{
+      let placed = false;
+      let attempts = 0;
+      while(!placed && attempts<200){
+        attempts++;
+        const dir = directions[Math.floor(Math.random()*directions.length)];
+        const row = Math.floor(Math.random()* (dir[0] ? WS_SIZE-word.length+1 : WS_SIZE));
+        const col = Math.floor(Math.random()* (dir[1] ? WS_SIZE-word.length+1 : WS_SIZE));
+
+        let fits = true;
+        const cells = [];
+        for(let i=0;i<word.length;i++){
+          const r = row + dir[0]*i;
+          const c = col + dir[1]*i;
+          if(r>=WS_SIZE || c>=WS_SIZE){ fits=false; break; }
+          const existing = grid[r][c];
+          if(existing && existing !== word[i]){ fits=false; break; }
+          cells.push([r,c]);
+        }
+        if(fits){
+          cells.forEach(([r,c],i)=> grid[r][c] = word[i]);
+          placements[word] = cells;
+          placed = true;
+        }
+      }
+    });
+
+    const alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    for(let r=0;r<WS_SIZE;r++){
+      for(let c=0;c<WS_SIZE;c++){
+        if(!grid[r][c]) grid[r][c] = alphabet[Math.floor(Math.random()*alphabet.length)];
+      }
+    }
+    return {grid, placements};
+  }
+
+  const {grid: wsGridData, placements: wsPlacements} = buildWordSearch();
+  const wsGridEl = document.getElementById('wsGrid');
+  const wsCells = [];
+  let wsSelection = [];
+  let wsFoundWords = new Set();
+
+  for(let r=0;r<WS_SIZE;r++){
+    wsCells.push([]);
+    for(let c=0;c<WS_SIZE;c++){
+      const cell = document.createElement('div');
+      cell.className = 'ws-cell';
+      cell.textContent = wsGridData[r][c].toUpperCase();
+      cell.dataset.r = r; cell.dataset.c = c;
+      cell.onclick = ()=>toggleCell(r,c,cell);
+      wsGridEl.appendChild(cell);
+      wsCells[r].push(cell);
+    }
+  }
+
+  const wsWordsEl = document.getElementById('wsWords');
+  wsWordsToFind.forEach(w=>{
+    const d = document.createElement('div');
+    d.id = 'wsword-'+w;
+    d.textContent = '• ' + w;
+    wsWordsEl.appendChild(d);
+  });
+
+  function toggleCell(r,c,cell){
+    if(cell.classList.contains('found')) return;
+    const idx = wsSelection.findIndex(s=>s[0]===r && s[1]===c);
+    if(idx === wsSelection.length-1 && idx !== -1){
+      wsSelection.pop();
+      cell.classList.remove('selected');
+      return;
+    }
+    wsSelection.push([r,c]);
+    cell.classList.add('selected');
+    checkWordSelection();
+  }
+
+  function checkWordSelection(){
+    const word = wsSelection.map(([r,c])=>wsGridData[r][c]).join('');
+    if(wsWordsToFind.includes(word) && !wsFoundWords.has(word)){
+      wsFoundWords.add(word);
+      wsSelection.forEach(([r,c])=>{
+        wsCells[r][c].classList.remove('selected');
+        wsCells[r][c].classList.add('found');
+      });
+      document.getElementById('wsword-'+word).classList.add('found-word');
+      wsSelection = [];
+      const fb = document.getElementById('fb6');
+      if(wsFoundWords.size === wsWordsToFind.length){
+        fb.textContent = "You found all the hidden months! 🔎🎉";
+        fb.className='feedback good';
+        earnStar(6);
+      } else {
+        fb.textContent = `Nice! You found "${word}". Keep looking.`;
+        fb.className='feedback good';
+      }
+    }
+  }
+
+  function clearSelection(){
+    wsSelection.forEach(([r,c])=> wsCells[r][c].classList.remove('selected'));
+    wsSelection = [];
+  }
+
+  /* ---------- EXERCISE 7: MEMORY GAME ---------- */
+  const memoryPairs = [
+    {a:"1", b:"enero"},
+    {a:"2", b:"febrero"},
+    {a:"3", b:"marzo"},
+    {a:"4", b:"abril"},
+    {a:"5", b:"mayo"},
+    {a:"6", b:"junio"},
+  ];
+  let memCards = [];
+  memoryPairs.forEach((p,i)=>{
+    memCards.push({id:i+'a', pair:i, label:p.a});
+    memCards.push({id:i+'b', pair:i, label:p.b});
+  });
+  memCards.sort(()=>Math.random()-0.5);
+
+  const memoryGrid = document.getElementById('memoryGrid');
+  let memFlipped = [];
+  let memMatches = 0;
+  let memLock = false;
+
+  memCards.forEach(card=>{
+    const el = document.createElement('div');
+    el.className='mem-card';
+    el.dataset.pair = card.pair;
+    el.dataset.state = 'hidden';
+    el.textContent = '?';
+    el.onclick = ()=>flipCard(el, card);
+    memoryGrid.appendChild(el);
+  });
+
+  function flipCard(el, card){
+    if(memLock || el.dataset.state !== 'hidden') return;
+    el.textContent = card.label;
+    el.classList.add('flipped');
+    el.dataset.state = 'flipped';
+    memFlipped.push({el, card});
+
+    if(memFlipped.length === 2){
+      memLock = true;
+      const [f1, f2] = memFlipped;
+      if(f1.card.pair === f2.card.pair){
+        f1.el.classList.add('matched'); f1.el.classList.remove('flipped');
+        f2.el.classList.add('matched'); f2.el.classList.remove('flipped');
+        f1.el.dataset.state='matched'; f2.el.dataset.state='matched';
+        memMatches++;
+        document.getElementById('memoryStatus').textContent = `Pairs found: ${memMatches} / ${memoryPairs.length}`;
+        memFlipped = [];
+        memLock = false;
+        if(memMatches === memoryPairs.length){
+          document.getElementById('memoryStatus').textContent = "You found all the pairs! 🃏🎉";
+          earnStar(7);
+        }
+      } else {
+        setTimeout(()=>{
+          f1.el.textContent='?'; f1.el.classList.remove('flipped'); f1.el.dataset.state='hidden';
+          f2.el.textContent='?'; f2.el.classList.remove('flipped'); f2.el.dataset.state='hidden';
+          memFlipped = [];
+          memLock = false;
+        }, 800);
+      }
+    }
+  }
+  </script>
+</body>
+</html>

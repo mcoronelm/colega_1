@@ -6,485 +6,30 @@
 <title>¡La Casa! 🏠</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --cream:#FFF8ED;
-    --coral:#FF6B5A;
-    --teal:#1E9E90;
-    --marigold:#FFC857;
-    --indigo:#3D348B;
-    --pink:#FF8FA3;
-    --ink:#2D1E2F;
-    --paper:#ffffff;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--cream);
-    font-family:'Nunito',sans-serif;
-    color:var(--ink);
-    padding-bottom:60px;
-  }
-  h1,h2,h3{font-family:'Baloo 2',cursive;margin:0;}
+<link rel="stylesheet" href="style.css">
 
-  /* ---------- PAPEL PICADO HEADER ---------- */
-  .banner{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:6px;
-    padding:18px 10px 0;
-    background:var(--indigo);
-  }
-  .flag{
-    width:70px;height:56px;
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
-    display:flex;align-items:flex-start;justify-content:center;
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:10.5px;
-    color:white;
-    padding-top:8px;
-    text-align:center;
-    line-height:1.05;
-  }
-  .flag:nth-child(6n+1){background:var(--coral);}
-  .flag:nth-child(6n+2){background:var(--teal);}
-  .flag:nth-child(6n+3){background:var(--marigold);color:var(--ink);}
-  .flag:nth-child(6n+4){background:var(--pink);}
-  .flag:nth-child(6n+5){background:#7FB069;}
-  .flag:nth-child(6n+6){background:#5EA0D0;}
-
-  header{
-    background:var(--indigo);
-    color:white;
-    text-align:center;
-    padding:14px 20px 34px;
-  }
-  header h1{
-    font-size:clamp(30px,7vw,46px);
-    color:var(--marigold);
-    text-shadow:3px 3px 0 rgba(0,0,0,0.15);
-  }
-  header p{
-    font-family:'Baloo 2';
-    font-size:18px;
-    color:white;
-    margin-top:6px;
-  }
-  .dog{
-    font-size:54px;
-    display:inline-block;
-    animation:wag 1.6s ease-in-out infinite;
-  }
-  @keyframes wag{
-    0%,100%{transform:rotate(-8deg);}
-    50%{transform:rotate(8deg);}
-  }
-
-  /* ---------- PROGRESS STARS ---------- */
-  .progress-wrap{
-    max-width:760px;
-    margin:-20px auto 0;
-    background:var(--paper);
-    border-radius:20px;
-    box-shadow:0 8px 0 rgba(0,0,0,0.08);
-    padding:14px 20px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    flex-wrap:wrap;
-  }
-  .progress-wrap span{font-family:'Baloo 2';font-weight:700;color:var(--indigo);}
-  .stars{font-size:26px;letter-spacing:4px;}
-  .star{opacity:0.25;transition:transform .25s, opacity .25s;}
-  .star.on{opacity:1;transform:scale(1.15);}
-
-  main{
-    max-width:760px;
-    margin:26px auto;
-    padding:0 16px;
-    display:flex;
-    flex-direction:column;
-    gap:26px;
-  }
-
-  .card{
-    background:var(--paper);
-    border-radius:22px;
-    padding:22px 20px 26px;
-    box-shadow:0 6px 0 rgba(61,52,139,0.15);
-    border:3px solid transparent;
-  }
-  .card h2{
-    color:var(--coral);
-    font-size:24px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:4px;
-  }
-  .badge{
-    background:var(--marigold);
-    color:var(--ink);
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:13px;
-    border-radius:999px;
-    padding:3px 12px;
-    display:inline-block;
-  }
-  .instructions{
-    font-size:15px;
-    color:#5b4b63;
-    margin:6px 0 16px;
-  }
-
-  /* ---------- EX 1: SORT OBJECTS INTO ROOMS ---------- */
-  .objects-pool{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin-bottom:14px;
-    min-height:44px;
-  }
-  .object-chip{
-    font-family:'Baloo 2';
-    font-weight:700;
-    background:var(--teal);
-    color:white;
-    border:none;
-    border-radius:12px;
-    padding:8px 14px;
-    font-size:15px;
-    cursor:pointer;
-    transition:transform .15s;
-  }
-  .object-chip:hover{transform:translateY(-2px);}
-  .object-chip:disabled{
-    background:#d7d7d7;
-    color:#a3a3a3;
-    cursor:not-allowed;
-  }
-  .rooms-board{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-    gap:10px;
-  }
-  .room-slot{
-    border:2px dashed #c9c1e0;
-    border-radius:14px;
-    min-height:96px;
-    padding:8px 10px;
-    background:#faf9ff;
-    cursor:pointer;
-    transition:border-color .15s, background .15s;
-  }
-  .room-slot.active{
-    border-color:var(--marigold);
-    border-style:solid;
-    background:#fff8e6;
-  }
-  .room-slot h3{
-    font-family:'Baloo 2';
-    font-size:14px;
-    color:var(--indigo);
-    margin:0 0 6px;
-  }
-  .room-slot .items{
-    display:flex;
-    flex-wrap:wrap;
-    gap:4px;
-  }
-  .room-slot .item-tag{
-    font-family:'Baloo 2';
-    font-size:11px;
-    font-weight:700;
-    color:white;
-    background:var(--teal);
-    border-radius:8px;
-    padding:3px 7px;
-  }
-  .room-slot .item-tag.correct{background:#4CAF50;}
-  .room-slot .item-tag.wrong{background:var(--coral);}
-  .hint-select{
-    font-family:'Baloo 2';
-    font-size:13px;
-    color:#9b8fb0;
-    margin-top:4px;
-  }
-
-  /* ---------- EX 2: NAME THE ROOM ---------- */
-  .num-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-    gap:12px;
-  }
-  .num-item{
-    background:#fdf3e2;
-    border-radius:14px;
-    padding:10px 12px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-  .num-item .digit{
-    font-family:'Baloo 2';
-    font-weight:800;
-    font-size:26px;
-    color:var(--coral);
-    width:36px;
-    text-align:center;
-  }
-  .num-item input{
-    flex:1;
-    min-width:0;
-    border:2px solid #e8d6ad;
-    border-radius:10px;
-    padding:6px 8px;
-    font-family:'Nunito';
-    font-size:14px;
-    font-weight:700;
-    color:var(--ink);
-  }
-  .num-item input.correct{border-color:#4CAF50;background:#eafbe9;}
-  .num-item input.wrong{border-color:var(--coral);background:#ffecea;}
-
-  /* ---------- EX 3: HOUSE SENTENCE BUILDER ---------- */
-  .birthday-box{
-    background:linear-gradient(135deg,#fff1e6,#ffe4ec);
-    border-radius:18px;
-    padding:18px;
-    text-align:center;
-  }
-  .birthday-box select{
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:16px;
-    padding:8px 10px;
-    border-radius:10px;
-    border:2px solid var(--pink);
-    margin:6px;
-    color:var(--indigo);
-  }
-  .birthday-sentence{
-    margin-top:14px;
-    font-family:'Baloo 2';
-    font-size:19px;
-    color:var(--indigo);
-    min-height:30px;
-  }
-  .birthday-sentence b{color:var(--coral);}
-  .cake{font-size:40px;}
-
-  /* ---------- EX 4: MISSING LETTERS ---------- */
-  .fill-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-    gap:12px;
-  }
-  .fill-item{
-    background:#eef7f5;
-    border-radius:14px;
-    padding:10px 12px;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-family:'Baloo 2';
-    font-size:17px;
-    color:var(--indigo);
-  }
-  .fill-item input{
-    width:34px;
-    text-align:center;
-    border:2px solid #bfe3dc;
-    border-radius:8px;
-    padding:4px;
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:16px;
-    color:var(--ink);
-  }
-  .fill-item input.correct{border-color:#4CAF50;background:#eafbe9;}
-  .fill-item input.wrong{border-color:var(--coral);background:#ffecea;}
-
-  /* ---------- CHECK BUTTONS ---------- */
-  .check-btn{
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:15px;
-    background:var(--coral);
-    color:white;
-    border:none;
-    border-radius:12px;
-    padding:10px 22px;
-    cursor:pointer;
-    margin-top:16px;
-    box-shadow:0 4px 0 #c94d3f;
-    transition:transform .1s;
-  }
-  .check-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #c94d3f;}
-  .feedback{
-    margin-top:10px;
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:15px;
-    min-height:20px;
-  }
-  .feedback.good{color:#2f9e44;}
-  .feedback.bad{color:var(--coral);}
-
-  footer{
-    text-align:center;
-    font-family:'Baloo 2';
-    color:var(--indigo);
-    padding:20px;
-    font-size:14px;
-  }
-
-  .confetti-layer{
-    position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:999;
-  }
-  .confetti-piece{
-    position:absolute;top:-20px;
-    width:10px;height:10px;
-    opacity:0.9;
-    animation:fall linear forwards;
-  }
-  @keyframes fall{
-    to{transform:translateY(110vh) rotate(360deg);opacity:1;}
-  }
-
-  /* ---------- EX 5: UNSCRAMBLE ---------- */
-  .scramble-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
-    gap:14px;
-  }
-  .scramble-item{
-    background:#fff0f2;
-    border-radius:14px;
-    padding:12px 14px;
-  }
-  .scramble-word{
-    font-family:'Baloo 2';
-    font-weight:800;
-    font-size:20px;
-    letter-spacing:3px;
-    color:var(--pink);
-    margin-bottom:8px;
-  }
-  .scramble-item input{
-    width:100%;
-    border:2px solid #f3c1cc;
-    border-radius:10px;
-    padding:7px 9px;
-    font-family:'Nunito';
-    font-weight:700;
-    font-size:14px;
-    color:var(--ink);
-  }
-  .scramble-item input.correct{border-color:#4CAF50;background:#eafbe9;}
-  .scramble-item input.wrong{border-color:var(--coral);background:#ffecea;}
-
-  /* ---------- EX 6: WORD SEARCH ---------- */
-  .wordsearch-wrap{
-    display:flex;
-    gap:22px;
-    flex-wrap:wrap;
-    align-items:flex-start;
-  }
-  .ws-grid{
-    display:grid;
-    grid-template-columns:repeat(10, 32px);
-    grid-auto-rows:32px;
-    gap:3px;
-    user-select:none;
-  }
-  .ws-cell{
-    background:#f4f0ff;
-    border-radius:6px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:14px;
-    color:var(--indigo);
-    cursor:pointer;
-    transition:background .1s;
-  }
-  .ws-cell.selected{background:var(--marigold);}
-  .ws-cell.found{background:#a8e6a1;color:var(--ink);cursor:default;}
-  .ws-words{
-    font-family:'Baloo 2';
-    font-size:15px;
-    color:var(--indigo);
-    min-width:140px;
-  }
-  .ws-words div{margin-bottom:6px;}
-  .ws-words .found-word{text-decoration:line-through;color:#4CAF50;}
-
-  /* ---------- EX 7: MEMORY GAME ---------- */
-  .memory-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(78px,1fr));
-    gap:8px;
-  }
-  .mem-card{
-    aspect-ratio:1/1;
-    background:var(--indigo);
-    border-radius:12px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family:'Baloo 2';
-    font-weight:700;
-    font-size:13px;
-    color:white;
-    cursor:pointer;
-    text-align:center;
-    padding:4px;
-    transition:transform .2s, background .2s;
-  }
-  .mem-card.flipped{background:var(--marigold);color:var(--ink);}
-  .mem-card.matched{background:#a8e6a1;color:var(--ink);cursor:default;}
-  .memory-status{
-    font-family:'Baloo 2';
-    color:var(--indigo);
-    margin-top:12px;
-    font-size:15px;
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    .dog{animation:none;}
-    .confetti-piece{animation:none;display:none;}
-  }
-</style>
 </head>
 <body>
 
-<div class="banner" id="banner"></div>
+  <!-- BANDERINES DE PAPEL PICADO -->
+  <div class="banner" id="banner">
+    <div class="flag">¡HOLA!</div>
+    <div class="flag">ELE</div>
+    <div class="flag">CURSO</div>
+    <div class="flag">NIÑOS</div>
+    <div class="flag">JUEGA</div>
+    <div class="flag">APRENDE</div>
+  </div>
 
+  <!-- HEADER -->
 <header>
-  <span class="dog">🐶</span>
-  <h1>¡La Casa!</h1>
-  <p>Practice with Coco the puppy · Spanish for kids</p>
+  <h1><a href="index.html" class="logo-link">MUNDO ELE</a></h1>
+  <p>Aprende español de forma divertida 🌟</p>
 </header>
 
-<div class="progress-wrap">
-  <span>Your progress</span>
-  <div class="stars" id="stars">
-    <span class="star" data-i="1">⭐</span>
-    <span class="star" data-i="2">⭐</span>
-    <span class="star" data-i="3">⭐</span>
-    <span class="star" data-i="4">⭐</span>
-    <span class="star" data-i="5">⭐</span>
-    <span class="star" data-i="6">⭐</span>
-    <span class="star" data-i="7">⭐</span>
-  </div>
-</div>
+<!-- NAVBAR CONTENEDOR VACIÓ PARA IMPORTAR -->
+<nav class="navbar" id="navbar-container"></nav>
+
 
 <main>
 
@@ -561,7 +106,48 @@
 
 </main>
 
-<footer>Great job! 🐾 Keep practicing every day.</footer>
+<div id="footer-container"></div>
+<!-- SCRIPT PARA IMPORTAR LA NAVBAR E INICIALIZAR EVENTOS -->
+<script>
+  // Cargar Navbar
+  fetch('navbar.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('navbar-container').innerHTML = data;
+      
+      // Activar comportamiento desplegable en dispositivos móviles
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        const link = item.querySelector('.nav-link');
+        if (link) {
+          link.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+              e.preventDefault();
+              navItems.forEach(otherItem => {
+                if (otherItem !== item) otherItem.classList.remove('active');
+              });
+              item.classList.toggle('active');
+            }
+          });
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.nav-item')) {
+          navItems.forEach(item => item.classList.remove('active'));
+        }
+      });
+    })
+    .catch(error => console.error('Error al cargar la navbar:', error));
+
+  // Cargar Footer
+  fetch('footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-container').innerHTML = data;
+    })
+    .catch(error => console.error('Error al cargar el footer:', error));
+</script>
 
 <script>
 const ROOMS = ["cocina","dormitorio","salón","baño","jardín","garaje"];
@@ -575,14 +161,7 @@ const ROOM_ICONS = {
 };
 
 /* ---------- BANNER ---------- */
-const BANNER_WORDS = ["COCINA","DORMITORIO","SALÓN","BAÑO","JARDÍN","GARAJE","SOFÁ","CAMA","VENTANA","LÁMPARA","ESPEJO","COCHE"];
-const bannerEl = document.getElementById('banner');
-BANNER_WORDS.forEach(w=>{
-  const f = document.createElement('div');
-  f.className='flag';
-  f.textContent = w;
-  bannerEl.appendChild(f);
-});
+
 
 /* ---------- STARS ---------- */
 let starsEarned = 0;

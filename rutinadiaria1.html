@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Rutina Diaria ⏰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  /* Componentes dinámicos de video y juegos */
+  .video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    border-radius: 12px;
+    margin-top: 15px;
+  }
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  
+  /* Four in a row */
+  .connect4-board {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    background-color: #1E9E90;
+    padding: 12px;
+    border-radius: 12px;
+    max-width: 500px;
+    margin: 15px auto;
+  }
+  .connect4-cell {
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: #ffffff;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+  }
+  .connect4-cell:hover { transform: scale(1.05); }
+  .connect4-cell.p1 { background-color: #FF6B5A; color: white; }
+  .connect4-cell.p2 { background-color: #FFC857; color: black; }
+  .turn-indicator { text-align: center; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px; }
+
+  /* Mix and Match */
+  .match-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    max-width: 600px;
+    margin: 15px auto;
+  }
+  .match-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+  .match-btn {
+    padding: 12px;
+    background: #f0f4f8;
+    border: 2px solid #5EA0D0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .match-btn.selected { background: #FFC857; border-color: #e0a800; }
+  .match-btn.matched { background: #28a745; color: white; border-color: #1e7e34; cursor: default; }
+
+  /* Spelling Game */
+  .spelling-box {
+    text-align: center;
+    background: #fdf8ec;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 500px;
+    margin: 15px auto;
+  }
+  .spelling-display {
+    font-size: 2rem;
+    letter-spacing: 4px;
+    font-weight: 800;
+    color: #1E9E90;
+    margin-bottom: 15px;
+  }
+  .spelling-input {
+    font-size: 1.2rem;
+    padding: 8px 12px;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+    width: 80%;
+  }
+</style>
+</head>
+<body>
+
+  <!-- BANDERINES DE PAPEL PICADO -->
+  <div class="banner" id="banner">
+    <div class="flag">¡HOLA!</div>
+    <div class="flag">ELE</div>
+    <div class="flag">CURSO</div>
+    <div class="flag">NIÑOS</div>
+    <div class="flag">JUEGA</div>
+    <div class="flag">APRENDE</div>
+  </div>
+
+  <!-- HEADER -->
+<header>
+  <h1><a href="index.html" class="logo-link">MUNDO ELE</a></h1>
+  <p>Aprende español de forma divertida 🌟</p>
+</header>
+
+<!-- NAVBAR CONTENEDOR VACÍO PARA IMPORTAR -->
+<nav class="navbar" id="navbar-container"></nav>
+
+<main>
+
+  <!-- VIDEO SECTION -->
+  <section class="card" id="card-video">
+    <h2>🎥 Learn Daily Routine <span class="badge">Video</span></h2>
+    <p class="instructions">Watch the video to learn the pronunciation and meaning of daily routines in Spanish.</p>
+    <div class="video-container">
+      <iframe src="https://www.youtube.com/embed/n5N_j1KEkHg?si=cw-crAg2Cdg6RpGJ" title="Daily routine in Spanish" allowfullscreen></iframe>
+    </div>
+  </section>
+
+  <!-- EXERCISE 1 -->
+  <section class="card" id="card1">
+    <h2>1. ⏰ Sort the Day <span class="badge">Time of day</span></h2>
+    <p class="instructions">Click a time of day to select it, then click the daily routines that happen during that time.</p>
+    <div class="objects-pool" id="objectsPool"></div>
+    <div class="rooms-board" id="roomsBoard"></div>
+    <button class="check-btn" onclick="checkRooms()">Check</button>
+    <div class="feedback" id="fb1"></div>
+  </section>
+
+  <!-- EXERCISE 2: MIX AND MATCH -->
+  <section class="card" id="card-mixmatch">
+    <h2>2. 🧩 Mix and Match <span class="badge">Match Pairs</span></h2>
+    <p class="instructions">Click a daily routine in Spanish on the left, then click its matching English translation on the right.</p>
+    <div class="match-container">
+      <div class="match-column" id="matchSpanishCol"></div>
+      <div class="match-column" id="matchEnglishCol"></div>
+    </div>
+    <div class="feedback" id="fbMixMatch"></div>
+  </section>
+
+  <!-- EXERCISE 3: THE SPELLING GAME -->
+  <section class="card" id="card-spelling">
+    <h2>3. 🔤 The Spelling Game <span class="badge">Spelling</span></h2>
+    <p class="instructions">Look at the icon and English prompt, then type the correct Spanish routine word without spelling errors.</p>
+    <div class="spelling-box">
+      <div class="spelling-display" id="spellingIcon">⏰</div>
+      <p id="spellingHint" style="color: #666; margin-bottom: 10px;">Translate: "I wake up"</p>
+      <input type="text" class="spelling-input" id="spellingInput" placeholder="Write here..." autocomplete="off">
+      <div style="margin-top: 15px;">
+        <button class="check-btn" onclick="checkSpelling()">Check</button>
+      </div>
+    </div>
+    <div class="feedback" id="fbSpelling"></div>
+  </section>
+
+  <!-- EXERCISE 4: FOUR IN A ROW -->
+  <section class="card" id="card-connect4">
+    <h2>4. 🔴🟡 Four in a Row <span class="badge">2 Players</span></h2>
+    <p class="instructions">Take turns clicking a slot and translating the action into Spanish to claim it. Connect 4 in a row to win!</p>
+    <div class="turn-indicator" id="turnIndicator">Player 1's Turn (🔴)</div>
+    <div class="connect4-board" id="connect4Board"></div>
+    <div class="feedback" id="fbConnect4"></div>
+  </section>
+
+  <!-- EXERCISE 5 -->
+  <section class="card" id="card2">
+    <h2>5. ✍️ What are they doing? <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Look at each icon/time prompt and write the corresponding action in Spanish.</p>
+    <div class="num-grid" id="numGrid"></div>
+    <button class="check-btn" onclick="checkNumbers()">Check</button>
+    <div class="feedback" id="fb2"></div>
+  </section>
+
+  <!-- EXERCISE 6 -->
+  <section class="card" id="card3">
+    <h2>6. 🗣️ Routine Sentence Builder</h2>
+    <p class="instructions">Choose a daily routine and a time to see the complete sentence in Spanish.</p>
+    <div class="birthday-box">
+      <div class="cake">⏰🌅</div>
+      <div>
+        <select id="daySelect"></select>
+        <select id="monthSelect"></select>
+      </div>
+      <div class="birthday-sentence" id="birthdaySentence">Todos los días, yo ___ a las ___.</div>
+    </div>
+  </section>
+
+  <!-- EXERCISE 7 -->
+  <section class="card" id="card4">
+    <h2>7. ✏️ Complete the Missing Letter</h2>
+    <p class="instructions">Write the missing letter for each routine verb.</p>
+    <div class="fill-grid" id="fillGrid"></div>
+    <button class="check-btn" onclick="checkFill()">Check</button>
+    <div class="feedback" id="fb4"></div>
+  </section>
+
+  <!-- EXERCISE 8 -->
+  <section class="card" id="card5">
+    <h2>8. 🔤 Unscramble the Letters</h2>
+    <p class="instructions">The letters of each action are mixed up. Write the correct word!</p>
+    <div class="scramble-grid" id="scrambleGrid"></div>
+    <button class="check-btn" onclick="checkScramble()">Check</button>
+    <div class="feedback" id="fb5"></div>
+  </section>
+
+  <!-- EXERCISE 9 -->
+  <section class="card" id="card6">
+    <h2>9. 🔎 Word Search</h2>
+    <p class="instructions">Click the letters, in order, to spell out each action on the list. Click the last letter again to undo.</p>
+    <div class="wordsearch-wrap">
+      <div class="ws-grid" id="wsGrid"></div>
+      <div class="ws-words" id="wsWords"></div>
+    </div>
+    <button class="check-btn" onclick="clearSelection()">Clear selection</button>
+    <div class="feedback" id="fb6"></div>
+  </section>
+
+  <!-- EXERCISE 10: PELMANISM (MEMORY MATCH) -->
+  <section class="card" id="card7">
+    <h2>10. 🃏 Pelmanism Game <span class="badge">Memory Match</span></h2>
+    <p class="instructions">Find the matching pairs: match the routine text with its icon.</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="memory-status" id="memoryStatus">Pairs found: 0 / 6</div>
+  </section>
+
+</main>
+
+<div id="footer-container"></div>
+
+<!-- SCRIPT DE CARGA DE NAVBAR Y FOOTER -->
+<script>
+  fetch('navbar.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('navbar-container').innerHTML = data;
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        const link = item.querySelector('.nav-link');
+        if (link) {
+          link.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+              e.preventDefault();
+              navItems.forEach(otherItem => {
+                if (otherItem !== item) otherItem.classList.remove('active');
+              });
+              item.classList.toggle('active');
+            }
+          });
+        }
+      });
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.nav-item')) {
+          navItems.forEach(item => item.classList.remove('active'));
+        }
+      });
+    })
+    .catch(error => console.error('Error al cargar la navbar:', error));
+
+  fetch('footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-container').innerHTML = data;
+    })
+    .catch(error => console.error('Error al cargar el footer:', error));
+</script>
+
+<script>
+/* ---------- DATOS GENERALES Y RUTINAS ---------- */
+const TIMES_OF_DAY = ["mañana", "tarde", "noche"];
+const TIME_LABELS = {
+  "mañana": "Por la mañana 🌅",
+  "tarde": "Por la tarde ☀️",
+  "noche": "Por la noche 🌙"
+};
+
+const ROUTINES = [
+  { spanish: "Me despierto", english: "I wake up", icon: "⏰", time: "mañana" },
+  { spanish: "Me levanto", english: "I get up", icon: "🛌", time: "mañana" },
+  { spanish: "Me lavo", english: "I wash", icon: "🚿", time: "mañana" },
+  { spanish: "Me visto", english: "I get dressed", icon: "👕", time: "mañana" },
+  { spanish: "Desayuno", english: "I have breakfast", icon: "🥣", time: "mañana" },
+  { spanish: "Llego a la escuela", english: "I arrive at school", icon: "🏫", time: "mañana" },
+  { spanish: "Almuerzo", english: "I have lunch", icon: "🍱", time: "tarde" },
+  { spanish: "Juego con mis amigos", english: "I play with my friends", icon: "⚽", time: "tarde" },
+  { spanish: "Ceno", english: "I have supper", icon: "🍽️", time: "noche" },
+  { spanish: "Me voy a la cama", english: "I go to bed", icon: "😴", time: "noche" }
+];
+
+let starsEarned = 0;
+function earnStar(n){
+  if(n<=starsEarned) return;
+  starsEarned = n;
+  launchConfetti();
+}
+
+function launchConfetti(){
+  const layer = document.createElement('div');
+  layer.className='confetti-layer';
+  document.body.appendChild(layer);
+  const colors = ['#FF6B5A','#1E9E90','#FFC857','#FF8FA3','#5EA0D0'];
+  for(let i=0;i<40;i++){
+    const p = document.createElement('div');
+    p.className='confetti-piece';
+    p.style.left = Math.random()*100+'vw';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration = (2+Math.random()*1.5)+'s';
+    p.style.borderRadius = Math.random()>0.5 ? '50%':'2px';
+    layer.appendChild(p);
+  }
+  setTimeout(()=>layer.remove(),3600);
+}
+
+function normalize(str){
+  return str.trim().toLowerCase()
+    .replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i").replace(/ó/g,"o").replace(/ú/g,"u");
+}
+
+/* ---------- EXERCISE 1: SORT BY TIME OF DAY ---------- */
+const objectsPool = document.getElementById('objectsPool');
+const roomsBoard = document.getElementById('roomsBoard');
+let selectedRoom = null;
+let placements = {};
+
+const shuffledRoutines = [...ROUTINES].sort(()=>Math.random()-0.5);
+shuffledRoutines.forEach(o=>{
+  const btn = document.createElement('button');
+  btn.className='object-chip';
+  btn.textContent = o.spanish;
+  btn.dataset.word = o.spanish;
+  btn.onclick = ()=>placeObject(o.spanish, btn);
+  objectsPool.appendChild(btn);
+});
+
+const roomSlotEls = {};
+TIMES_OF_DAY.forEach(r=>{
+  const slot = document.createElement('div');
+  slot.className='room-slot';
+  slot.dataset.room = r;
+  slot.innerHTML = `<h3>${TIME_LABELS[r]}</h3><div class="items"></div><div class="hint-select">click to select</div>`;
+  slot.onclick = ()=>selectRoom(r, slot);
+  roomsBoard.appendChild(slot);
+  roomSlotEls[r] = slot;
+});
+
+function selectRoom(r, slot){
+  Object.values(roomSlotEls).forEach(s=>s.classList.remove('active'));
+  slot.classList.add('active');
+  selectedRoom = r;
+}
+
+function placeObject(word, btn){
+  if(!selectedRoom){
+    const fb = document.getElementById('fb1');
+    fb.textContent = "First click a time of day, then click the action. 🌅";
+    fb.className='feedback bad';
+    return;
+  }
+  const slot = roomSlotEls[selectedRoom];
+  const tag = document.createElement('span');
+  tag.className='item-tag';
+  tag.dataset.word = word;
+  tag.textContent = word;
+  slot.querySelector('.items').appendChild(tag);
+  placements[word] = selectedRoom;
+  btn.disabled = true;
+}
+
+function checkRooms(){
+  const fb = document.getElementById('fb1');
+  if(Object.keys(placements).length < ROUTINES.length){
+    fb.textContent = "Place all 10 routines first. ⏰";
+    fb.className='feedback bad';
+    return;
+  }
+  let correct = 0;
+  ROUTINES.forEach(o=>{
+    const tag = document.querySelector(`.item-tag[data-word="${o.spanish}"]`);
+    if(placements[o.spanish] === o.time){
+      tag.classList.add('correct'); tag.classList.remove('wrong');
+      correct++;
+    } else {
+      tag.classList.add('wrong'); tag.classList.remove('correct');
+    }
+  });
+  if(correct === ROUTINES.length){
+    fb.textContent = "Perfect! 🎉 You organized your day correctly.";
+    fb.className='feedback good';
+    earnStar(1);
+  } else {
+    fb.textContent = `You have ${correct} out of ${ROUTINES.length} correct. Try again!`;
+    fb.className='feedback bad';
+  }
+}
+
+/* ---------- EXERCISE 2: MIX AND MATCH ---------- */
+const mixSpanishCol = document.getElementById('matchSpanishCol');
+const mixEnglishCol = document.getElementById('matchEnglishCol');
+const mixSubset = ROUTINES.slice(0, 5);
+
+let selectedSpanishBtn = null;
+let selectedEnglishBtn = null;
+let mixMatchesCount = 0;
+
+const shuffledSpanish = [...mixSubset].sort(() => Math.random() - 0.5);
+const shuffledEnglish = [...mixSubset].sort(() => Math.random() - 0.5);
+
+shuffledSpanish.forEach(item => {
+  const btn = document.createElement('button');
+  btn.className = 'match-btn';
+  btn.textContent = `${item.icon} ${item.spanish}`;
+  btn.dataset.pair = item.spanish;
+  btn.onclick = () => selectMixBtn(btn, 'spanish');
+  mixSpanishCol.appendChild(btn);
+});
+
+shuffledEnglish.forEach(item => {
+  const btn = document.createElement('button');
+  btn.className = 'match-btn';
+  btn.textContent = item.english;
+  btn.dataset.pair = item.spanish;
+  btn.onclick = () => selectMixBtn(btn, 'english');
+  mixEnglishCol.appendChild(btn);
+});
+
+function selectMixBtn(btn, lang) {
+  if (btn.classList.contains('matched')) return;
+
+  if (lang === 'spanish') {
+    if (selectedSpanishBtn) selectedSpanishBtn.classList.remove('selected');
+    selectedSpanishBtn = btn;
+    btn.classList.add('selected');
+  } else {
+    if (selectedEnglishBtn) selectedEnglishBtn.classList.remove('selected');
+    selectedEnglishBtn = btn;
+    btn.classList.add('selected');
+  }
+
+  if (selectedSpanishBtn && selectedEnglishBtn) {
+    if (selectedSpanishBtn.dataset.pair === selectedEnglishBtn.dataset.pair) {
+      selectedSpanishBtn.className = 'match-btn matched';
+      selectedEnglishBtn.className = 'match-btn matched';
+      selectedSpanishBtn = null;
+      selectedEnglishBtn = null;
+      mixMatchesCount++;
+
+      if (mixMatchesCount === mixSubset.length) {
+        const fb = document.getElementById('fbMixMatch');
+        fb.textContent = "Excellent! You matched all pairs correctly. 🧩🎉";
+        fb.className = 'feedback good';
+        earnStar(2);
+      }
+    } else {
+      const fb = document.getElementById('fbMixMatch');
+      fb.textContent = "Not a match. Try again!";
+      fb.className = 'feedback bad';
+      setTimeout(() => {
+        if(selectedSpanishBtn) selectedSpanishBtn.classList.remove('selected');
+        if(selectedEnglishBtn) selectedEnglishBtn.classList.remove('selected');
+        selectedSpanishBtn = null;
+        selectedEnglishBtn = null;
+        fb.textContent = "";
+      }, 1000);
+    }
+  }
+}
+
+/* ---------- EXERCISE 3: THE SPELLING GAME ---------- */
+let currentSpellingIndex = 0;
+const spellingItems = ROUTINES.slice(0, 5);
+
+function loadSpellingItem() {
+  const item = spellingItems[currentSpellingIndex];
+  document.getElementById('spellingIcon').textContent = item.icon;
+  document.getElementById('spellingHint').textContent = `Translate & spell: "${item.english}"`;
+  document.getElementById('spellingInput').value = '';
+}
+
+function checkSpelling() {
+  const inputVal = document.getElementById('spellingInput').value;
+  const currentItem = spellingItems[currentSpellingIndex];
+  const fb = document.getElementById('fbSpelling');
+
+  if (normalize(inputVal) === normalize(currentItem.spanish)) {
+    currentSpellingIndex++;
+    if (currentSpellingIndex < spellingItems.length) {
+      fb.textContent = "Correct! Next word...";
+      fb.className = 'feedback good';
+      setTimeout(() => {
+        fb.textContent = "";
+        loadSpellingItem();
+      }, 1200);
+    } else {
+      fb.textContent = "Fabulous! You finished the Spelling Game! 🔤🎉";
+      fb.className = 'feedback good';
+      earnStar(3);
+    }
+  } else {
+    fb.textContent = "Incorrect spelling. Check your letters carefully.";
+    fb.className = 'feedback bad';
+  }
+}
+loadSpellingItem();
+
+/* ---------- EXERCISE 4: FOUR IN A ROW GAME ---------- */
+const boardState = Array(4).fill(null).map(() => Array(7).fill(null));
+let currentPlayer = 1;
+const connect4Board = document.getElementById('connect4Board');
+
+for(let r=0; r<4; r++){
+  for(let c=0; c<7; c++){
+    const cell = document.createElement('div');
+    cell.className = 'connect4-cell';
+    const randRoutine = ROUTINES[(r*7 + c) % ROUTINES.length];
+    cell.textContent = randRoutine.icon;
+    cell.title = randRoutine.english;
+    cell.onclick = () => playConnect4(r, c, cell, randRoutine);
+    connect4Board.appendChild(cell);
+  }
+}
+
+function playConnect4(r, c, cell, routine){
+  if(boardState[r][c] !== null) return;
+  
+  const ans = prompt(`Type in Spanish for '${routine.english}':`);
+  if(ans && normalize(ans) === normalize(routine.spanish)){
+    boardState[r][c] = currentPlayer;
+    cell.classList.add(currentPlayer === 1 ? 'p1' : 'p2');
+    if(checkWin(currentPlayer)){
+      document.getElementById('fbConnect4').textContent = `Player ${currentPlayer} Wins! 🎉`;
+      document.getElementById('fbConnect4').className = 'feedback good';
+      earnStar(4);
+    } else {
+      currentPlayer = currentPlayer === 1 ? 2 : 1;
+      document.getElementById('turnIndicator').textContent = `Player ${currentPlayer}'s Turn (${currentPlayer === 1 ? '🔴' : '🟡'})`;
+    }
+  } else {
+    alert("Incorrect! Passing turn to the next player.");
+    currentPlayer = currentPlayer === 1 ? 2 : 1;
+    document.getElementById('turnIndicator').textContent = `Player ${currentPlayer}'s Turn (${currentPlayer === 1 ? '🔴' : '🟡'})`;
+  }
+}
+
+function checkWin(player){
+  for(let r=0; r<4; r++){
+    for(let c=0; c<4; c++){
+      if(boardState[r][c] === player && boardState[r][c+1] === player && 
+         boardState[r][c+2] === player && boardState[r][c+3] === player) return true;
+    }
+  }
+  for(let r=0; r<1; r++){
+    for(let c=0; c<7; c++){
+      if(boardState[r][c] === player && boardState[r+1][c] === player && 
+         boardState[r+2][c] === player && boardState[r+3][c] === player) return true;
+    }
+  }
+  return false;
+}
+
+/* ---------- EXERCISE 5: NAME THE ROUTINE ---------- */
+const numGrid = document.getElementById('numGrid');
+ROUTINES.slice(0, 8).forEach(p=>{
+  const item = document.createElement('div');
+  item.className='num-item';
+  item.innerHTML = `<div class="digit">${p.icon}</div><input type="text" data-answer="${p.spanish}" placeholder="write here...">`;
+  numGrid.appendChild(item);
+});
+
+function checkNumbers(){
+  const inputs = numGrid.querySelectorAll('input');
+  let correct = 0;
+  inputs.forEach(inp=>{
+    if(normalize(inp.value)===normalize(inp.dataset.answer)){
+      inp.classList.add('correct'); inp.classList.remove('wrong');
+      correct++;
+    } else {
+      inp.classList.add('wrong'); inp.classList.remove('correct');
+    }
+  });
+  const fb = document.getElementById('fb2');
+  if(correct===inputs.length){
+    fb.textContent = "Excellent! You know your routines really well. 🌟";
+    fb.className='feedback good';
+    earnStar(5);
+  } else {
+    fb.textContent = `${correct} out of ${inputs.length} correct. The red ones need review.`;
+    fb.className='feedback bad';
+  }
+}
+
+/* ---------- EXERCISE 6: ROUTINE SENTENCE BUILDER ---------- */
+const daySelect = document.getElementById('daySelect');
+const monthSelect = document.getElementById('monthSelect');
+const HOURS = ["7:00 AM", "7:30 AM", "8:00 AM", "12:30 PM", "6:00 PM", "9:00 PM"];
+
+ROUTINES.forEach(o=>{
+  const opt = document.createElement('option');
+  opt.value = o.spanish.toLowerCase();
+  opt.textContent = o.spanish;
+  daySelect.appendChild(opt);
+});
+HOURS.forEach(h=>{
+  const opt = document.createElement('option');
+  opt.value = h;
+  opt.textContent = h;
+  monthSelect.appendChild(opt);
+});
+
+function updateSentence(){
+  const act = daySelect.value;
+  const hr = monthSelect.value;
+  document.getElementById('birthdaySentence').innerHTML =
+    `Todos los días, yo <b>${act}</b> a las <b>${hr}</b>.`;
+  earnStar(6);
+}
+daySelect.onchange = updateSentence;
+monthSelect.onchange = updateSentence;
+updateSentence();
+
+/* ---------- EXERCISE 7: MISSING LETTERS ---------- */
+const fillGrid = document.getElementById('fillGrid');
+const fillWords = [
+  {word:"despierto", blankIndex:3},
+  {word:"levanto", blankIndex:2},
+  {word:"almuerzo", blankIndex:4},
+  {word:"desayuno", blankIndex:3},
+  {word:"escuela", blankIndex:2},
+  {word:"amigos", blankIndex:1}
+];
+fillWords.forEach(fw=>{
+  const chars = fw.word.split('');
+  const answer = chars[fw.blankIndex];
+  chars[fw.blankIndex] = '_';
+  const displayWord = chars.join('');
+  const before = displayWord.slice(0, fw.blankIndex);
+  const after = displayWord.slice(fw.blankIndex+1);
+
+  const item = document.createElement('div');
+  item.className='fill-item';
+  item.innerHTML = `<span>${before}</span><input maxlength="1" data-answer="${answer}"><span>${after}</span>`;
+  fillGrid.appendChild(item);
+});
+
+function checkFill(){
+  const inputs = fillGrid.querySelectorAll('input');
+  let correct = 0;
+  inputs.forEach(inp=>{
+    if(normalize(inp.value)===normalize(inp.dataset.answer)){
+      inp.classList.add('correct'); inp.classList.remove('wrong');
+      correct++;
+    } else {
+      inp.classList.add('wrong'); inp.classList.remove('correct');
+    }
+  });
+  const fb = document.getElementById('fb4');
+  if(correct===inputs.length){
+    fb.textContent = "Amazing! You completed all words correctly. 🏆";
+    fb.className='feedback good';
+    earnStar(7);
+  } else {
+    fb.textContent = `${correct} out of ${inputs.length} correct. Almost there!`;
+    fb.className='feedback bad';
+  }
+}
+
+/* ---------- EXERCISE 8: UNSCRAMBLE ---------- */
+function scramble(word){
+  let letters, result;
+  do{
+    letters = word.split('');
+    for(let i=letters.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [letters[i],letters[j]] = [letters[j],letters[i]];
+    }
+    result = letters.join('');
+  } while(result===word);
+  return result;
+}
+const scrambleWords = ["ceno", "visto", "lavo", "almuerzo", "amigos"];
+const scrambleGrid = document.getElementById('scrambleGrid');
+scrambleWords.forEach(w=>{
+  const item = document.createElement('div');
+  item.className='scramble-item';
+  item.innerHTML = `<div class="scramble-word">${scramble(w).toUpperCase()}</div>
+    <input type="text" data-answer="${w}" placeholder="write the word...">`;
+  scrambleGrid.appendChild(item);
+});
+
+function checkScramble(){
+  const inputs = scrambleGrid.querySelectorAll('input');
+  let correct = 0;
+  inputs.forEach(inp=>{
+    if(normalize(inp.value)===normalize(inp.dataset.answer)){
+      inp.classList.add('correct'); inp.classList.remove('wrong');
+      correct++;
+    } else {
+      inp.classList.add('wrong'); inp.classList.remove('correct');
+    }
+  });
+  const fb = document.getElementById('fb5');
+  if(correct===inputs.length){
+    fb.textContent = "You unscrambled them all! 🌟";
+    fb.className='feedback good';
+    earnStar(8);
+  } else {
+    fb.textContent = `${correct} out of ${inputs.length} correct. Check the letters closely.`;
+    fb.className='feedback bad';
+  }
+}
+
+/* ---------- EXERCISE 9: WORD SEARCH ---------- */
+const WS_SIZE = 10;
+const wsWordsToFind = ["ceno", "lavo", "visto", "cama"];
+const wsDisplayWords = {"ceno":"ceno","lavo":"lavo","visto":"visto","cama":"cama"};
+
+function buildWordSearch(){
+  const grid = Array.from({length:WS_SIZE},()=>Array(WS_SIZE).fill(null));
+  const directions = [[0,1],[1,0],[1,1]];
+  const placements = {};
+
+  wsWordsToFind.forEach(word=>{
+    let placed = false;
+    let attempts = 0;
+    while(!placed && attempts<200){
+      attempts++;
+      const dir = directions[Math.floor(Math.random()*directions.length)];
+      const row = Math.floor(Math.random()* (dir[0] ? WS_SIZE-word.length+1 : WS_SIZE));
+      const col = Math.floor(Math.random()* (dir[1] ? WS_SIZE-word.length+1 : WS_SIZE));
+
+      let fits = true;
+      const cells = [];
+      for(let i=0;i<word.length;i++){
+        const r = row + dir[0]*i;
+        const c = col + dir[1]*i;
+        if(r>=WS_SIZE || c>=WS_SIZE){ fits=false; break; }
+        const existing = grid[r][c];
+        if(existing && existing !== word[i]){ fits=false; break; }
+        cells.push([r,c]);
+      }
+      if(fits){
+        cells.forEach(([r,c],i)=> grid[r][c] = word[i]);
+        placements[word] = cells;
+        placed = true;
+      }
+    }
+  });
+
+  const alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+  for(let r=0;r<WS_SIZE;r++){
+    for(let c=0;c<WS_SIZE;c++){
+      if(!grid[r][c]) grid[r][c] = alphabet[Math.floor(Math.random()*alphabet.length)];
+    }
+  }
+  return {grid, placements};
+}
+
+const {grid: wsGridData, placements: wsPlacements} = buildWordSearch();
+const wsGridEl = document.getElementById('wsGrid');
+const wsCells = [];
+let wsSelection = [];
+let wsFoundWords = new Set();
+
+for(let r=0;r<WS_SIZE;r++){
+  wsCells.push([]);
+  for(let c=0;c<WS_SIZE;c++){
+    const cell = document.createElement('div');
+    cell.className = 'ws-cell';
+    cell.textContent = wsGridData[r][c].toUpperCase();
+    cell.dataset.r = r; cell.dataset.c = c;
+    cell.onclick = ()=>toggleCell(r,c,cell);
+    wsGridEl.appendChild(cell);
+    wsCells[r].push(cell);
+  }
+}
+
+const wsWordsEl = document.getElementById('wsWords');
+wsWordsToFind.forEach(w=>{
+  const d = document.createElement('div');
+  d.id = 'wsword-'+w;
+  d.textContent = '• ' + wsDisplayWords[w];
+  wsWordsEl.appendChild(d);
+});
+
+function toggleCell(r,c,cell){
+  if(cell.classList.contains('found')) return;
+  const idx = wsSelection.findIndex(s=>s[0]===r && s[1]===c);
+  if(idx === wsSelection.length-1 && idx !== -1){
+    wsSelection.pop();
+    cell.classList.remove('selected');
+    return;
+  }
+  wsSelection.push([r,c]);
+  cell.classList.add('selected');
+  checkWordSelection();
+}
+
+function checkWordSelection(){
+  const word = wsSelection.map(([r,c])=>wsGridData[r][c]).join('');
+  if(wsWordsToFind.includes(word) && !wsFoundWords.has(word)){
+    wsFoundWords.add(word);
+    wsSelection.forEach(([r,c])=>{
+      wsCells[r][c].classList.remove('selected');
+      wsCells[r][c].classList.add('found');
+    });
+    document.getElementById('wsword-'+word).classList.add('found-word');
+    wsSelection = [];
+    const fb = document.getElementById('fb6');
+    if(wsFoundWords.size === wsWordsToFind.length){
+      fb.textContent = "You found all the hidden words! 🔎🎉";
+      fb.className='feedback good';
+      earnStar(9);
+    } else {
+      fb.textContent = `Nice! You found "${wsDisplayWords[word]}". Keep looking.`;
+      fb.className='feedback good';
+    }
+  }
+}
+
+function clearSelection(){
+  wsSelection.forEach(([r,c])=> wsCells[r][c].classList.remove('selected'));
+  wsSelection = [];
+}
+
+/* ---------- EXERCISE 10: PELMANISM GAME ---------- */
+const memoryPairs = ROUTINES.slice(0, 6).map(r => ({ a: r.icon, b: r.spanish }));
+let memCards = [];
+memoryPairs.forEach((p,i)=>{
+  memCards.push({id:i+'a', pair:i, label:p.a});
+  memCards.push({id:i+'b', pair:i, label:p.b});
+});
+memCards.sort(()=>Math.random()-0.5);
+
+const memoryGrid = document.getElementById('memoryGrid');
+let memFlipped = [];
+let memMatches = 0;
+let memLock = false;
+
+memCards.forEach(card=>{
+  const el = document.createElement('div');
+  el.className='mem-card';
+  el.dataset.pair = card.pair;
+  el.dataset.state = 'hidden';
+  el.textContent = '?';
+  el.onclick = ()=>flipCard(el, card);
+  memoryGrid.appendChild(el);
+});
+
+function flipCard(el, card){
+  if(memLock || el.dataset.state !== 'hidden') return;
+  el.textContent = card.label;
+  el.classList.add('flipped');
+  el.dataset.state = 'flipped';
+  memFlipped.push({el, card});
+
+  if(memFlipped.length === 2){
+    memLock = true;
+    const [f1, f2] = memFlipped;
+    if(f1.card.pair === f2.card.pair){
+      f1.el.classList.add('matched'); f1.el.classList.remove('flipped');
+      f2.el.classList.add('matched'); f2.el.classList.remove('flipped');
+      f1.el.dataset.state='matched'; f2.el.dataset.state='matched';
+      memMatches++;
+      document.getElementById('memoryStatus').textContent = `Pairs found: ${memMatches} / ${memoryPairs.length}`;
+      memFlipped = [];
+      memLock = false;
+      if(memMatches === memoryPairs.length){
+        document.getElementById('memoryStatus').textContent = "You found all the pairs in Pelmanism! 🃏🎉";
+        earnStar(10);
+      }
+    } else {
+      setTimeout(()=>{
+        f1.el.textContent='?'; f1.el.classList.remove('flipped'); f1.el.dataset.state='hidden';
+        f2.el.textContent='?'; f2.el.classList.remove('flipped'); f2.el.dataset.state='hidden';
+        memFlipped = [];
+        memLock = false;
+      }, 800);
+    }
+  }
+}
+</script>
+</body>
+</html>
