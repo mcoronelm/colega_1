@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Yo sé! 🎨⚽</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  /* Flashcards flipables — estilos propios de esta página */
+  .flip-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
+    gap:16px;
+    margin:18px 0;
+  }
+  .flip-card{
+    background:transparent;
+    height:150px;
+    perspective:1000px;
+    cursor:pointer;
+  }
+  .flip-card-inner{
+    position:relative;
+    width:100%;
+    height:100%;
+    text-align:center;
+    transition:transform 0.6s;
+    transform-style:preserve-3d;
+  }
+  .flip-card.flipped .flip-card-inner{
+    transform:rotateY(180deg);
+  }
+  .flip-card-front, .flip-card-back{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    backface-visibility:hidden;
+    border-radius:16px;
+    border:2px solid #ffd9c2;
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+    padding:10px;
+  }
+  .flip-card-front{
+    background:#FFF6EE;
+    font-size:2.6rem;
+  }
+  .flip-card-back{
+    background:#1E9E90;
+    color:#fff;
+    transform:rotateY(180deg);
+  }
+  .flip-card-back .fc-word{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:1.05rem;
+  }
+  .flip-card-back .fc-translation{
+    font-size:.85rem;
+    opacity:.9;
+  }
+  .flip-hint{
+    font-size:.7rem;
+    opacity:.7;
+    margin-top:2px;
+  }
+  .flip-audio-btn{
+    position:absolute;
+    top:8px;
+    right:8px;
+    width:30px;
+    height:30px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.25);
+    color:#fff;
+    font-size:1rem;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:background .2s;
+  }
+  .flip-audio-btn:hover{
+    background:rgba(255,255,255,.45);
+  }
+  .flip-audio-btn:active{
+    transform:scale(0.9);
+  }
+</style>
+
+</head>
+<body>
+
+  <!-- BANDERINES DE PAPEL PICADO -->
+  <div class="banner" id="banner">
+    <div class="flag">¡HOLA!</div>
+    <div class="flag">ELE</div>
+    <div class="flag">CURSO</div>
+    <div class="flag">NIÑOS</div>
+    <div class="flag">JUEGA</div>
+    <div class="flag">APRENDE</div>
+  </div>
+
+  <!-- HEADER -->
+<header>
+  <h1><a href="index.html" class="logo-link">MUNDO ELE</a></h1>
+  <p>Aprende español de forma divertida 🌟</p>
+</header>
+
+<!-- NAVBAR CONTENEDOR VACIÓ PARA IMPORTAR -->
+<nav class="navbar" id="navbar-container"></nav>
+
+
+<main>
+
+  <!-- FLASHCARDS -->
+  <section class="card" id="cardFlash">
+    <h2>0. 🔄 Flashcards <span class="badge">New vocabulary</span></h2>
+    <p class="instructions">Click each card to flip it and reveal the word and its meaning.</p>
+    <div class="flip-grid" id="flipGrid"></div>
+  </section>
+
+  <!-- EXERCISE 1 -->
+  <section class="card" id="card1">
+    <h2>1. 🎯 Sort the Activities <span class="badge">Yo sé... / ¿Sabes...?</span></h2>
+    <p class="instructions">Click a category to select it, then click the activities that belong there. Place all 10 activities!</p>
+    <div class="objects-pool" id="objectsPool"></div>
+    <div class="rooms-board" id="roomsBoard"></div>
+    <button class="check-btn" onclick="checkRooms()">Check</button>
+    <div class="feedback" id="fb1"></div>
+  </section>
+
+  <!-- EXERCISE 2 -->
+  <section class="card" id="card2">
+    <h2>2. ✍️ Name the Skill <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Look at each picture and write the activity, in Spanish.</p>
+    <div class="num-grid" id="numGrid"></div>
+    <button class="check-btn" onclick="checkNumbers()">Check</button>
+    <div class="feedback" id="fb2"></div>
+  </section>
+
+  <!-- EXERCISE 3 -->
+  <section class="card" id="card3">
+    <h2>3. 🗣️ Build a Sentence with "Saber"</h2>
+    <p class="instructions">Choose a person and an activity, and see the complete sentence.</p>
+    <div class="birthday-box">
+      <div class="cake">🙋‍♀️💬</div>
+      <div>
+        <select id="daySelect"></select>
+        <select id="monthSelect"></select>
+      </div>
+      <div class="birthday-sentence" id="birthdaySentence">Yo sé ___.</div>
+    </div>
+    <div class="birthday-box">
+      <div class="cake">🤔❓</div>
+      <div>
+        <select id="askSelect"></select>
+        <select id="answerSelect"></select>
+      </div>
+      <div class="birthday-sentence" id="answerSentence">¿Sabes ___? Sí.</div>
+    </div>
+  </section>
+
+  <!-- EXERCISE 4 -->
+  <section class="card" id="card4">
+    <h2>4. ✏️ Complete the Missing Letter</h2>
+    <p class="instructions">Write the letter that's missing in each word.</p>
+    <div class="fill-grid" id="fillGrid"></div>
+    <button class="check-btn" onclick="checkFill()">Check</button>
+    <div class="feedback" id="fb4"></div>
+  </section>
+
+  <!-- EXERCISE 5 -->
+  <section class="card" id="card5">
+    <h2>5. 🔤 Unscramble the Letters</h2>
+    <p class="instructions">The letters of each word are mixed up. Write the correct word!</p>
+    <div class="scramble-grid" id="scrambleGrid"></div>
+    <button class="check-btn" onclick="checkScramble()">Check</button>
+    <div class="feedback" id="fb5"></div>
+  </section>
+
+  <!-- EXERCISE 6 -->
+  <section class="card" id="card6">
+    <h2>6. 🔎 Word Search</h2>
+    <p class="instructions">Click the letters, in order, to spell out each word on the list. If you make a mistake, click the last letter again to remove it.</p>
+    <div class="wordsearch-wrap">
+      <div class="ws-grid" id="wsGrid"></div>
+      <div class="ws-words" id="wsWords"></div>
+    </div>
+    <button class="check-btn" onclick="clearSelection()">Clear selection</button>
+    <div class="feedback" id="fb6"></div>
+  </section>
+
+  <!-- EXERCISE 7 -->
+  <section class="card" id="card7">
+    <h2>7. 🃏 Memory Match: Activity and Icon</h2>
+    <p class="instructions">Find the pairs: the activity with its icon.</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="memory-status" id="memoryStatus">Pairs found: 0 / 6</div>
+  </section>
+
+</main>
+
+<div id="footer-container"></div>
+<!-- SCRIPT PARA IMPORTAR LA NAVBAR E INICIALIZAR EVENTOS -->
+<script>
+  // Cargar Navbar
+  fetch('navbar.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('navbar-container').innerHTML = data;
+
+      // Activar comportamiento desplegable en dispositivos móviles
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        const link = item.querySelector('.nav-link');
+        if (link) {
+          link.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+              e.preventDefault();
+              navItems.forEach(otherItem => {
+                if (otherItem !== item) otherItem.classList.remove('active');
+              });
+              item.classList.toggle('active');
+            }
+          });
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.nav-item')) {
+          navItems.forEach(item => item.classList.remove('active'));
+        }
+      });
+    })
+    .catch(error => console.error('Error al cargar la navbar:', error));
+
+  // Cargar Footer
+  fetch('footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-container').innerHTML = data;
+    })
+    .catch(error => console.error('Error al cargar el footer:', error));
+</script>
+
+<script>
+/* ---------- VOCABULARY ---------- */
+const CATEGORIES = ["casa","deportes"];
+const CAT_LABELS = { "casa":"En casa", "deportes":"Deportes y juegos" };
+const CAT_ICONS = { "casa":"🏠", "deportes":"⚽" };
+
+const ACTIVITIES = [
+  {word:"leer", cat:"casa", icon:"📖"},
+  {word:"bailar", cat:"casa", icon:"💃"},
+  {word:"ladrar", cat:"casa", icon:"🐕"},
+  {word:"hacer la cama", cat:"casa", icon:"🛏️"},
+  {word:"cantar", cat:"casa", icon:"🎤"},
+  {word:"tocar el piano", cat:"casa", icon:"🎹"},
+  {word:"nadar", cat:"deportes", icon:"🏊"},
+  {word:"saltar a la comba", cat:"deportes", icon:"🪢"},
+  {word:"jugar al fútbol", cat:"deportes", icon:"⚽"},
+  {word:"montar en bici", cat:"deportes", icon:"🚲"},
+];
+
+/* ---------- FLASHCARDS ---------- */
+const TRANSLATIONS = {
+  "leer":"to read",
+  "bailar":"to dance",
+  "ladrar":"to bark",
+  "hacer la cama":"to make the bed",
+  "cantar":"to sing",
+  "tocar el piano":"to play the piano",
+  "nadar":"to swim",
+  "saltar a la comba":"to skip rope",
+  "jugar al fútbol":"to play football",
+  "montar en bici":"to ride a bike",
+};
+const flipGrid = document.getElementById('flipGrid');
+ACTIVITIES.forEach(a=>{
+  const card = document.createElement('div');
+  card.className='flip-card';
+  card.innerHTML = `
+    <div class="flip-card-inner">
+      <div class="flip-card-front">
+        <div>${a.icon}</div>
+        <div class="flip-hint">click to flip &amp; hear it</div>
+      </div>
+      <div class="flip-card-back">
+        <button type="button" class="flip-audio-btn" aria-label="Play pronunciation">🔊</button>
+        <div class="fc-word">${a.word}</div>
+        <div class="fc-translation">${TRANSLATIONS[a.word]}</div>
+      </div>
+    </div>`;
+  card.onclick = ()=>{
+    const wasFlipped = card.classList.contains('flipped');
+    card.classList.toggle('flipped');
+    if(!wasFlipped) speakSpanish(a.word);
+  };
+  card.querySelector('.flip-audio-btn').onclick = (e)=>{
+    e.stopPropagation();
+    speakSpanish(a.word);
+  };
+  flipGrid.appendChild(card);
+});
+
+function speakSpanish(text){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'es-ES';
+  utter.rate = 0.85;
+  window.speechSynthesis.speak(utter);
+}
+
+/* ---------- STARS ---------- */
+let starsEarned = 0;
+function earnStar(n){
+  if(n<=starsEarned) return;
+  starsEarned = n;
+  document.querySelectorAll('.star').forEach(s=>{
+    if(parseInt(s.dataset.i) <= starsEarned) s.classList.add('on');
+  });
+  launchConfetti();
+}
+
+/* ---------- CONFETTI ---------- */
+function launchConfetti(){
+  const layer = document.createElement('div');
+  layer.className='confetti-layer';
+  document.body.appendChild(layer);
+  const colors = ['#FF6B5A','#1E9E90','#FFC857','#FF8FA3','#5EA0D0'];
+  for(let i=0;i<40;i++){
+    const p = document.createElement('div');
+    p.className='confetti-piece';
+    p.style.left = Math.random()*100+'vw';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration = (2+Math.random()*1.5)+'s';
+    p.style.borderRadius = Math.random()>0.5 ? '50%':'2px';
+    layer.appendChild(p);
+  }
+  setTimeout(()=>layer.remove(),3600);
+}
+
+function normalize(str){
+  return str.trim().toLowerCase()
+    .replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i").replace(/ó/g,"o").replace(/ú/g,"u")
+    .replace(/\s+/g," ");
+}
+
+/* ---------- EXERCISE 1: SORT ACTIVITIES INTO CATEGORIES ---------- */
+const objectsPool = document.getElementById('objectsPool');
+const roomsBoard = document.getElementById('roomsBoard');
+let selectedRoom = null;
+let placements = {}; // word -> cat
+
+const shuffledActivities = [...ACTIVITIES].sort(()=>Math.random()-0.5);
+shuffledActivities.forEach(o=>{
+  const btn = document.createElement('button');
+  btn.className='object-chip';
+  btn.textContent = o.icon + ' ' + o.word;
+  btn.dataset.word = o.word;
+  btn.onclick = ()=>placeObject(o.word, btn);
+  objectsPool.appendChild(btn);
+});
+
+const roomSlotEls = {};
+CATEGORIES.forEach(r=>{
+  const slot = document.createElement('div');
+  slot.className='room-slot';
+  slot.dataset.room = r;
+  slot.innerHTML = `<h3>${CAT_ICONS[r]} ${CAT_LABELS[r]}</h3><div class="items"></div><div class="hint-select">click to select</div>`;
+  slot.onclick = ()=>selectRoom(r, slot);
+  roomsBoard.appendChild(slot);
+  roomSlotEls[r] = slot;
+});
+
+function selectRoom(r, slot){
+  Object.values(roomSlotEls).forEach(s=>s.classList.remove('active'));
+  slot.classList.add('active');
+  selectedRoom = r;
+}
+
+function placeObject(word, btn){
+  if(!selectedRoom){
+    const fb = document.getElementById('fb1');
+    fb.textContent = "First click a category, then click the activity. 🎯";
+    fb.className='feedback bad';
+    return;
+  }
+  const slot = roomSlotEls[selectedRoom];
+  const tag = document.createElement('span');
+  tag.className='item-tag';
+  tag.dataset.word = word;
+  tag.textContent = word;
+  slot.querySelector('.items').appendChild(tag);
+  placements[word] = selectedRoom;
+  btn.disabled = true;
+}
+
+function checkRooms(){
+  const fb = document.getElementById('fb1');
+  if(Object.keys(placements).length < ACTIVITIES.length){
+    fb.textContent = "Place all 10 activities first. 🐕";
+    fb.className='feedback bad';
+    return;
+  }
+  let correct = 0;
+  ACTIVITIES.forEach(o=>{
+    const tag = document.querySelector(`.item-tag[data-word="${o.word}"]`);
+    if(placements[o.word] === o.cat){
+      tag.classList.add('correct'); tag.classList.remove('wrong');
+      correct++;
+    } else {
+      tag.classList.add('wrong'); tag.classList.remove('correct');
+    }
+  });
+  if(correct === ACTIVITIES.length){
+    fb.textContent = "Perfect! 🎉 Every activity is in the right place.";
+    fb.className='feedback good';
+    earnStar(1);
+  } else {
+    fb.textContent = `You have ${correct} out of ${ACTIVITIES.length} correct. Try again!`;
+    fb.className='feedback bad';
+  }
+}
+
+/* ---------- EXERCISE 2: NAME THE SKILL ---------- */
+const numGrid = document.getElementById('numGrid');
+const skillPictures = ACTIVITIES.map(a=>({icon:a.icon, answer:a.word}));
+skillPictures.forEach(p=>{
+  const item = document.createElement('div');
+  item.className='num-item';
+  item.innerHTML = `<div class="digit">${p.icon}</div><input type="text" data-answer="${p.answer}" placeholder="write here...">`;
+  numGrid.appendChild(item);
+});
+
+function checkNumbers(){
+  const inputs = numGrid.querySelectorAll('input');
+  let correct = 0;
+  inputs.forEach(inp=>{
+    const ans = normalize(inp.dataset.answer);
+    if(normalize(inp.value)===ans){
+      inp.classList.add('correct'); inp.classList.remove('wrong');
+      correct++;
+    } else {
+      inp.classList.add('wrong'); inp.classList.remove('correct');
+    }
+  });
+  const fb = document.getElementById('fb2');
+  if(correct===inputs.length){
+    fb.textContent = "Excellent! You know these skills really well. 🌟";
+    fb.className='feedback good';
+    earnStar(2);
+  } else {
+    fb.textContent = `${correct} out of ${inputs.length} correct. The red ones need review.`;
+    fb.className='feedback bad';
+  }
+}
+
+/* ---------- EXERCISE 3a: SABER SENTENCE BUILDER ---------- */
+const daySelect = document.getElementById('daySelect');
+const monthSelect = document.getElementById('monthSelect');
+const PRONOUNS = [
+  {value:"yo", label:"Yo", verb:"sé"},
+  {value:"tú", label:"Tú", verb:"sabes"},
+  {value:"él", label:"Él", verb:"sabe"},
+  {value:"ella", label:"Ella", verb:"sabe"},
+];
+PRONOUNS.forEach(p=>{
+  const opt = document.createElement('option');
+  opt.value = p.value;
+  opt.textContent = p.label;
+  daySelect.appendChild(opt);
+});
+ACTIVITIES.forEach(a=>{
+  const opt = document.createElement('option');
+  opt.value = a.word;
+  opt.textContent = a.icon + ' ' + a.word;
+  monthSelect.appendChild(opt);
+});
+function updateBirthday(){
+  const pronoun = PRONOUNS.find(p=>p.value===daySelect.value);
+  const act = monthSelect.value;
+  document.getElementById('birthdaySentence').innerHTML =
+    `<b>${pronoun.label}</b> ${pronoun.verb} <b>${act}</b>.`;
+  earnStar(3);
+}
+daySelect.onchange = updateBirthday;
+monthSelect.onchange = updateBirthday;
+updateBirthday();
+
+/* ---------- EXERCISE 3b: ¿SABES...? YES/NO/NOT VERY GOOD ---------- */
+const askSelect = document.getElementById('askSelect');
+const answerSelect = document.getElementById('answerSelect');
+const ANSWERS = [
+  {value:"si", label:"Sí"},
+  {value:"no", label:"No"},
+  {value:"masomenos", label:"No muy bien"},
+];
+ACTIVITIES.forEach(a=>{
+  const opt = document.createElement('option');
+  opt.value = a.word;
+  opt.textContent = a.icon + ' ' + a.word;
+  askSelect.appendChild(opt);
+});
+ANSWERS.forEach(a=>{
+  const opt = document.createElement('option');
+  opt.value = a.value;
+  opt.textContent = a.label;
+  answerSelect.appendChild(opt);
+});
+function updateAnswer(){
+  const act = askSelect.value;
+  const ans = answerSelect.value;
+  let sentence;
+  if(ans==="si") sentence = `¿Sabes <b>${act}</b>? Sí, sé <b>${act}</b>.`;
+  else if(ans==="no") sentence = `¿Sabes <b>${act}</b>? No, no sé <b>${act}</b>.`;
+  else sentence = `¿Sabes <b>${act}</b>? Sí, pero no muy bien.`;
+  document.getElementById('answerSentence').innerHTML = sentence;
+  earnStar(3);
+}
+askSelect.onchange = updateAnswer;
+answerSelect.onchange = updateAnswer;
+updateAnswer();
+
+/* ---------- EXERCISE 4: MISSING LETTERS ---------- */
+const fillGrid = document.getElementById('fillGrid');
+const fillWords = [
+  {word:"leer", blankIndex:2},
+  {word:"bailar", blankIndex:3},
+  {word:"ladrar", blankIndex:2},
+  {word:"cantar", blankIndex:3},
+  {word:"nadar", blankIndex:2},
+  {word:"comba", blankIndex:3},
+  {word:"futbol", blankIndex:2},
+  {word:"piano", blankIndex:2},
+  {word:"bici", blankIndex:2},
+  {word:"cama", blankIndex:1},
+];
+fillWords.forEach(fw=>{
+  const chars = fw.word.split('');
+  const answer = chars[fw.blankIndex];
+  chars[fw.blankIndex] = '_';
+  const displayWord = chars.join('');
+  const before = displayWord.slice(0, fw.blankIndex);
+  const after = displayWord.slice(fw.blankIndex+1);
+
+  const item = document.createElement('div');
+  item.className='fill-item';
+  item.innerHTML = `<span>${before}</span><input maxlength="1" data-answer="${answer}"><span>${after}</span>`;
+  fillGrid.appendChild(item);
+});
+
+function checkFill(){
+  const inputs = fillGrid.querySelectorAll('input');
+  let correct = 0;
+  inputs.forEach(inp=>{
+    if(normalize(inp.value)===normalize(inp.dataset.answer)){
+      inp.classList.add('correct'); inp.classList.remove('wrong');
+      correct++;
+    } else {
+      inp.classList.add('wrong'); inp.classList.remove('correct');
+    }
+  });
+  const fb = document.getElementById('fb4');
+  if(correct===inputs.length){
+    fb.textContent = "Amazing! You know all the words. 🏆";
+    fb.className='feedback good';
+    earnStar(4);
+  } else {
+    fb.textContent = `${correct} out of ${inputs.length} correct. You're almost there!`;
+    fb.className='feedback bad';
+  }
+}
+
+/* ---------- EXERCISE 5: UNSCRAMBLE ---------- */
+function scramble(word){
+  let letters, result;
+  do{
+    letters = word.split('');
+    for(let i=letters.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [letters[i],letters[j]] = [letters[j],letters[i]];
+    }
+    result = letters.join('');
+  } while(result===word);
+  return result;
+}
+const scrambleWords = ["nadar","cantar","bailar","ladrar","piano","bici"];
+const scrambleGrid = document.getElementById('scrambleGrid');
+scrambleWords.forEach(w=>{
+  const item = document.createElement('div');
+  item.className='scramble-item';
+  item.innerHTML = `<div class="scramble-word">${scramble(w).toUpperCase()}</div>
+    <input type="text" data-answer="${w}" placeholder="write the word...">`;
+  scrambleGrid.appendChild(item);
+});
+function checkScramble(){
+  const inputs = scrambleGrid.querySelectorAll('input');
+  let correct = 0;
+  inputs.forEach(inp=>{
+    if(normalize(inp.value)===normalize(inp.dataset.answer)){
+      inp.classList.add('correct'); inp.classList.remove('wrong');
+      correct++;
+    } else {
+      inp.classList.add('wrong'); inp.classList.remove('correct');
+    }
+  });
+  const fb = document.getElementById('fb5');
+  if(correct===inputs.length){
+    fb.textContent = "You unscrambled them all! 🌟";
+    fb.className='feedback good';
+    earnStar(5);
+  } else {
+    fb.textContent = `${correct} out of ${inputs.length} correct. Look closely at the letters.`;
+    fb.className='feedback bad';
+  }
+}
+
+/* ---------- EXERCISE 6: WORD SEARCH ---------- */
+const WS_SIZE = 10;
+const wsWordsToFind = ["nadar","cantar","bailar","leer"];
+const wsDisplayWords = {"nadar":"nadar","cantar":"cantar","bailar":"bailar","leer":"leer"};
+function buildWordSearch(){
+  const grid = Array.from({length:WS_SIZE},()=>Array(WS_SIZE).fill(null));
+  const directions = [[0,1],[1,0],[1,1]]; // right, down, diagonal
+  const placements = {};
+
+  wsWordsToFind.forEach(word=>{
+    let placed = false;
+    let attempts = 0;
+    while(!placed && attempts<200){
+      attempts++;
+      const dir = directions[Math.floor(Math.random()*directions.length)];
+      const row = Math.floor(Math.random()* (dir[0] ? WS_SIZE-word.length+1 : WS_SIZE));
+      const col = Math.floor(Math.random()* (dir[1] ? WS_SIZE-word.length+1 : WS_SIZE));
+
+      let fits = true;
+      const cells = [];
+      for(let i=0;i<word.length;i++){
+        const r = row + dir[0]*i;
+        const c = col + dir[1]*i;
+        if(r>=WS_SIZE || c>=WS_SIZE){ fits=false; break; }
+        const existing = grid[r][c];
+        if(existing && existing !== word[i]){ fits=false; break; }
+        cells.push([r,c]);
+      }
+      if(fits){
+        cells.forEach(([r,c],i)=> grid[r][c] = word[i]);
+        placements[word] = cells;
+        placed = true;
+      }
+    }
+  });
+
+  const alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+  for(let r=0;r<WS_SIZE;r++){
+    for(let c=0;c<WS_SIZE;c++){
+      if(!grid[r][c]) grid[r][c] = alphabet[Math.floor(Math.random()*alphabet.length)];
+    }
+  }
+  return {grid, placements};
+}
+
+const {grid: wsGridData, placements: wsPlacements} = buildWordSearch();
+const wsGridEl = document.getElementById('wsGrid');
+const wsCells = [];
+let wsSelection = [];
+let wsFoundWords = new Set();
+
+for(let r=0;r<WS_SIZE;r++){
+  wsCells.push([]);
+  for(let c=0;c<WS_SIZE;c++){
+    const cell = document.createElement('div');
+    cell.className = 'ws-cell';
+    cell.textContent = wsGridData[r][c].toUpperCase();
+    cell.dataset.r = r; cell.dataset.c = c;
+    cell.onclick = ()=>toggleCell(r,c,cell);
+    wsGridEl.appendChild(cell);
+    wsCells[r].push(cell);
+  }
+}
+
+const wsWordsEl = document.getElementById('wsWords');
+wsWordsToFind.forEach(w=>{
+  const d = document.createElement('div');
+  d.id = 'wsword-'+w;
+  d.textContent = '• ' + wsDisplayWords[w];
+  wsWordsEl.appendChild(d);
+});
+
+function toggleCell(r,c,cell){
+  if(cell.classList.contains('found')) return;
+  const idx = wsSelection.findIndex(s=>s[0]===r && s[1]===c);
+  if(idx === wsSelection.length-1 && idx !== -1){
+    // clicking last selected cell again removes it
+    wsSelection.pop();
+    cell.classList.remove('selected');
+    return;
+  }
+  wsSelection.push([r,c]);
+  cell.classList.add('selected');
+  checkWordSelection();
+}
+
+function checkWordSelection(){
+  const word = wsSelection.map(([r,c])=>wsGridData[r][c]).join('');
+  if(wsWordsToFind.includes(word) && !wsFoundWords.has(word)){
+    wsFoundWords.add(word);
+    wsSelection.forEach(([r,c])=>{
+      wsCells[r][c].classList.remove('selected');
+      wsCells[r][c].classList.add('found');
+    });
+    document.getElementById('wsword-'+word).classList.add('found-word');
+    wsSelection = [];
+    const fb = document.getElementById('fb6');
+    if(wsFoundWords.size === wsWordsToFind.length){
+      fb.textContent = "You found all the hidden words! 🔎🎉";
+      fb.className='feedback good';
+      earnStar(6);
+    } else {
+      fb.textContent = `Nice! You found "${wsDisplayWords[word]}". Keep looking.`;
+      fb.className='feedback good';
+    }
+  }
+}
+
+function clearSelection(){
+  wsSelection.forEach(([r,c])=> wsCells[r][c].classList.remove('selected'));
+  wsSelection = [];
+}
+
+/* ---------- EXERCISE 7: MEMORY GAME ---------- */
+const memoryPairs = [
+  {a:"📖", b:"leer"},
+  {a:"💃", b:"bailar"},
+  {a:"🐕", b:"ladrar"},
+  {a:"🎤", b:"cantar"},
+  {a:"🎹", b:"piano"},
+  {a:"🏊", b:"nadar"},
+];
+let memCards = [];
+memoryPairs.forEach((p,i)=>{
+  memCards.push({id:i+'a', pair:i, label:p.a});
+  memCards.push({id:i+'b', pair:i, label:p.b});
+});
+memCards.sort(()=>Math.random()-0.5);
+
+const memoryGrid = document.getElementById('memoryGrid');
+let memFlipped = [];
+let memMatches = 0;
+let memLock = false;
+
+memCards.forEach(card=>{
+  const el = document.createElement('div');
+  el.className='mem-card';
+  el.dataset.pair = card.pair;
+  el.dataset.state = 'hidden';
+  el.textContent = '?';
+  el.onclick = ()=>flipCard(el, card);
+  memoryGrid.appendChild(el);
+});
+
+function flipCard(el, card){
+  if(memLock || el.dataset.state !== 'hidden') return;
+  el.textContent = card.label;
+  el.classList.add('flipped');
+  el.dataset.state = 'flipped';
+  memFlipped.push({el, card});
+
+  if(memFlipped.length === 2){
+    memLock = true;
+    const [f1, f2] = memFlipped;
+    if(f1.card.pair === f2.card.pair){
+      f1.el.classList.add('matched'); f1.el.classList.remove('flipped');
+      f2.el.classList.add('matched'); f2.el.classList.remove('flipped');
+      f1.el.dataset.state='matched'; f2.el.dataset.state='matched';
+      memMatches++;
+      document.getElementById('memoryStatus').textContent = `Pairs found: ${memMatches} / ${memoryPairs.length}`;
+      memFlipped = [];
+      memLock = false;
+      if(memMatches === memoryPairs.length){
+        document.getElementById('memoryStatus').textContent = "You found all the pairs! 🃏🎉";
+        earnStar(7);
+      }
+    } else {
+      setTimeout(()=>{
+        f1.el.textContent='?'; f1.el.classList.remove('flipped'); f1.el.dataset.state='hidden';
+        f2.el.textContent='?'; f2.el.classList.remove('flipped'); f2.el.dataset.state='hidden';
+        memFlipped = [];
+        memLock = false;
+      }, 800);
+    }
+  }
+}
+</script>
+</body>
+</html>
