@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mid-Autumn Festival Fun! 🥮</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#ff80ab;--pink-light:#fce4ec;--purple:#ba68c8;--yellow:#ffd54f;--yellow-light:#fffde7;
+  --bg1:#f3e5f5;--bg2:#e1f5fe;--text:#4a148c;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent;}
+body{
+  font-family:'Fredoka','Comic Sans MS',cursive,sans-serif;
+  background:linear-gradient(160deg,var(--bg1),var(--bg2) 60%,#fff3e0);
+  color:var(--text);margin:0;padding:14px;min-height:100%;position:relative;overflow-x:hidden;
+}
+.bgdeco{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.bgdeco span{position:absolute;font-size:2rem;opacity:.25;animation:drift linear infinite;}
+@keyframes drift{0%{transform:translateY(110vh) rotate(0deg);}100%{transform:translateY(-10vh) rotate(360deg);}}
+h1{color:#8e24aa;font-size:1.8rem;margin:4px 0 2px;text-shadow:2px 2px white;text-align:center;position:relative;z-index:1;}
+.sub{text-align:center;color:#7b1fa2;margin-bottom:12px;font-size:1rem;position:relative;z-index:1;}
+#app{position:relative;z-index:1;max-width:560px;margin:0 auto;}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.homeBtn,.backBtn{
+  background:white;border:3px solid var(--purple);color:var(--purple);font-weight:700;
+  padding:8px 16px;border-radius:20px;cursor:pointer;box-shadow:0 4px 0 var(--purple);font-size:1rem;
+}
+.homeBtn:active,.backBtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--purple);}
+.grid-home{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.gcard{
+  border:none;border-radius:20px;padding:14px 6px;color:white;font-weight:700;cursor:pointer;
+  box-shadow:0 5px 0 rgba(0,0,0,.15);text-align:center;font-size:.85rem;
+  opacity:0;transform:translateY(14px);animation:pop .4s forwards;
+}
+.gcard span{display:block;font-size:2rem;margin-bottom:4px;}
+.gcard:active{transform:translateY(3px) scale(.97);}
+@keyframes pop{to{opacity:1;transform:translateY(0);}}
+#stage{
+  background:white;padding:18px;border-radius:24px;box-shadow:0 8px 16px rgba(0,0,0,.1);
+  border:4px solid var(--pink-light);text-align:center;min-height:280px;
+}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px;}
+.card{
+  background:var(--yellow-light);border:3px solid var(--yellow);border-radius:16px;padding:10px 6px;
+  cursor:pointer;box-shadow:0 5px 0 var(--yellow);transition:transform .1s;
+}
+.card:active{transform:scale(.93);}
+.card.flip{background:var(--pink);border-color:#c2185b;box-shadow:0 5px 0 #c2185b;}
+.card.matched{background:#c8e6c9;border-color:#66bb6a;box-shadow:0 5px 0 #66bb6a;cursor:default;}
+.card-icon{font-size:2.2rem;display:block;}
+.card-word{font-size:1.1rem;font-weight:700;color:#d81b60;}
+.speak-btn{
+  background:var(--pink);color:white;border:none;padding:12px 26px;font-size:1.15rem;border-radius:50px;
+  cursor:pointer;font-weight:700;box-shadow:0 6px 0 #c2185b;margin:10px 4px;
+}
+.speak-btn:active{box-shadow:0 2px 0 #c2185b;transform:translateY(4px);}
+.bubble{background:var(--pink-light);border:3px solid var(--pink);padding:14px;border-radius:18px;font-size:1.2rem;margin-bottom:14px;}
+.opt-btn{
+  background:white;border:3px solid var(--purple);border-radius:18px;padding:11px 18px;font-size:1.1rem;
+  font-weight:700;color:var(--purple);cursor:pointer;margin:6px;box-shadow:0 4px 0 var(--purple);
+}
+.opt-btn:active{transform:translateY(2px);box-shadow:0 2px 0 var(--purple);}
+.opt-btn.correct{background:#c8e6c9;border-color:#43a047;color:#2e7d32;}
+.opt-btn.wrong{background:#ffcdd2;border-color:#e53935;color:#c62828;}
+.feedback{font-size:1.3rem;font-weight:700;min-height:34px;margin-top:8px;}
+.letters{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:10px 0;}
+.letter{
+  background:var(--purple);color:white;font-size:1.3rem;font-weight:700;padding:8px 12px;
+  border-radius:10px;cursor:pointer;box-shadow:0 4px 0 #7b1fa2;
+}
+.letter.used{opacity:.25;pointer-events:none;}
+.answerSlot{font-size:1.6rem;letter-spacing:4px;min-height:40px;font-weight:700;color:#d81b60;margin:6px 0;}
+.wheel-wrap{position:relative;width:230px;height:230px;margin:14px auto;}
+.wheel{
+  width:100%;height:100%;border-radius:50%;border:6px solid var(--purple);position:relative;
+  transition:transform 3.5s cubic-bezier(.17,.67,.16,1);background:conic-gradient(var(--pink-light) 0 100%);
+}
+.wheel span{position:absolute;font-size:1.5rem;transform-origin:0 0;}
+.pointer{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:1.8rem;}
+.seqItem{
+  background:var(--yellow-light);border:3px solid var(--yellow);border-radius:16px;padding:10px;
+  margin:6px 0;display:flex;align-items:center;gap:10px;cursor:pointer;font-size:1.05rem;font-weight:700;text-align:left;
+}
+.seqItem.done{background:#c8e6c9;border-color:#43a047;}
+.badge{background:var(--purple);color:white;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.bingoGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+.bingoCell{
+  background:var(--yellow-light);border:3px solid var(--yellow);border-radius:14px;padding:10px 4px;
+  font-size:1.8rem;cursor:pointer;box-shadow:0 4px 0 var(--yellow);
+}
+.bingoCell.marked{background:#c8e6c9;border-color:#43a047;box-shadow:0 4px 0 #43a047;}
+.songLine{
+  background:var(--pink-light);border:3px solid var(--pink);border-radius:16px;padding:12px;margin:8px 0;
+  cursor:pointer;font-size:1.15rem;font-weight:600;text-align:left;display:flex;justify-content:space-between;align-items:center;
+}
+.songLine.sung{background:#c8e6c9;border-color:#43a047;}
+.confetti{position:fixed;top:0;font-size:1.8rem;pointer-events:none;z-index:5;animation:fall 1.6s ease-in forwards;}
+@keyframes fall{to{transform:translateY(100vh) rotate(360deg);opacity:0;}}
+</style>
+</head>
+<body>
+<div class="bgdeco" id="bgdeco"></div>
+<h1>🥮 Mid-Autumn Festival! 🐰</h1>
+<p class="sub">Tap a game to play! 🌕</p>
+<div id="app">
+  <div class="topbar" id="topbar" style="display:none;">
+    <button class="backBtn" onclick="goHome()">⬅ Home</button>
+  </div>
+  <div id="home" class="grid-home"></div>
+  <div id="stage" style="display:none;"></div>
+</div>
+<script>
+const vocab=[
+ {word:'Moon',icon:'🌕'},{word:'Mooncake',icon:'🥮'},{word:'Rabbit',icon:'🐰'},
+ {word:'Lantern',icon:'🏮'},{word:'Family',icon:'👨‍👩‍👧'},{word:'Tea',icon:'🍵'},
+ {word:'Star',icon:'⭐'},{word:'Flower',icon:'🌸'},{word:'Night',icon:'🌌'}
+];
+const GAMES=[
+ {id:'learn',t:'Flashcards',i:'🌸',c:'#ff80ab'},{id:'listen',t:'Listen & Touch',i:'👂',c:'#ba68c8'},
+ {id:'talk',t:"Let's Talk",i:'💬',c:'#4fc3f7'},{id:'memory',t:'Memory Match',i:'🧠',c:'#ffb74d'},
+ {id:'scramble',t:'Word Scramble',i:'🔤',c:'#81c784'},{id:'wheel',t:'Spin & Say',i:'🎡',c:'#f06292'},
+ {id:'truefalse',t:'True or False',i:'✅',c:'#7986cb'},{id:'sequence',t:'Story Order',i:'📖',c:'#4db6ac'},
+ {id:'oddone',t:'Odd One Out',i:'🔍',c:'#ffb300'},{id:'counting',t:'Count Lanterns',i:'🔢',c:'#e57373'},
+ {id:'bingo',t:'Bingo!',i:'🎯',c:'#9575cd'},{id:'fillblank',t:'Fill the Blank',i:'✏️',c:'#64b5f6'},
+ {id:'song',t:'Sing Along',i:'🎵',c:'#f48fb1'}
+];
+
+function speak(text,rate=0.85){
+  if(!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US';u.pitch=1.3;u.rate=rate;
+  window.speechSynthesis.speak(u);
+}
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
+function confetti(){
+  const icons=['⭐','🎉','🥮','✨'];
+  for(let i=0;i<10;i++){
+    const s=document.createElement('span');
+    s.className='confetti';s.textContent=icons[Math.floor(Math.random()*icons.length)];
+    s.style.left=Math.random()*100+'vw';s.style.animationDelay=(Math.random()*.3)+'s';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),2000);
+  }
+}
+// decorative background
+const deco=document.getElementById('bgdeco');
+const decoIcons=['🌕','⭐','🏮','✨'];
+for(let i=0;i<10;i++){
+  const s=document.createElement('span');
+  s.textContent=decoIcons[i%decoIcons.length];
+  s.style.left=(Math.random()*95)+'vw';
+  s.style.animationDuration=(14+Math.random()*10)+'s';
+  s.style.animationDelay=(Math.random()*10)+'s';
+  deco.appendChild(s);
+}
+
+// HOME
+const homeEl=document.getElementById('home');
+GAMES.forEach((g,idx)=>{
+  const b=document.createElement('button');
+  b.className='gcard';b.style.background=g.c;b.style.animationDelay=(idx*0.05)+'s';
+  b.innerHTML=`<span>${g.i}</span>${g.t}`;
+  b.onclick=()=>openGame(g.id);
+  homeEl.appendChild(b);
+});
+function goHome(){
+  document.getElementById('home').style.display='grid';
+  document.getElementById('stage').style.display='none';
+  document.getElementById('topbar').style.display='none';
+  window.speechSynthesis.cancel();
+}
+function openGame(id){
+  document.getElementById('home').style.display='none';
+  document.getElementById('topbar').style.display='flex';
+  const stage=document.getElementById('stage');
+  stage.style.display='block';
+  ({learn:initLearn,listen:initListen,talk:initTalk,memory:initMemory,scramble:initScramble,
+    wheel:initWheel,truefalse:initTF,sequence:initSeq,oddone:initOdd,counting:initCounting,
+    bingo:initBingo,fillblank:initFill,song:initSong})[id]();
+}
+
+// 1. FLASHCARDS
+function initLearn(){
+  const stage=document.getElementById('stage');
+  stage.innerHTML=`<h2>Touch to Listen & Learn! 🎧</h2><div class="grid" id="vocabGrid"></div>`;
+  const g=document.getElementById('vocabGrid');
+  vocab.forEach(item=>{
+    const card=document.createElement('div');card.className='card';
+    card.innerHTML=`<span class="card-icon">${item.icon}</span><span class="card-word">${item.word}</span>`;
+    card.onclick=()=>speak(item.word);
+    g.appendChild(card);
+  });
+}
+
+// 2. LISTEN & TOUCH
+let listenIdx=0;
+function initListen(){
+  const stage=document.getElementById('stage');
+  stage.innerHTML=`<h2>Listen & Touch! 🌟</h2><button class="speak-btn" onclick="playListenAudio()">🔊 Listen</button>
+    <div class="grid" id="listenGrid"></div><div class="feedback" id="listenFeedback"></div>`;
+  listenIdx=Math.floor(Math.random()*vocab.length);
+  const grid=document.getElementById('listenGrid');grid.innerHTML='';
+  shuffle(vocab).forEach(item=>{
+    const c=document.createElement('div');c.className='card';
+    c.innerHTML=`<span class="card-icon">${item.icon}</span>`;
+    c.onclick=()=>checkListen(item.word);
+    grid.appendChild(c);
+  });
+  setTimeout(playListenAudio,300);
+}
+function playListenAudio(){speak('Touch the '+vocab[listenIdx].word);}
+function checkListen(w){
+  const fb=document.getElementById('listenFeedback');const target=vocab[listenIdx].word;
+  if(w===target){fb.style.color='#2e7d32';fb.textContent='Great Job! ⭐🎉';confetti();speak('Yay! Good job! '+target);setTimeout(initListen,1600);}
+  else{fb.style.color='#c62828';fb.textContent='Try again! 💕';speak('Try again!');}
+}
+
+// 3. TALK
+const dialogues=[
+ {p:'Look at the moon! What do you see? 🌕',o:[{t:'I see the moon!',ok:1},{t:'I see a mooncake!',ok:0}]},
+ {p:'Do you like mooncakes? 🥮',o:[{t:'Yes, I do! Yum!',ok:1},{t:'No, thank you!',ok:1}]},
+ {p:'Happy Mid-Autumn Festival! 🐰',o:[{t:'Happy Mid-Autumn Festival!',ok:1}]}
+];
+let talkIdx=0;
+function initTalk(){
+  talkIdx=0;renderTalk();
+}
+function renderTalk(){
+  const stage=document.getElementById('stage');
+  const d=dialogues[talkIdx];
+  stage.innerHTML=`<h2>Let's Talk! 💬</h2><div class="bubble">${d.p}</div>
+    <button class="speak-btn" onclick="speak('${d.p.replace(/'/g,"\\'")}')">🔊 Listen Sentence</button>
+    <p>Answer the rabbit:</p><div id="dOpts"></div><div class="feedback" id="talkFb"></div>`;
+  const c=document.getElementById('dOpts');
+  d.o.forEach(opt=>{
+    const btn=document.createElement('button');btn.className='opt-btn';btn.textContent=opt.t;
+    btn.onclick=()=>{
+      speak(opt.t);document.getElementById('talkFb').style.color='#2e7d32';
+      document.getElementById('talkFb').textContent='Wonderful! 🌟';confetti();
+      setTimeout(()=>{talkIdx=(talkIdx+1)%dialogues.length;renderTalk();},1800);
+    };
+    c.appendChild(btn);
+  });
+  setTimeout(()=>speak(d.p),300);
+}
+
+// 4. MEMORY MATCH
+let memState={first:null,lock:false,matched:0};
+function initMemory(){
+  memState={first:null,lock:false,matched:0};
+  const pairs=shuffle(vocab.slice(0,6).flatMap(v=>[{...v},{...v}]));
+  const stage=document.getElementById('stage');
+  stage.innerHTML=`<h2>Memory Match! 🧠</h2><p>Find the matching pairs!</p><div class="grid" id="memGrid"></div>`;
+  const grid=document.getElementById('memGrid');
+  pairs.forEach((item,i)=>{
+    const c=document.createElement('div');c.className='card';c.dataset.word=item.word;c.dataset.i=i;
+    c.innerHTML=`<span class="card-icon">❓</span>`;
+    c.onclick=()=>flipMem(c,item);
+    grid.appendChild(c);
+  });
+}
+function flipMem(el,item){
+  if(memState.lock||el.classList.contains('flip')||el.classList.contains('matched'))return;
+  el.classList.add('flip');el.querySelector('.card-icon').textContent=item.icon;speak(item.word,1);
+  if(!memState.first){memState.first={el,item};return;}
+  memState.lock=true;
+  const {el:el1,item:item1}=memState.first;
+  if(item1.word===item.word){
+    el1.classList.add('matched');el.classList.add('matched');
+    memState.matched++;memState.first=null;memState.lock=false;
+    if(memState.matched===6){confetti();setTimeout(()=>speak('You matched them all! Great job!'),400);}
+  }else{
+    setTimeout(()=>{
+      el1.classList.remove('flip');el1.querySelector('.card-icon').textContent='❓';
+      el.classList.remove('flip');el.querySelector('.card-icon').textContent='❓';
+      memState.first=null;memState.lock=false;
+    },800);
+  }
+}
+
+// 5. WORD SCRAMBLE
+let scrState={word:'',built:''};
+function initScramble(){
+  const item=vocab[Math.floor(Math.random()*vocab.length)];
+  scrState={word:item.word.toUpperCase(),built:''};
+  const stage=document.getElementById('stage');
+  stage.innerHTML=`<h2>Word Scramble! 🔤</h2><span class="card-icon" style="font-size:3rem">${item.icon}</span>
+    <div class="answerSlot" id="answerSlot"></div><div class="letters" id="letterBox"></div>
+    <button class="speak-btn" onclick="initScramble()">🔄 New Word</button>
+    <div class="feedback" id="scrFb"></div>`;
+  const letters=shuffle(scrState.word.split(''));
+  const box=document.getElementById('letterBox');
+  letters.forEach((l,i)=>{
+    const s=document.createElement('span');s.className='letter';s.textContent=l;s.dataset.i=i;
+    s.onclick=()=>{
+      if(s.classList.contains('used'))return;
+      s.classList.add('used');scrState.built+=l;
+      document.getElementById('answerSlot').textContent=scrState.built;
+      if(scrState.built.length===scrState.word.length){
+        if(scrState.built===scrState.word){
+          document.getElementById('scrFb').style.color='#2e7d32';
+          document.getElementById('scrFb').textContent='Perfect! ⭐';confetti();
+          speak('Great! '+scrState.word);setTimeout(initScramble,1800);
+        }else{
+          document.getElementById('scrFb').style.color='#c62828';
+          document.getElementById('scrFb').textContent='Oops, try again! 💕';
+          setTimeout(initScramble,1200);
+        }
+      }
+    };
+    box.appendChild(s);
+  });
+}
+
+// 6. SPIN & SAY WHEEL
+function initWheel(){
+  const stage=document.getElementById('stage');
+  const n=vocab.length;
+  let items='';
+  vocab.forEach((v,i)=>{
+    const ang=(360/n)*i;
+    items+=`<span style="transform:rotate(${ang}deg) translate(70px) rotate(-${ang}deg)">${v.icon}</span>`;
+  });
+  stage.innerHTML=`<h2>Spin & Say! 🎡</h2>
+    <div class="wheel-wrap"><span class="pointer">📍</span><div class="wheel" id="wheelEl">${items}</div></div>
+    <button class="speak-btn" onclick="spinWheel()">🎡 Spin!</button>
+    <div class="feedback" id="wheelFb"></div>`;
+}
+function spinWheel(){
+  const n=vocab.length;const seg=360/n;
+  const idx=Math.floor(Math.random()*n);
+  const extraSpins=360*5;
+  const targetDeg=extraSpins+(360-idx*seg);
+  const wheel=document.getElementById('wheelEl');
+  wheel.style.transform=`rotate(${targetDeg}deg)`;
+  document.getElementById('wheelFb').textContent='';
+  setTimeout(()=>{
+    const item=vocab[idx];
+    document.getElementById('wheelFb').innerHTML=`It's the <b>${item.word}</b>! ${item.icon}`;
+    speak("It's the "+item.word+"!");confetti();
+  },3600);
+}
+
+// 7. TRUE OR FALSE
+const facts=[
+ {t:'Mid-Autumn Festival happens in summer.',ok:false},
+ {t:'People eat mooncakes during Mid-Autumn Festival.',ok:true},
+ {t:'The moon is full during Mid-Autumn Festival.',ok:true},
+ {t:'A rabbit lives on the sun in the story.',ok:false},
+ {t:'Families gather together for Mid-Autumn Festival.',ok:true},
+ {t:'People light lanterns at the festival.',ok:true}
+];
+let tfIdx=0;
+function initTF(){tfIdx=0;renderTF();}
+function renderTF(){
+  const stage=document.getElementById('stage');
+  if(tfIdx>=facts.length){
+    stage.innerHTML=`<h2>All Done! 🌟</h2><p>You know so much about the festival!</p>
+      <button class="speak-btn" onclick="initTF()">🔄 Play Again</button>`;confetti();return;
+  }
+  const f=facts[tfIdx];
+  stage.innerHTML=`<h2>True or False? ✅</h2><div class="bubble">${f.t}</div>
+    <button class="speak-btn" onclick="speak('${f.t.replace(/'/g,"\\'")}')">🔊 Listen</button><br>
+    <button class="opt-btn" id="btnTrue">✅ True</button>
+    <button class="opt-btn" id="btnFalse">❌ False</button>
+    <div class="feedback" id="tfFb"></div>`;
+  document.getElementById('btnTrue').onclick=()=>answerTF(true);
+  document.getElementById('btnFalse').onclick=()=>answerTF(false);
+  setTimeout(()=>speak(f.t),300);
+}
+function answerTF(v){
+  const f=facts[tfIdx];const fb=document.getElementById('tfFb');
+  if(v===f.ok){fb.style.color='#2e7d32';fb.textContent='Correct! ⭐';confetti();speak('Correct!');}
+  else{fb.style.color='#c62828';fb.textContent='Not quite! 💕';speak('Not quite!');}
+  tfIdx++;setTimeout(renderTF,1600);
+}
+
+// 8. STORY ORDER
+const seqSteps=[
+ {i:'👨‍👩‍👧',t:'Family gathers together',o:1},
+ {i:'🌕',t:'Watch the full moon rise',o:2},
+ {i:'🥮',t:'Eat sweet mooncakes',o:3},
+ {i:'🏮',t:'Light lanterns and celebrate',o:4}
+];
+let seqState={next:1};
+function initSeq(){
+  seqState={next:1};
+  const stage=document.getElementById('stage');
+  stage.innerHTML=`<h2>Put the Story in Order! 📖</h2><p>Tap the steps in the right order:</p><div id="seqBox"></div><div class="feedback" id="seqFb"></div>`;
+  const box=document.getElementById('seqBox');
+  shuffle(seqSteps).forEach(s=>{
+    const d=document.createElement('div');d.className='seqItem';
+    d.innerHTML=`<span style="font-size:1.6rem">${s.i}</span><span>${s.t}</span>`;
+    d.onclick=()=>{
+      if(d.classList.contains('done'))return;
+      if(s.o===seqState.next){
+        d.classList.add('done');d.innerHTML=`<span class="badge">${s.o}</span><span>${s.t}</span>`;
+        speak(s.t);seqState.next++;
+        if(seqState.next>4){document.getElementById('seqFb').style.color='#2e7d32';
+          document.getElementById('seqFb').textContent='Great storytelling! 🌟';confetti();}
+      }else{
+        document.getElementById('seqFb').style.color='#c62828';
+        document.getElementById('seqFb').textContent='Try the next step! 💕';
+      }
+    };
+    box.appendChild(d);
+  });
+}
+
+// 9. ODD ONE OUT
+const distractors=['🍕','⚽','🚗','📱','🦖','🍔','🚀','🐳'];
+function initOdd(){
+  const three=shuffle(vocab).slice(0,3);
+  const odd=distractors[Math.floor(Math.random()*distractors.length)];
+  const options=shuffle([...three.map(v=>v.icon),odd]);
+  const stage=document.getElementById('stage');
+  stage.innerHTML=`<h2>Odd One Out! 🔍</h2><p>Which one does NOT belong?</p><div class="grid" id="oddGrid"></div><div class="feedback" id="oddFb"></div>`;
+  const grid=document.getElementById('oddGrid');
+  options.forEach(ic=>{
+    const c=document.createElement('div');c.className='card';c.innerHTML=`<span class="card-icon">${ic}</span>`;
+    c.onclick=()=>{
+      const fb=document.getElementById('oddFb');
+      if(ic===odd){fb.style.color='#2e7d32';fb.textContent='Yes! That one is different! ⭐';confetti();speak('Great job!');setTimeout(initOdd,1600);}
+      else{fb.style.color='#c62828';fb.textContent='Try another one! 💕';speak('Try again!');}
+    };
+    grid.appendChild(c);
+  });
+}
+
+// 10. COUNT THE LANTERNS
+function initCounting(){
+  const n=2+Math.floor(Math.random()*4);
+  const wrong=shuffle([n-1,n+1,n+2].filter(x=>x>0&&x!==n)).slice(0,2);
+  const options=shuffle([n,...wrong]);
+  const stage=document.getElementById('stage');
+  stage.innerHTML=`<h2>Count the Lanterns! 🔢</h2><div style="font-size:2.4rem">${'🏮'.repeat(n)}</div>
+    <p>How many lanterns?</p><div id="cntOpts"></div><div class="feedback" id="cntFb"></div>`;
+  const box=document.getElementById('cntOpts');
+  options.forEach(num=>{
+    const b=document.createElement('button');b.className='opt-btn';b.textContent=num;
+    b.onclick=()=>{
+      const fb=document.getElementById('cntFb');
+      if(num===n){fb.style.color='#2e7d32';fb.textContent='Correct! ⭐';confetti();speak(n+'! Correct!');setTimeout(initCounting,1600);}
+      else{fb.style.color='#c62828';fb.textContent='Count again! 💕';speak('Try again!');}
+    };
+    box.appendChild(b);
+  });
+  setTimeout(()=>speak('How many lanterns?'),300);
+}
+
+// 11. BINGO
+let bingoState={cells:[],called:new Set()};
+function initBingo(){
+  const chosen=shuffle(vocab).slice(0,9);
+  bingoState={cells:chosen,called:new Set()};
+  const stage=document.getElementById('stage');
+  stage.innerHTML=`<h2>Bingo! 🎯</h2><button class="speak-btn" onclick="callBingo()">🔊 Call a Word</button>
+    <div class="bingoGrid" id="bingoGrid"></div><div class="feedback" id="bingoFb"></div>`;
+  const grid=document.getElementById('bingoGrid');
+  chosen.forEach(item=>{
+    const c=document.createElement('div');c.className='bingoCell';c.textContent=item.icon;
+    c.onclick=()=>{
+      if(bingoState.calledWord===item.word){
+        c.classList.add('marked');confetti();
+        document.getElementById('bingoFb').textContent='Nice find! ⭐';
+      }
+    };
+    grid.appendChild(c);
+  });
+}
+function callBingo(){
+  const item=bingoState.cells[Math.floor(Math.random()*bingoState.cells.length)];
+  bingoState.calledWord=item.word;
+  speak('Find the '+item.word+'!');
+  document.getElementById('bingoFb').textContent='Listen and tap the picture!';
+}
+
+// 12. FILL IN THE BLANK
+const fillSentences=[
+ {s:'I eat a ___ under the moon.',a:'Mooncake'},{s:'We light a ___ at night.',a:'Lantern'},
+ {s:'The ___ is full and bright tonight.',a:'Moon'},{s:'My ___ and I watch the moon together.',a:'Family'},
+ {s:'The ___ hops in the moon story.',a:'Rabbit'},{s:'Grandma pours warm ___ for us.',a:'Tea'}
+];
+function initFill(){
+  const item=fillSentences[Math.floor(Math.random()*fillSentences.length)];
+  const wrongPool=vocab.map(v=>v.word).filter(w=>w!==item.a);
+  const options=shuffle([item.a,...shuffle(wrongPool).slice(0,2)]);
+  const stage=document.getElementById('stage');
+  stage.innerHTML=`<h2>Fill in the Blank! ✏️</h2><div class="bubble">${item.s}</div>
+    <button class="speak-btn" onclick="speak('${item.s.replace('___','blank').replace(/'/g,"\\'")}')">🔊 Listen</button>
+    <div id="fillOpts"></div><div class="feedback" id="fillFb"></div>`;
+  const box=document.getElementById('fillOpts');
+  options.forEach(w=>{
+    const b=document.createElement('button');b.className='opt-btn';b.textContent=w;
+    b.onclick=()=>{
+      const fb=document.getElementById('fillFb');
+      if(w===item.a){fb.style.color='#2e7d32';fb.textContent='Perfect! ⭐';confetti();speak(item.s.replace('___',item.a));setTimeout(initFill,1900);}
+      else{fb.style.color='#c62828';fb.textContent='Try again! 💕';speak('Try again!');}
+    };
+    box.appendChild(b);
+  });
+}
+
+// 13. SING ALONG
+const songLines=[
+ '🌕 Big round moon up in the sky,','🥮 Sweet mooncakes, oh so nice,',
+ '🏮 Lanterns glowing bright and warm,','👨‍👩‍👧 Family together, safe from harm!'
+];
+let sungCount=0;
+function initSong(){
+  sungCount=0;
+  const stage=document.getElementById('stage');
+  stage.innerHTML=`<h2>Sing Along! 🎵</h2><p>Tap each line to hear it, then sing along!</p><div id="songBox"></div><div class="feedback" id="songFb"></div>`;
+  const box=document.getElementById('songBox');
+  songLines.forEach((line,i)=>{
+    const d=document.createElement('div');d.className='songLine';
+    d.innerHTML=`<span>${line}</span><span>▶️</span>`;
+    d.onclick=()=>{
+      speak(line,0.8);
+      if(!d.classList.contains('sung')){d.classList.add('sung');d.lastElementChild.textContent='⭐';sungCount++;
+        if(sungCount===songLines.length){
+          document.getElementById('songFb').style.color='#2e7d32';
+          document.getElementById('songFb').textContent='You sang the whole song! 🎉';confetti();
+        }
+      }
+    };
+    box.appendChild(d);
+  });
+}
+</script>
+</body>
+</html>
