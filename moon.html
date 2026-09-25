@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mid-Autumn Festival Fun! 🥮🥮</title>
+  <style>
+    :root {
+      --pink: #ff80ab;
+      --pink-light: #fce4ec;
+      --purple: #ba68c8;
+      --yellow: #ffd54f;
+      --yellow-light: #fffde7;
+      --bg: #f3e5f5;
+      --text: #4a148c;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Fredoka One', cursive, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      color: #8e24aa;
+      font-size: 2rem;
+      margin: 5px 0;
+      text-shadow: 2px 2px white;
+      text-align: center;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+
+    .tab-btn {
+      padding: 12px 18px;
+      border: 3px solid var(--purple);
+      background-color: white;
+      color: var(--purple);
+      font-weight: bold;
+      font-size: 1.1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 var(--purple);
+      transition: all 0.1s ease;
+    }
+
+    .tab-btn.active, .tab-btn:active {
+      background-color: var(--pink);
+      color: white;
+      border-color: #f50057;
+      box-shadow: 0 2px 0 #f50057;
+      transform: translateY(2px);
+    }
+
+    .section {
+      display: none;
+      width: 100%;
+      max-width: 550px;
+      background: white;
+      padding: 20px;
+      border-radius: 25px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      border: 4px solid var(--pink-light);
+      text-align: center;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    /* Cards Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .card {
+      background-color: var(--yellow-light);
+      border: 3px solid var(--yellow);
+      border-radius: 20px;
+      padding: 15px;
+      cursor: pointer;
+      box-shadow: 0 5px 0 var(--yellow);
+      transition: transform 0.1s;
+    }
+
+    .card:active {
+      transform: scale(0.95);
+    }
+
+    .card-icon {
+      font-size: 3.5rem;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .card-word {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #d81b60;
+    }
+
+    /* Big Action Button */
+    .speak-btn {
+      background-color: var(--pink);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.3rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 6px 0 #c2185b;
+      margin: 15px 0;
+    }
+
+    .speak-btn:active {
+      box-shadow: 0 2px 0 #c2185b;
+      transform: translateY(4px);
+    }
+
+    /* Dialogue box */
+    .bubble {
+      background-color: var(--pink-light);
+      border: 3px solid var(--pink);
+      padding: 15px;
+      border-radius: 20px;
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    /* Options */
+    .opt-btn {
+      background-color: white;
+      border: 3px solid var(--purple);
+      border-radius: 20px;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--purple);
+      cursor: pointer;
+      margin: 8px;
+      box-shadow: 0 4px 0 var(--purple);
+    }
+
+    .opt-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 var(--purple);
+    }
+
+    .feedback {
+      font-size: 1.5rem;
+      font-weight: bold;
+      min-height: 40px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🥮 Mid-Autumn Festival! 🐰</h1>
+
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('learn')">1. Words 🌸</button>
+    <button class="tab-btn" onclick="switchTab('listen')">2. Listen 👂</button>
+    <button class="tab-btn" onclick="switchTab('talk')">3. Talk 💬</button>
+  </div>
+
+  <!-- SECTION 1: FLASHCARDS -->
+  <div id="learn" class="section active">
+    <h2>Touch to Listen & Learn! 🎧</h2>
+    <div class="grid" id="vocabGrid"></div>
+  </div>
+
+  <!-- SECTION 2: LISTENING GAME -->
+  <div id="listen" class="section">
+    <h2>Listen & Touch! 🌟</h2>
+    <p style="font-size: 1.2rem;">Click the button to listen:</p>
+    <button class="speak-btn" onclick="playQuestionAudio()">🔊 Listen</button>
+    <div class="grid" id="listenGrid"></div>
+    <div class="feedback" id="listenFeedback"></div>
+  </div>
+
+  <!-- SECTION 3: SIMPLE DIALOGUE PRACTICE -->
+  <div id="talk" class="section">
+    <h2>Let's Talk! 💬</h2>
+    <div class="bubble" id="dialogueText">
+      "Happy Mid-Autumn Festival! 🥮"
+    </div>
+    <button class="speak-btn" onclick="speakCurrentSentence()">🔊 Listen Sentence</button>
+    <p style="font-size: 1.1rem; margin-top: 15px;">Answer the rabbit:</p>
+    <div id="dialogueOptions"></div>
+    <div class="feedback" id="talkFeedback"></div>
+  </div>
+
+  <script>
+    // VOCABULARY DATA
+    const vocab = [
+      { word: 'Moon', icon: '🌕', text: 'Full Moon' },
+      { word: 'Mooncake', icon: '🥮', text: 'Yummy Mooncake' },
+      { word: 'Rabbit', icon: '🐰', text: 'Cute Rabbit' },
+      { word: 'Lantern', icon: '🏮', text: 'Pretty Lantern' },
+      { word: 'Family', icon: '👨‍👩‍👧', text: 'Happy Family' },
+      { word: 'Tea', icon: '🍵', text: 'Warm Tea' }
+    ];
+
+    let currentListenIndex = 0;
+
+    // SPEECH SYNTHESIS (Girl/Kid friendly speed & pitch)
+    function speak(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // Stop any active speech
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.pitch = 1.3; // Higher pitch for friendly/kid tone
+        utterance.rate = 0.85;  // Slower speed for young ESL learner
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    // TAB SWITCHING
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+
+      event.target.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+
+      if (tabId === 'listen') initListenGame();
+      if (tabId === 'talk') initTalkGame();
+    }
+
+    // 1. BUILD VOCAB FLASHCARDS
+    const vocabGrid = document.getElementById('vocabGrid');
+    vocab.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <span class="card-icon">${item.icon}</span>
+        <span class="card-word">${item.word}</span>
+      `;
+      card.onclick = () => speak(item.word);
+      vocabGrid.appendChild(card);
+    });
+
+    // 2. LISTEN & CHOOSE GAME
+    function initListenGame() {
+      document.getElementById('listenFeedback').textContent = '';
+      currentListenIndex = Math.floor(Math.random() * vocab.length);
+      
+      const grid = document.getElementById('listenGrid');
+      grid.innerHTML = '';
+
+      // Shuffle items for choices
+      const choices = [...vocab].sort(() => Math.random() - 0.5);
+
+      choices.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `<span class="card-icon">${item.icon}</span>`;
+        card.onclick = () => checkListenAnswer(item.word);
+        grid.appendChild(card);
+      });
+
+      // Play audio right away
+      setTimeout(() => playQuestionAudio(), 300);
+    }
+
+    function playQuestionAudio() {
+      speak("Touch the " + vocab[currentListenIndex].word);
+    }
+
+    function checkListenAnswer(selectedWord) {
+      const feedback = document.getElementById('listenFeedback');
+      const target = vocab[currentListenIndex].word;
+
+      if (selectedWord === target) {
+        feedback.style.color = '#2e7d32';
+        feedback.textContent = 'Great Job! ⭐🎉';
+        speak("Yay! Good job! " + target);
+        setTimeout(() => initListenGame(), 1800);
+      } else {
+        feedback.style.color = '#c62828';
+        feedback.textContent = 'Try again! 💕';
+        speak("Try again!");
+      }
+    }
+
+    // 3. CONVERSATION PRACTICE
+    const dialogues = [
+      {
+        prompt: "Look at the moon! What do you see? 🌕",
+        options: [
+          { text: "I see the moon!", correct: true },
+          { text: "I see a mooncake!", correct: false }
+        ]
+      },
+      {
+        prompt: "Do you like mooncakes? 🥮",
+        options: [
+          { text: "Yes, I do! Yum!", correct: true },
+          { text: "No, thank you!", correct: true } // Both valid for speaking!
+        ]
+      },
+      {
+        prompt: "Happy Mid-Autumn Festival! 🐰",
+        options: [
+          { text: "Happy Mid-Autumn Festival!", correct: true }
+        ]
+      }
+    ];
+
+    let currentDialogueIdx = 0;
+
+    function initTalkGame() {
+      const current = dialogues[currentDialogueIdx];
+      document.getElementById('dialogueText').textContent = current.prompt;
+      document.getElementById('talkFeedback').textContent = '';
+      
+      const container = document.getElementById('dialogueOptions');
+      container.innerHTML = '';
+
+      current.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.textContent = opt.text;
+        btn.onclick = () => {
+          speak(opt.text);
+          document.getElementById('talkFeedback').style.color = '#2e7d32';
+          document.getElementById('talkFeedback').textContent = 'Wonderful! 🌟';
+          setTimeout(() => {
+            currentDialogueIdx = (currentDialogueIdx + 1) % dialogues.length;
+            initTalkGame();
+          }, 2000);
+        };
+        container.appendChild(btn);
+      });
+
+      setTimeout(() => speakCurrentSentence(), 300);
+    }
+
+    function speakCurrentSentence() {
+      speak(dialogues[currentDialogueIdx].prompt);
+    }
+  </script>
+</body>
+</html>

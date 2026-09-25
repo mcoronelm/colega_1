@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprender La Mesa · flashcards que giran</title>
+  <style>
+    :root {
+      --primary:#f47b20; --primary-dark:#d95d08; --primary-light:#fff1df;
+      --secondary:#42a86b; --secondary-light:#e8f7ee; --yellow:#ffd45c;
+      --blue:#5aa9e6; --bg:#fffaf3; --card-bg:#fff; --text:#30343b;
+      --muted:#747b85; --shadow:0 10px 28px rgba(75,56,35,.10);
+      --shadow-hover:0 16px 34px rgba(75,56,35,.16);
+    }
+    *{box-sizing:border-box}
+    body{
+      font-family:"Trebuchet MS","Segoe UI",Tahoma,sans-serif;
+      background:
+        radial-gradient(circle at 8% 8%,rgba(255,212,92,.28) 0 55px,transparent 56px),
+        radial-gradient(circle at 92% 12%,rgba(90,169,230,.18) 0 70px,transparent 71px),
+        radial-gradient(circle at 15% 90%,rgba(244,143,177,.13) 0 80px,transparent 81px),
+        var(--bg);
+      color:var(--text); margin:0; padding:24px 18px 50px; min-height:100vh;
+    }
+    body:before{content:"🍽️";position:fixed;left:18px;bottom:18px;font-size:2rem;opacity:.12;pointer-events:none}
+    body:after{content:"🥄";position:fixed;right:18px;top:25%;font-size:2.2rem;opacity:.10;pointer-events:none;transform:rotate(18deg)}
+    h1{text-align:center;color:var(--primary);margin:0;font-size:clamp(2rem,5vw,3.2rem);line-height:1;letter-spacing:-1px;text-shadow:2px 3px 0 rgba(244,123,32,.10)}
+    h1:before{content:"✨ "} h1:after{content:" ✨"}
+    .subtitle{text-align:center;color:var(--muted);margin:10px auto 18px}
+    .lesson-progress{width:min(850px,100%);margin:0 auto 18px;display:flex;align-items:center;gap:10px;color:var(--primary)}
+    .lesson-progress span{font-size:1.35rem}.progress-track{height:12px;flex:1;background:#eee8df;border-radius:99px;overflow:hidden}
+    .progress-fill{height:100%;width:8.33%;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--yellow));transition:width .35s ease}
+    .lesson-progress strong{font-size:.85rem;min-width:42px;text-align:right}
+    .nav-tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;width:100%;max-width:1050px;margin:0 auto 22px}
+    .tab-btn{min-height:48px;padding:10px 13px;border:2px solid transparent;background:#fff;color:var(--text);font-weight:800;border-radius:17px;cursor:pointer;font-size:.88rem;box-shadow:0 5px 14px rgba(60,50,40,.07);transition:.18s ease}
+    .tab-btn:hover{transform:translateY(-3px) rotate(-.5deg);box-shadow:var(--shadow-hover);border-color:var(--primary-light)}
+    .tab-btn.active{background:linear-gradient(135deg,var(--primary),#ff9b43);color:#fff;box-shadow:0 7px 18px rgba(244,123,32,.25);transform:translateY(-2px)}
+    .section{display:none;width:100%;max-width:850px;margin:0 auto;background:rgba(255,255,255,.95);padding:clamp(22px,5vw,36px);border-radius:28px;box-shadow:var(--shadow);border:3px solid rgba(255,255,255,.9);position:relative;overflow:hidden;animation:sectionIn .35s ease both}
+    .section:before{content:"";position:absolute;width:130px;height:130px;border-radius:50%;background:var(--primary-light);right:-60px;top:-60px}
+    .section>*{position:relative;z-index:1}.section.active{display:block}.section h3{font-size:1.45rem;margin:0 0 8px;color:var(--text)}
+    .section>p{color:var(--muted);line-height:1.5}
+    @keyframes sectionIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+    .game-box{text-align:center;padding:10px 0}
+    .interactive-icon{font-size:clamp(4rem,11vw,6rem);margin:18px 0;display:inline-block;filter:drop-shadow(0 7px 7px rgba(0,0,0,.10));animation:floaty 2.8s ease-in-out infinite}
+    @keyframes floaty{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}
+    input[type=text]{font-size:1rem;padding:13px 15px;border:3px solid #e8e8e8;border-radius:15px;text-align:center;width:min(90%,450px);margin-bottom:15px;outline:none;background:#fffdf9;transition:.2s}
+    input[type=text]:focus{border-color:var(--blue);box-shadow:0 0 0 5px rgba(90,169,230,.12)}
+    button.action-btn{background:linear-gradient(135deg,var(--secondary),#67c68c);color:#fff;border:0;padding:13px 22px;font-size:1rem;border-radius:15px;cursor:pointer;font-weight:900;box-shadow:0 6px 0 #328253,0 10px 18px rgba(66,168,107,.18);transition:.12s}
+    button.action-btn:hover{transform:translateY(-2px)}button.action-btn:active{transform:translateY(4px);box-shadow:0 2px 0 #328253}
+    .feedback{margin-top:18px;min-height:28px;font-weight:900;font-size:1.05rem}.correct{color:var(--secondary);animation:pop .3s ease}.incorrect{color:#dc5353;animation:shake .35s ease}
+    @keyframes pop{50%{transform:scale(1.15)}}@keyframes shake{25%{transform:translateX(-7px)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}
+    .opt-grid{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px}.opt-grid .tab-btn{min-width:130px}
+    /* FLIP CARD GRID */
+    .vocab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:18px;margin-top:12px}
+    .flashcard {
+      perspective: 1200px;
+      background: transparent;
+      height: 170px;
+      cursor: pointer;
+      user-select: none;
+      outline: none;
+      border: none;
+      padding: 0;
+    }
+    .flashcard-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.45s cubic-bezier(.2,.9,.3,1.1);
+      transform-style: preserve-3d;
+      border-radius: 22px;
+      box-shadow: 0 7px 18px rgba(60,50,40,.09);
+    }
+    .flashcard.flipped .flashcard-inner {
+      transform: rotateY(180deg);
+    }
+    .flashcard-front, .flashcard-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 10px;
+      background: linear-gradient(145deg,#fff,#fff8f1);
+      box-shadow: 0 7px 18px rgba(60,50,40,.09);
+      transition: box-shadow .2s;
+    }
+    .flashcard:hover .flashcard-front,
+    .flashcard:hover .flashcard-back {
+      box-shadow: 0 16px 30px rgba(75,56,35,.18);
+    }
+    .flashcard-front {
+      background: #fff;
+    }
+    .flashcard-back {
+      background: linear-gradient(135deg, #fff3e6, #ffe8d4);
+      transform: rotateY(180deg);
+      border: 3px solid var(--primary-light);
+    }
+    .flashcard .icon-large {
+      font-size: 3.2rem;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 4px 4px rgba(0,0,0,.05));
+    }
+    .flashcard .spanish-word {
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--primary-dark);
+      text-align: center;
+      margin: 4px 0;
+      letter-spacing: -0.3px;
+    }
+    .flashcard .plural-small {
+      font-size: 0.8rem;
+      color: #7a6b5e;
+      margin-top: 4px;
+      background: rgba(255,255,255,0.6);
+      padding: 4px 8px;
+      border-radius: 30px;
+    }
+    .flashcard .english-word {
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: #2d5e3e;
+      text-align: center;
+      margin: 6px 0;
+      letter-spacing: -0.2px;
+      text-transform: capitalize;
+    }
+    .flashcard .hint-small {
+      font-size: 0.7rem;
+      color: #a67c5e;
+      margin-top: 6px;
+      opacity: 0.9;
+      font-style: italic;
+    }
+    /* small flip hint */
+    .flashcard .flip-hint {
+      position: absolute;
+      bottom: 8px;
+      right: 12px;
+      font-size: 0.65rem;
+      color: #b0a9a1;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    /* keep original sections for other tabs */
+    .match-container{display:flex;justify-content:space-between;gap:18px}.match-col{display:flex;flex-direction:column;gap:11px;width:48%}
+    .match-item{padding:14px 10px;border:3px solid #f0f0f0;border-radius:16px;cursor:pointer;text-align:center;background:#fff;font-weight:800;box-shadow:0 4px 10px rgba(0,0,0,.05);transition:.18s}
+    .match-item:hover{transform:scale(1.03);border-color:var(--yellow)}.match-item.selected{border-color:var(--primary);background:var(--primary-light);transform:scale(1.03)}
+    .match-item.matched{border-color:var(--secondary);background:var(--secondary-light);opacity:.65;pointer-events:none;animation:pop .25s ease}
+    .memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:520px;margin:20px auto}
+    .memory-card{aspect-ratio:1;background:linear-gradient(135deg,var(--primary),#ffae5f);color:#fff;font-size:1.5rem;display:flex;align-items:center;justify-content:center;border-radius:18px;cursor:pointer;user-select:none;box-shadow:0 6px 0 #d96412;transition:.2s}
+    .memory-card:hover{transform:translateY(-4px) rotate(2deg)}.memory-card.flipped{background:#fff;border:3px solid var(--primary);color:var(--text);box-shadow:0 6px 15px rgba(0,0,0,.08)}
+    .table-layout{width:100%;height:300px;border:0;background:radial-gradient(circle,rgba(255,255,255,.45) 1px,transparent 2px),#e8b77b;background-size:18px 18px;border-radius:25px;position:relative;margin:22px 0;box-shadow:inset 0 0 0 8px rgba(125,76,34,.10),inset 0 0 30px rgba(91,54,25,.15)}
+    .table-layout:after{content:"🍽️";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:6rem;opacity:.13;pointer-events:none}
+    .drop-zone{width:82px;height:72px;border:3px dashed rgba(80,50,30,.35);border-radius:18px;position:absolute;display:flex;align-items:center;justify-content:center;font-size:.72rem;color:#65452e;text-align:center;background:rgba(255,255,255,.25);transition:.2s;z-index:2}
+    .drop-zone:hover{transform:scale(1.05);background:rgba(255,255,255,.5)}.drag-items{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .drag-item{padding:11px 15px;background:#fff;border:3px solid var(--primary-light);border-radius:15px;cursor:grab;font-weight:900;box-shadow:0 5px 12px rgba(0,0,0,.08);transition:.18s}.drag-item:hover{transform:translateY(-4px)}
+    .word-pool,.sentence-target{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;min-height:55px;padding:12px;border:3px dashed #dedede;border-radius:17px;margin-bottom:14px;background:#fffdf9}
+    .word-tile{padding:9px 14px;background:#e6f4ff;border:2px solid #74b9df;border-radius:12px;cursor:pointer;font-weight:900;box-shadow:0 3px 7px rgba(0,0,0,.06);transition:.15s}.word-tile:hover{transform:translateY(-3px)}
+    #phrases .game-box>div[style]{border-left:0!important;border-radius:18px!important;box-shadow:inset 0 0 0 2px rgba(66,168,107,.12);font-size:1.15rem}
+    @media(max-width:600px){body{padding:16px 10px 35px}.nav-tabs{grid-template-columns:repeat(2,1fr)}.section{padding:20px 15px;border-radius:22px}.match-container{gap:8px}.match-item{font-size:.85rem;padding:12px 6px}.memory-grid{gap:8px}.memory-card{font-size:1.15rem;border-radius:13px}.table-layout{height:260px}.drop-zone{width:68px;height:62px;font-size:.65rem}}
+    @media(max-width:450px){.vocab-grid{grid-template-columns:1fr 1fr;gap:12px}.flashcard{height:150px}.flashcard .icon-large{font-size:2.5rem}.flashcard .spanish-word{font-size:1rem}.flashcard .english-word{font-size:1.1rem}}
+  </style>
+</head>
+<body>
+
+  <h1>La Mesa (The Dining Table)</h1>
+  <p class="subtitle">Práctica interactiva · flashcards que giran 🔄</p>
+  <div class="lesson-progress" aria-label="Progreso de actividades">
+    <span>🍴</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <strong id="progressText">1 / 12</strong>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('vocab')">1. Vocabulario</button>
+    <button class="tab-btn" onclick="switchTab('spelling')">2. Completar Letras</button>
+    <button class="tab-btn" onclick="switchTab('phrases')">3. Pedir la Mesa</button>
+    <button class="tab-btn" onclick="switchTab('matching')">4. Unir Parejas</button>
+    <button class="tab-btn" onclick="switchTab('plurals')">5. Plurales</button>
+    <button class="tab-btn" onclick="switchTab('listening')">6. Escuchar</button>
+    <button class="tab-btn" onclick="switchTab('imgIdentify')">7. Identificar Imagen</button>
+    <button class="tab-btn" onclick="switchTab('memory')">8. Memoria</button>
+    <button class="tab-btn" onclick="switchTab('tableSet')">9. Colocar la Mesa</button>
+    <button class="tab-btn" onclick="switchTab('scramble')">10. Ordenar Frase</button>
+    <button class="tab-btn" onclick="switchTab('fillBlank')">11. Rellenar Huecos</button>
+    <button class="tab-btn" onclick="switchTab('quiz')">12. Cuestionario</button>
+  </div>
+
+  <!-- SECTION 1: VOCABULARY FLASHCARDS (FLIP) -->
+  <div id="vocab" class="section active">
+    <h3>1. Vocabulario de la mesa <span style="font-size:1rem; font-weight:normal; color:var(--muted);">(toca para girar)</span></h3>
+    <div class="vocab-grid" id="vocabGrid"></div>
+  </div>
+
+  <!-- SECTION 2: FILL IN MISSING VOWELS -->
+  <div id="spelling" class="section">
+    <h3>2. Completa las letras que faltan</h3>
+    <div class="game-box">
+      <div class="interactive-icon" id="spellingIcon">🍽️</div>
+      <p id="spellingPrompt" style="font-size: 1.3rem; letter-spacing: 2px; font-weight: bold;"></p>
+      <input type="text" id="spellingInput" placeholder="Escribe la palabra completa" autocomplete="off">
+      <br>
+      <button class="action-btn" onclick="checkSpelling()">Comprobar</button>
+      <div class="feedback" id="spellingFeedback"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: PHRASE PRACTICE -->
+  <div id="phrases" class="section">
+    <h3>3. ¿Me das ..., por favor?</h3>
+    <p>Pide el objeto indicado a tu compañero:</p>
+    <div class="game-box">
+      <div class="interactive-icon" id="phraseIcon">🍴</div>
+      <div style="background:#e8f5e9; padding:12px; border-left:4px solid var(--secondary); margin-bottom:15px;">
+        "¿Me das <strong id="targetObject">...</strong>, por favor?"
+      </div>
+      <div id="phraseOptions" class="opt-grid"></div>
+      <div class="feedback" id="phraseFeedback"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: MATCHING PAIRS -->
+  <div id="matching" class="section">
+    <h3>4. Unir Parejas (Español - Icono)</h3>
+    <p>Haz clic en una palabra en español y luego en su imagen correspondiente:</p>
+    <div class="match-container">
+      <div class="match-col" id="matchSpanish"></div>
+      <div class="match-col" id="matchIcons"></div>
+    </div>
+    <div class="feedback" id="matchFeedback"></div>
+  </div>
+
+  <!-- SECTION 5: PLURALS PRACTICE -->
+  <div id="plurals" class="section">
+    <h3>5. Práctica de Plurales</h3>
+    <div class="game-box">
+      <p>¿Cuál es el plural correcto de este objeto?</p>
+      <div class="interactive-icon" id="pluralIcon">🍽️</div>
+      <h3 id="pluralSingular" style="color:var(--primary);">el plato</h3>
+      <div id="pluralOptions" class="opt-grid"></div>
+      <div class="feedback" id="pluralFeedback"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: LISTENING PRACTICE -->
+  <div id="listening" class="section">
+    <h3>6. Práctica de Audición</h3>
+    <div class="game-box">
+      <p>Escucha la palabra y selecciona el objeto correspondiente:</p>
+      <button class="action-btn" onclick="playAudioPrompt()">🔊 Escuchar</button>
+      <div id="listeningOptions" class="opt-grid" style="margin-top:20px;"></div>
+      <div class="feedback" id="listeningFeedback"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 7: IMAGE IDENTIFICATION -->
+  <div id="imgIdentify" class="section">
+    <h3>7. Identificar la Imagen</h3>
+    <div class="game-box">
+      <p>¿Qué objeto es este?</p>
+      <div class="interactive-icon" id="imgIdentifyIcon">🔪</div>
+      <div id="imgIdentifyOptions" class="opt-grid"></div>
+      <div class="feedback" id="imgIdentifyFeedback"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 8: MEMORY GAME -->
+  <div id="memory" class="section">
+    <h3>8. Juego de Memoria</h3>
+    <p>Encuentra las parejas (Palabra y Su Icono):</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="feedback" id="memoryFeedback"></div>
+  </div>
+
+  <!-- SECTION 9: TABLE SETTING DRAG & DROP -->
+  <div id="tableSet" class="section">
+    <h3>9. Colocar la Mesa</h3>
+    <p>Arrastra (o haz clic en) los elementos para colocarlos en su sitio correcto:</p>
+    <div class="table-layout">
+      <div class="drop-zone" style="top:20px; left:20px;" data-accept="la servilleta">la servilleta</div>
+      <div class="drop-zone" style="top:20px; left:40%;" data-accept="el plato">el plato</div>
+      <div class="drop-zone" style="top:20px; right:20px;" data-accept="el vaso">el vaso</div>
+      <div class="drop-zone" style="bottom:20px; left:20px;" data-accept="el tenedor">el tenedor</div>
+      <div class="drop-zone" style="bottom:20px; right:20px;" data-accept="el cuchillo">el cuchillo</div>
+    </div>
+    <div class="drag-items" id="dragItems"></div>
+    <div class="feedback" id="tableFeedback"></div>
+  </div>
+
+  <!-- SECTION 10: SENTENCE SCRAMBLE -->
+  <div id="scramble" class="section">
+    <h3>10. Ordenar la Frase</h3>
+    <div class="game-box">
+      <p>Haz clic en las palabras para construir la frase correcta:</p>
+      <div class="sentence-target" id="sentenceTarget"></div>
+      <div class="word-pool" id="wordPool"></div>
+      <button class="action-btn" onclick="checkScramble()">✨ Comprobar frase</button>
+      <div class="feedback" id="scrambleFeedback"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 11: FILL IN THE BLANK -->
+  <div id="fillBlank" class="section">
+    <h3>11. Rellenar los Huecos</h3>
+    <div class="game-box">
+      <p id="fillPrompt" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 15px;"></p>
+      <div id="fillOptions" class="opt-grid"></div>
+      <div class="feedback" id="fillFeedback"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 12: QUIZ -->
+  <div id="quiz" class="section">
+    <h3>12. Cuestionario de Evaluación</h3>
+    <div class="game-box">
+      <p id="quizQuestion" style="font-size: 1.1rem; font-weight: bold;"></p>
+      <div id="quizOptions" class="opt-grid"></div>
+      <div class="feedback" id="quizFeedback"></div>
+    </div>
+  </div>
+
+  <script>
+    // DATA SOURCE (con inglés añadido)
+    const items = [
+      { es: 'el mantel', plural: 'los manteles', pattern: 'EL M_NT_L', icon: '🏁', en: 'tablecloth' },
+      { es: 'la servilleta', plural: 'las servilletas', pattern: 'LA S_RV_LL_T_', icon: '🧻', en: 'napkin' },
+      { es: 'el plato', plural: 'los platos', pattern: 'EL PL_T_', icon: '🍽️', en: 'plate' },
+      { es: 'el vaso', plural: 'los vasos', pattern: 'EL V_S_', icon: '🥛', en: 'glass' },
+      { es: 'el pan', plural: 'los panes', pattern: 'EL P_N', icon: '🍞', en: 'bread' },
+      { es: 'la botella de agua', plural: 'las botellas de agua', pattern: 'LA B_T_LL_ D_ _G__', icon: '💧', en: 'water bottle' },
+      { es: 'el zumo de naranja', plural: 'los zumos de naranja', pattern: 'EL Z_M_ D_ N_R_NJ_', icon: '🧃', en: 'orange juice' },
+      { es: 'el tenedor', plural: 'los tenedores', pattern: 'EL T_N_D_R', icon: '🍴', en: 'fork' },
+      { es: 'el cuchillo', plural: 'los cuchillos', pattern: 'EL C_CH_LL_', icon: '🔪', en: 'knife' },
+      { es: 'la cuchara', plural: 'las cucharas', pattern: 'LA C_CH_R_', icon: '🥄', en: 'spoon' }
+    ];
+
+    let currentSpellingIdx = 0;
+    let currentPhraseIdx = 0;
+
+    // TAB SWITCHING
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+
+      const tabIds = ['vocab','spelling','phrases','matching','plurals','listening','imgIdentify','memory','tableSet','scramble','fillBlank','quiz'];
+      const progressIndex = tabIds.indexOf(tabId);
+      if (progressIndex >= 0) {
+        document.getElementById('progressFill').style.width = ((progressIndex + 1) / tabIds.length * 100) + '%';
+        document.getElementById('progressText').textContent = `${progressIndex + 1} / ${tabIds.length}`;
+      }
+
+      if(tabId === 'spelling') loadSpellingQuestion();
+      if(tabId === 'phrases') loadPhraseQuestion();
+      if(tabId === 'matching') initMatching();
+      if(tabId === 'plurals') loadPluralQuestion();
+      if(tabId === 'listening') loadListeningQuestion();
+      if(tabId === 'imgIdentify') loadImgIdentifyQuestion();
+      if(tabId === 'memory') initMemoryGame();
+      if(tabId === 'tableSet') initTableSet();
+      if(tabId === 'scramble') loadScrambleQuestion();
+      if(tabId === 'fillBlank') loadFillBlankQuestion();
+      if(tabId === 'quiz') loadQuizQuestion();
+    }
+
+    // 1. VOCABULARY FLASHCARDS (FLIP)
+    const vocabGrid = document.getElementById('vocabGrid');
+    function renderFlashcards() {
+      vocabGrid.innerHTML = '';
+      items.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'flashcard';
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `Flashcard: ${item.es}, toca para ver inglés`);
+        // inner structure
+        card.innerHTML = `
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="icon-large">${item.icon}</div>
+              <div class="spanish-word">${item.es}</div>
+              <div class="plural-small">${item.plural}</div>
+              <div class="flip-hint">🔄</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="icon-large" style="font-size:2.8rem;">${item.icon}</div>
+              <div class="english-word">${item.en}</div>
+              <div class="hint-small">${item.es} · ${item.plural}</div>
+              <div class="flip-hint">🔄</div>
+            </div>
+          </div>
+        `;
+
+        // Click to flip
+        card.addEventListener('click', (e) => {
+          e.stopPropagation();
+          card.classList.toggle('flipped');
+        });
+
+        // Keyboard flip (Enter or Space)
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            card.classList.toggle('flipped');
+          }
+        });
+
+        // Double-click also speaks the word (optional, no flip)
+        card.addEventListener('dblclick', (e) => {
+          e.stopPropagation();
+          const utterance = new SpeechSynthesisUtterance(item.es);
+          utterance.lang = 'es-ES';
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(utterance);
+        });
+
+        // Prevent text selection on rapid clicks
+        card.style.userSelect = 'none';
+        vocabGrid.appendChild(card);
+      });
+    }
+    renderFlashcards();
+
+    // 2. SPELLING
+    function loadSpellingQuestion() {
+      const item = items[currentSpellingIdx];
+      document.getElementById('spellingIcon').textContent = item.icon;
+      document.getElementById('spellingPrompt').textContent = item.pattern;
+      document.getElementById('spellingInput').value = '';
+      document.getElementById('spellingFeedback').textContent = '';
+    }
+    function checkSpelling() {
+      const input = document.getElementById('spellingInput').value.trim().toLowerCase();
+      const target = items[currentSpellingIdx].es.toLowerCase();
+      const feedback = document.getElementById('spellingFeedback');
+      if (input === target) {
+        feedback.textContent = '¡Correcto! 🎉'; feedback.className = 'feedback correct';
+        setTimeout(() => { currentSpellingIdx = (currentSpellingIdx + 1) % items.length; loadSpellingQuestion(); }, 1200);
+      } else {
+        feedback.textContent = `Incorrecto. Solución: "${items[currentSpellingIdx].es}"`; feedback.className = 'feedback incorrect';
+      }
+    }
+
+    // 3. PHRASES
+    function loadPhraseQuestion() {
+      const item = items[currentPhraseIdx];
+      document.getElementById('phraseIcon').textContent = item.icon;
+      document.getElementById('targetObject').textContent = '______';
+      document.getElementById('phraseFeedback').textContent = '';
+      const container = document.getElementById('phraseOptions'); container.innerHTML = '';
+      let opts = shuffle([item.es, getDistractor(item.es), getDistractor(item.es)]);
+      opts.forEach(opt => {
+        const btn = document.createElement('button'); btn.className = 'tab-btn'; btn.textContent = opt;
+        btn.onclick = () => {
+          if (opt === item.es) {
+            document.getElementById('targetObject').textContent = opt;
+            document.getElementById('phraseFeedback').textContent = '¡Excelente! 🎉'; document.getElementById('phraseFeedback').className = 'feedback correct';
+            setTimeout(() => { currentPhraseIdx = (currentPhraseIdx + 1) % items.length; loadPhraseQuestion(); }, 1200);
+          } else {
+            document.getElementById('phraseFeedback').textContent = 'Inténtalo de nuevo.'; document.getElementById('phraseFeedback').className = 'feedback incorrect';
+          }
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    // 4. MATCHING PAIRS
+    let selectedMatch = { span: null, icon: null };
+    function initMatching() {
+      const spanCol = document.getElementById('matchSpanish');
+      const iconCol = document.getElementById('matchIcons');
+      spanCol.innerHTML = ''; iconCol.innerHTML = '';
+      document.getElementById('matchFeedback').textContent = '';
+      let subItems = items.slice(0, 5);
+      let shuffledSpan = shuffle([...subItems]);
+      let shuffledIcons = shuffle([...subItems]);
+
+      shuffledSpan.forEach(item => {
+        const div = document.createElement('div'); div.className = 'match-item'; div.textContent = item.es;
+        div.onclick = () => {
+          document.querySelectorAll('#matchSpanish .match-item').forEach(d => d.classList.remove('selected'));
+          div.classList.add('selected'); selectedMatch.span = item.es; checkMatch();
+        };
+        spanCol.appendChild(div);
+      });
+
+      shuffledIcons.forEach(item => {
+        const div = document.createElement('div'); div.className = 'match-item'; div.textContent = item.icon; div.style.fontSize = '1.5rem';
+        div.onclick = () => {
+          document.querySelectorAll('#matchIcons .match-item').forEach(d => d.classList.remove('selected'));
+          div.classList.add('selected'); selectedMatch.icon = item.es; checkMatch();
+        };
+        iconCol.appendChild(div);
+      });
+    }
+    function checkMatch() {
+      if (selectedMatch.span && selectedMatch.icon) {
+        if (selectedMatch.span === selectedMatch.icon) {
+          document.querySelector('#matchSpanish .selected').classList.add('matched');
+          document.querySelector('#matchIcons .selected').classList.add('matched');
+          document.getElementById('matchFeedback').textContent = '¡Pareja correcta! 👏';
+        } else {
+          document.getElementById('matchFeedback').textContent = 'No coinciden, intenta otra vez.';
+        }
+        document.querySelectorAll('.match-item').forEach(d => d.classList.remove('selected'));
+        selectedMatch = { span: null, icon: null };
+      }
+    }
+
+    // 5. PLURALS
+    let currentPluralIdx = 0;
+    function loadPluralQuestion() {
+      const item = items[currentPluralIdx];
+      document.getElementById('pluralIcon').textContent = item.icon;
+      document.getElementById('pluralSingular').textContent = item.es;
+      document.getElementById('pluralFeedback').textContent = '';
+      const container = document.getElementById('pluralOptions'); container.innerHTML = '';
+      let opts = shuffle([item.plural, item.es + 's', 'los ' + item.es.split(' ')[1] + 'es']);
+      opts.forEach(opt => {
+        const btn = document.createElement('button'); btn.className = 'tab-btn'; btn.textContent = opt;
+        btn.onclick = () => {
+          if (opt === item.plural) {
+            document.getElementById('pluralFeedback').textContent = '¡Correcto! 🎉'; document.getElementById('pluralFeedback').className = 'feedback correct';
+            setTimeout(() => { currentPluralIdx = (currentPluralIdx + 1) % items.length; loadPluralQuestion(); }, 1200);
+          } else {
+            document.getElementById('pluralFeedback').textContent = 'Incorrecto.'; document.getElementById('pluralFeedback').className = 'feedback incorrect';
+          }
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    // 6. LISTENING (Speech Synthesis)
+    let currentListenIdx = 0;
+    function loadListeningQuestion() {
+      document.getElementById('listeningFeedback').textContent = '';
+      const container = document.getElementById('listeningOptions'); container.innerHTML = '';
+      const item = items[currentListenIdx];
+      let opts = shuffle([item, items[(currentListenIdx + 1) % items.length], items[(currentListenIdx + 2) % items.length]]);
+      opts.forEach(opt => {
+        const btn = document.createElement('button'); btn.className = 'tab-btn'; btn.style.fontSize = '2rem'; btn.textContent = opt.icon;
+        btn.onclick = () => {
+          if (opt.es === item.es) {
+            document.getElementById('listeningFeedback').textContent = '¡Muy bien! 🎧'; document.getElementById('listeningFeedback').className = 'feedback correct';
+            setTimeout(() => { currentListenIdx = (currentListenIdx + 1) % items.length; loadListeningQuestion(); }, 1200);
+          } else {
+            document.getElementById('listeningFeedback').textContent = 'Inténtalo otra vez.'; document.getElementById('listeningFeedback').className = 'feedback incorrect';
+          }
+        };
+        container.appendChild(btn);
+      });
+    }
+    function playAudioPrompt() {
+      const utterance = new SpeechSynthesisUtterance(items[currentListenIdx].es);
+      utterance.lang = 'es-ES';
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // 7. IMAGE IDENTIFICATION
+    let currentImgIdx = 0;
+    function loadImgIdentifyQuestion() {
+      const item = items[currentImgIdx];
+      document.getElementById('imgIdentifyIcon').textContent = item.icon;
+      document.getElementById('imgIdentifyFeedback').textContent = '';
+      const container = document.getElementById('imgIdentifyOptions'); container.innerHTML = '';
+      let opts = shuffle([item.es, getDistractor(item.es), getDistractor(item.es)]);
+      opts.forEach(opt => {
+        const btn = document.createElement('button'); btn.className = 'tab-btn'; btn.textContent = opt;
+        btn.onclick = () => {
+          if (opt === item.es) {
+            document.getElementById('imgIdentifyFeedback').textContent = '¡Correcto! 🌟'; document.getElementById('imgIdentifyFeedback').className = 'feedback correct';
+            setTimeout(() => { currentImgIdx = (currentImgIdx + 1) % items.length; loadImgIdentifyQuestion(); }, 1200);
+          } else {
+            document.getElementById('imgIdentifyFeedback').textContent = 'Esa no es la opción correcta.'; document.getElementById('imgIdentifyFeedback').className = 'feedback incorrect';
+          }
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    // 8. MEMORY GAME
+    let firstCard = null, secondCard = null;
+    function initMemoryGame() {
+      const grid = document.getElementById('memoryGrid'); grid.innerHTML = '';
+      document.getElementById('memoryFeedback').textContent = '';
+      let sub = items.slice(0, 4);
+      let cards = [];
+      sub.forEach(item => {
+        cards.push({ type: 'text', val: item.es, match: item.es });
+        cards.push({ type: 'icon', val: item.icon, match: item.es });
+      });
+      cards = shuffle(cards);
+      cards.forEach(c => {
+        const div = document.createElement('div'); div.className = 'memory-card'; div.dataset.match = c.match; div.dataset.val = c.val; div.textContent = '?';
+        div.onclick = () => {
+          if (div.classList.contains('flipped') || secondCard) return;
+          div.classList.add('flipped'); div.textContent = c.val;
+          if (!firstCard) firstCard = div;
+          else {
+            secondCard = div;
+            if (firstCard.dataset.match === secondCard.dataset.match) {
+              firstCard = null; secondCard = null;
+              document.getElementById('memoryFeedback').textContent = '¡Pareja encontrada! 🎉';
+            } else {
+              setTimeout(() => {
+                firstCard.classList.remove('flipped'); firstCard.textContent = '?';
+                secondCard.classList.remove('flipped'); secondCard.textContent = '?';
+                firstCard = null; secondCard = null;
+              }, 1000);
+            }
+          }
+        };
+        grid.appendChild(div);
+      });
+    }
+
+    // 9. TABLE SETTING DRAG & CLICK
+    let selectedDrag = null;
+    function initTableSet() {
+      const container = document.getElementById('dragItems'); container.innerHTML = '';
+      document.getElementById('tableFeedback').textContent = '';
+      let pool = shuffle(['el plato', 'el tenedor', 'el cuchillo', 'la servilleta', 'el vaso']);
+      pool.forEach(name => {
+        const item = document.createElement('div'); item.className = 'drag-item'; item.textContent = name;
+        item.onclick = () => {
+          document.querySelectorAll('.drag-item').forEach(d => d.style.border = '1px solid var(--primary)');
+          item.style.border = '2px solid black'; selectedDrag = name;
+        };
+        container.appendChild(item);
+      });
+      document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.onclick = () => {
+          if (selectedDrag) {
+            if (zone.dataset.accept === selectedDrag) {
+              zone.style.background = '#c8e6c9'; zone.textContent = selectedDrag;
+              document.getElementById('tableFeedback').textContent = '¡Colocado correctamente!';
+            } else {
+              document.getElementById('tableFeedback').textContent = 'Ese objeto no va ahí.';
+            }
+          }
+        };
+      });
+    }
+
+    // 10. SENTENCE SCRAMBLE
+    const scramblePhrases = [
+      "Dodi lleva el pan .",
+      "Timi lleva la servilleta .",
+      "¿ Me das el tenedor ? "
+    ];
+    let currentScrambleIdx = 0;
+    function loadScrambleQuestion() {
+      const target = document.getElementById('sentenceTarget'); const pool = document.getElementById('wordPool');
+      target.innerHTML = ''; pool.innerHTML = '';
+      document.getElementById('scrambleFeedback').textContent = '';
+      let words = shuffle(scramblePhrases[currentScrambleIdx].split(' '));
+      words.forEach(w => {
+        const tile = document.createElement('div'); tile.className = 'word-tile'; tile.textContent = w;
+        tile.onclick = () => {
+          if (tile.parentElement === pool) target.appendChild(tile);
+          else pool.appendChild(tile);
+        };
+        pool.appendChild(tile);
+      });
+    }
+    function checkScramble() {
+      const constructed = Array.from(document.getElementById('sentenceTarget').children).map(c => c.textContent).join(' ');
+      if (constructed === scramblePhrases[currentScrambleIdx]) {
+        document.getElementById('scrambleFeedback').textContent = '¡Frase correcta! 🎉'; document.getElementById('scrambleFeedback').className = 'feedback correct';
+        setTimeout(() => { currentScrambleIdx = (currentScrambleIdx + 1) % scramblePhrases.length; loadScrambleQuestion(); }, 1500);
+      } else {
+        document.getElementById('scrambleFeedback').textContent = 'Frase incorrecta. Revisa el orden.'; document.getElementById('scrambleFeedback').className = 'feedback incorrect';
+      }
+    }
+
+    // 11. FILL IN THE BLANKS
+    const fillData = [
+      { sentence: "Para cortar la carne necesito el ____.", answer: "cuchillo" },
+      { sentence: "Para tomar agua uso un ____.", answer: "vaso" },
+      { sentence: "Limpio mi boca con la ____.", answer: "servilleta" },
+      { sentence: "Para comer la sopa uso la ____.", answer: "cuchara" }
+    ];
+    let currentFillIdx = 0;
+    function loadFillBlankQuestion() {
+      const q = fillData[currentFillIdx];
+      document.getElementById('fillPrompt').textContent = q.sentence;
+      document.getElementById('fillFeedback').textContent = '';
+      const container = document.getElementById('fillOptions'); container.innerHTML = '';
+      let opts = shuffle([q.answer, 'tenedor', 'mantel', 'plato']);
+      opts.forEach(opt => {
+        const btn = document.createElement('button'); btn.className = 'tab-btn'; btn.textContent = opt;
+        btn.onclick = () => {
+          if (opt === q.answer) {
+            document.getElementById('fillFeedback').textContent = '¡Correcto! 🎉'; document.getElementById('fillFeedback').className = 'feedback correct';
+            setTimeout(() => { currentFillIdx = (currentFillIdx + 1) % fillData.length; loadFillBlankQuestion(); }, 1200);
+          } else {
+            document.getElementById('fillFeedback').textContent = 'Respuesta incorrecta.'; document.getElementById('fillFeedback').className = 'feedback incorrect';
+          }
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    // 12. QUIZ
+    const quizData = [
+      { q: "¿Qué artículo acompaña a 'servilleta'?", opts: ["la", "el", "los"], a: "la" },
+      { q: "¿Cómo se dice 'spoon' en español?", opts: ["la cuchara", "el cuchillo", "el tenedor"], a: "la cuchara" },
+      { q: "¿Cuál es el plural de 'el mantel'?", opts: ["los manteles", "las manteles", "los mantels"], a: "los manteles" }
+    ];
+    let currentQuizIdx = 0;
+    function loadQuizQuestion() {
+      const q = quizData[currentQuizIdx];
+      document.getElementById('quizQuestion').textContent = q.q;
+      document.getElementById('quizFeedback').textContent = '';
+      const container = document.getElementById('quizOptions'); container.innerHTML = '';
+      q.opts.forEach(opt => {
+        const btn = document.createElement('button'); btn.className = 'tab-btn'; btn.textContent = opt;
+        btn.onclick = () => {
+          if (opt === q.a) {
+            document.getElementById('quizFeedback').textContent = '¡Respuesta correcta! 🏆'; document.getElementById('quizFeedback').className = 'feedback correct';
+            setTimeout(() => { currentQuizIdx = (currentQuizIdx + 1) % quizData.length; loadQuizQuestion(); }, 1200);
+          } else {
+            document.getElementById('quizFeedback').textContent = 'Incorrecto.'; document.getElementById('quizFeedback').className = 'feedback incorrect';
+          }
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    // HELPER FUNCTIONS
+    function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+    function getDistractor(correct) {
+      let d = items[Math.floor(Math.random() * items.length)].es;
+      return d === correct ? getDistractor(correct) : d;
+    }
+
+    // Initialize first tab (flashcards already rendered)
+    // Also ensure progress is set
+    document.getElementById('progressFill').style.width = '8.33%';
+    document.getElementById('progressText').textContent = '1 / 12';
+  </script>
+</body>
+</html>
