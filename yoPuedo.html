@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Yo puedo! 💪</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  /* Flashcards flipables — estilos propios de esta página */
+  .flip-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
+    gap:16px;
+    margin:18px 0;
+  }
+  .flip-card{
+    background:transparent;
+    height:150px;
+    perspective:1000px;
+    cursor:pointer;
+  }
+  .flip-card-inner{
+    position:relative;
+    width:100%;
+    height:100%;
+    text-align:center;
+    transition:transform 0.6s;
+    transform-style:preserve-3d;
+  }
+  .flip-card.flipped .flip-card-inner{
+    transform:rotateY(180deg);
+  }
+  .flip-card-front, .flip-card-back{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    backface-visibility:hidden;
+    border-radius:16px;
+    border:2px solid #ffd9c2;
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+    padding:10px;
+  }
+  .flip-card-front{
+    background:#FFF6EE;
+    font-size:2.6rem;
+  }
+  .flip-card-back{
+    background:#1E9E90;
+    color:#fff;
+    transform:rotateY(180deg);
+  }
+  .flip-card-back .fc-word{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:1.05rem;
+  }
+  .flip-card-back .fc-translation{
+    font-size:.85rem;
+    opacity:.9;
+  }
+  .flip-hint{
+    font-size:.7rem;
+    opacity:.7;
+    margin-top:2px;
+  }
+  .flip-audio-btn{
+    position:absolute;
+    top:8px;
+    right:8px;
+    width:30px;
+    height:30px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.25);
+    color:#fff;
+    font-size:1rem;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:background .2s;
+  }
+  .flip-audio-btn:hover{
+    background:rgba(255,255,255,.45);
+  }
+  .flip-audio-btn:active{
+    transform:scale(0.9);
+  }
+</style>
+
+</head>
+<body>
+
+  <!-- BANDERINES DE PAPEL PICADO -->
+  <div class="banner" id="banner">
+    <div class="flag">¡HOLA!</div>
+    <div class="flag">ELE</div>
+    <div class="flag">CURSO</div>
+    <div class="flag">NIÑOS</div>
+    <div class="flag">JUEGA</div>
+    <div class="flag">APRENDE</div>
+  </div>
+
+  <!-- HEADER -->
+<header>
+  <h1><a href="index.html" class="logo-link">MUNDO ELE</a></h1>
+  <p>Aprende español de forma divertida 🌟</p>
+</header>
+
+<!-- NAVBAR CONTENEDOR VACIÓ PARA IMPORTAR -->
+<nav class="navbar" id="navbar-container"></nav>
+
+
+<main>
+
+  <section class="card" id="card0">
+    <h2>0. 🔄 Flashcards <span class="badge">El verbo PODER</span></h2>
+    <p class="instructions">Click each card to flip it. Listen and repeat!</p>
+    <div class="flip-grid" id="flipGrid"></div>
+  </section>
+
+  <section class="card" id="card1">
+    <h2>1. ✍️ Conjugate "Poder" <span class="badge">Yo puedo · Tú puedes · Él/Ella puede</span></h2>
+    <p class="instructions">Write the correct form of <b>poder</b> for each person.</p>
+    <div class="num-grid" id="conjGrid"></div>
+    <button class="check-btn" onclick="checkInputs('conjGrid','fb1',1,'Perfect conjugation! 🌟')">Check</button>
+    <div class="feedback" id="fb1"></div>
+  </section>
+
+  <section class="card" id="card2">
+    <h2>2. 🎯 Choose the Correct Form</h2>
+    <p class="instructions">Pick <b>puedo</b>, <b>puedes</b> or <b>puede</b> to complete each sentence.</p>
+    <div class="fill-grid" id="chooseGrid"></div>
+    <button class="check-btn" onclick="checkSelects()">Check</button>
+    <div class="feedback" id="fb2"></div>
+  </section>
+
+  <section class="card" id="card3">
+    <h2>3. ✅❌ Can or Can't? <span class="badge">puedo / no puedo</span></h2>
+    <p class="instructions">Look at the symbol: ✅ = can, ❌ = can't. Write the full sentence in Spanish.</p>
+    <div class="num-grid" id="canGrid"></div>
+    <button class="check-btn" onclick="checkInputs('canGrid','fb3',3,'Great! You know when to use no puedo. 💪')">Check</button>
+    <div class="feedback" id="fb3"></div>
+  </section>
+
+  <section class="card" id="card4">
+    <h2>4. 🗣️ Build Sentences with "Poder"</h2>
+    <p class="instructions">Choose the options and see the complete sentence.</p>
+    <div class="birthday-box">
+      <div class="cake">🙋‍♀️💬</div>
+      <div><select id="pron1"></select><select id="pol1"><option value="">can</option><option value="no ">can't</option></select><select id="act1"></select></div>
+      <div class="birthday-sentence" id="sent1"></div>
+    </div>
+    <div class="birthday-box">
+      <div class="cake">🤔❓</div>
+      <div><select id="act2"></select><select id="ans2"><option value="si">Sí</option><option value="no">No</option><option value="mm">No muy bien</option></select></div>
+      <div class="birthday-sentence" id="sent2"></div>
+    </div>
+    <div class="birthday-box">
+      <div class="cake">✅❌</div>
+      <div><select id="pron3"></select><select id="act3a"></select><select id="act3b"></select></div>
+      <div class="birthday-sentence" id="sent3"></div>
+    </div>
+  </section>
+
+  <section class="card" id="card5">
+    <h2>5. 🔤 Put the Sentence in Order</h2>
+    <p class="instructions">Click the words in the right order. Use Reset to start again.</p>
+    <div id="orderGrid"></div>
+    <button class="check-btn" onclick="checkOrder()">Check</button>
+    <div class="feedback" id="fb5"></div>
+  </section>
+
+  <section class="card" id="card6">
+    <h2>6. 💬 Answer the Question <span class="badge">¿Puedes…? → Yo puedo…</span></h2>
+    <p class="instructions">Someone asks you (<b>tú</b>). Choose the correct answer with <b>yo</b>.</p>
+    <div class="fill-grid" id="qaGrid"></div>
+    <button class="check-btn" onclick="checkSelects('qaGrid','fb6',6)">Check</button>
+    <div class="feedback" id="fb6"></div>
+  </section>
+
+  <section class="card" id="card7">
+    <h2>7. 🃏 Memory Match</h2>
+    <p class="instructions">Find the pairs: person and verb form, or Spanish and English.</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="memory-status" id="memoryStatus">Pairs found: 0 / 6</div>
+  </section>
+
+</main>
+
+<div id="footer-container"></div>
+<script>
+  // Cargar Navbar
+  fetch('navbar.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('navbar-container').innerHTML = data;
+
+      // Activar comportamiento desplegable en dispositivos móviles
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        const link = item.querySelector('.nav-link');
+        if (link) {
+          link.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+              e.preventDefault();
+              navItems.forEach(otherItem => {
+                if (otherItem !== item) otherItem.classList.remove('active');
+              });
+              item.classList.toggle('active');
+            }
+          });
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.nav-item')) {
+          navItems.forEach(item => item.classList.remove('active'));
+        }
+      });
+    })
+    .catch(error => console.error('Error al cargar la navbar:', error));
+
+  // Cargar Footer
+  fetch('footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-container').innerHTML = data;
+    })
+    .catch(error => console.error('Error al cargar el footer:', error));
+</script>
+<script>
+const PRON = [{v:"Yo",f:"puedo",i:"🙋"},{v:"Tú",f:"puedes",i:"👉"},{v:"Él",f:"puede",i:"👦"},{v:"Ella",f:"puede",i:"👧"}];
+const ACT = [
+  {w:"leer",i:"📖"},{w:"bailar",i:"💃"},{w:"ladrar",i:"🐕"},{w:"hacer la cama",i:"🛏️"},{w:"cantar",i:"🎤"},
+  {w:"tocar la guitarra",i:"🎸"},{w:"nadar",i:"🏊"},{w:"saltar a la comba",i:"🪢"},{w:"jugar al fútbol",i:"⚽"},{w:"montar en bici",i:"🚲"}
+];
+const act = w => ACT.find(a=>a.w===w);
+const form = p => PRON.find(x=>x.v===p).f;
+const shuffle = a => [...a].sort(()=>Math.random()-0.5);
+const $ = id => document.getElementById(id);
+function normalize(s){return s.trim().toLowerCase().replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i").replace(/ó/g,"o").replace(/ú/g,"u").replace(/\s+/g," ");}
+function speakSpanish(t){ if(!('speechSynthesis' in window)) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='es-ES'; u.rate=.85; speechSynthesis.speak(u); }
+let starsEarned=0;
+function earnStar(n){ if(n<=starsEarned) return; starsEarned=n; document.querySelectorAll('.star').forEach(s=>{ if(parseInt(s.dataset.i)<=starsEarned) s.classList.add('on'); }); launchConfetti(); }
+function launchConfetti(){
+  const l=document.createElement('div'); l.className='confetti-layer'; document.body.appendChild(l);
+  const c=['#FF6B5A','#1E9E90','#FFC857','#FF8FA3','#5EA0D0'];
+  for(let i=0;i<40;i++){ const p=document.createElement('div'); p.className='confetti-piece'; p.style.left=Math.random()*100+'vw'; p.style.background=c[Math.floor(Math.random()*c.length)]; p.style.animationDuration=(2+Math.random()*1.5)+'s'; p.style.borderRadius=Math.random()>.5?'50%':'2px'; l.appendChild(p); }
+  setTimeout(()=>l.remove(),3600);
+}
+function feedback(id,ok,good,bad){ const f=$(id); f.textContent=ok?good:bad; f.className='feedback '+(ok?'good':'bad'); }
+
+/* 0. FLASHCARDS */
+[{f:"🙋 Yo",w:"puedo",t:"I can"},{f:"👉 Tú",w:"puedes",t:"you can"},{f:"👦 Él",w:"puede",t:"he can"},{f:"👧 Ella",w:"puede",t:"she can"},
+ {f:"❌",w:"no puedo",t:"I can't"},{f:"🤔 ¡PERO!",w:"pero",t:"but"}].forEach(c=>{
+  const el=document.createElement('div'); el.className='flip-card';
+  el.innerHTML=`<div class="flip-card-inner"><div class="flip-card-front"><div style="font-size:1.8rem">${c.f}</div><div class="flip-hint">click to flip &amp; hear it</div></div>
+  <div class="flip-card-back"><button type="button" class="flip-audio-btn" aria-label="Play pronunciation">🔊</button><div class="fc-word">${c.w}</div><div class="fc-translation">${c.t}</div></div></div>`;
+  el.onclick=()=>{ const was=el.classList.contains('flipped'); el.classList.toggle('flipped'); if(!was) speakSpanish(c.w); };
+  el.querySelector('.flip-audio-btn').onclick=e=>{e.stopPropagation(); speakSpanish(c.w);};
+  $('flipGrid').appendChild(el);
+});
+
+/* shared checker for text inputs */
+function checkInputs(gridId,fbId,star,goodMsg){
+  const inputs=$(gridId).querySelectorAll('input'); let ok=0;
+  inputs.forEach(inp=>{
+    const answers=inp.dataset.answer.split('|').map(normalize);
+    const good=answers.includes(normalize(inp.value));
+    inp.classList.toggle('correct',good); inp.classList.toggle('wrong',!good); if(good) ok++;
+  });
+  const all=ok===inputs.length;
+  feedback(fbId,all,goodMsg,`${ok} out of ${inputs.length} correct. The red ones need review.`);
+  if(all) earnStar(star);
+}
+function checkSelects(gridId='chooseGrid',fbId='fb2',star=2){
+  const sels=$(gridId).querySelectorAll('select'); let ok=0;
+  sels.forEach(s=>{ const good=s.value===s.dataset.answer; s.classList.toggle('correct',good); s.classList.toggle('wrong',!good); if(good) ok++; });
+  const all=ok===sels.length;
+  feedback(fbId,all,'Excellent! 🎉',`${ok} out of ${sels.length} correct. Try again!`);
+  if(all) earnStar(star);
+}
+
+/* 1. CONJUGATE */
+PRON.filter((p,i)=>i!==3).concat(PRON[3]).forEach(p=>{
+  const d=document.createElement('div'); d.className='num-item';
+  d.innerHTML=`<div class="digit">${p.i} ${p.v}</div><input type="text" data-answer="${p.f}" placeholder="poder → ...">`;
+  $('conjGrid').appendChild(d);
+});
+
+/* 2. CHOOSE FORM */
+[["Yo","leer"],["Tú","nadar"],["Él","bailar"],["Ella","cantar"],["Tú","montar en bici"],["Yo","jugar al fútbol"],["Ella","tocar la guitarra"],["Él","hacer la cama"]].forEach(([p,a])=>{
+  const d=document.createElement('div'); d.className='fill-item';
+  d.innerHTML=`<span>${act(a).i} <b>${p}</b></span><select data-answer="${form(p)}"><option value="">...</option><option>puedo</option><option>puedes</option><option>puede</option></select><span>${a}.</span>`;
+  $('chooseGrid').appendChild(d);
+});
+
+/* 3. CAN / CAN'T */
+[["Yo",1,"leer"],["Tú",0,"nadar"],["Él",1,"bailar"],["Ella",0,"cantar"],["Yo",0,"ladrar"],["Tú",1,"montar en bici"],["Ella",1,"tocar la guitarra"],["Él",0,"jugar al fútbol"]].forEach(([p,pos,a])=>{
+  const v=(pos?'':'no ')+form(p)+' '+a;
+  const d=document.createElement('div'); d.className='num-item';
+  d.innerHTML=`<div class="digit">${pos?'✅':'❌'} ${p} ${act(a).i}</div><input type="text" data-answer="${p} ${v}|${v}" placeholder="${p} ...">`;
+  $('canGrid').appendChild(d);
+});
+
+/* 4. BUILDERS */
+const fillSel=(id,items,fn)=>items.forEach(x=>{ const o=document.createElement('option'); const [v,t]=fn(x); o.value=v; o.textContent=t; $(id).appendChild(o); });
+['pron1','pron3'].forEach(id=>fillSel(id,PRON,p=>[p.v,p.v]));
+['act1','act2','act3a','act3b'].forEach(id=>fillSel(id,ACT,a=>[a.w,a.i+' '+a.w]));
+$('act3b').selectedIndex=1;
+function upd1(){ $('sent1').innerHTML=`<b>${$('pron1').value}</b> ${$('pol1').value}${form($('pron1').value)} <b>${$('act1').value}</b>.`; earnStar(4); }
+function upd2(){ const a=$('act2').value, r=$('ans2').value;
+  $('sent2').innerHTML = `¿Puedes <b>${a}</b>? ` + (r==='si'?`Sí, puedo <b>${a}</b>.`:r==='no'?`No, no puedo <b>${a}</b>.`:`No muy bien.`); earnStar(4); }
+function upd3(){ const p=$('pron3').value, a=$('act3a').value, b=$('act3b').value;
+  $('sent3').innerHTML = a===b ? 'Choose two different activities. 🙂' : `<b>${p}</b> ${form(p)} <b>${a}</b>, pero no ${form(p)} <b>${b}</b>.`; earnStar(4); }
+['pron1','pol1','act1'].forEach(id=>$(id).onchange=upd1);
+['act2','ans2'].forEach(id=>$(id).onchange=upd2);
+['pron3','act3a','act3b'].forEach(id=>$(id).onchange=upd3);
+upd1(); upd2(); upd3();
+
+/* 5. ORDER THE SENTENCE */
+const orderSentences=["Yo puedo bailar","Tú no puedes nadar","Ella puede cantar","Él no puede ladrar","¿Puedes leer?","Yo puedo cantar pero no puedo bailar"];
+const orderState=[];
+orderSentences.forEach((s,idx)=>{
+  const row=document.createElement('div'); row.className='fill-item'; row.style.cssText='flex-wrap:wrap;gap:8px;margin-bottom:10px';
+  const out=document.createElement('div'); out.style.cssText='min-height:34px;width:100%;font-weight:700;border-bottom:2px dashed #ffd9c2';
+  const chips=document.createElement('div'); chips.style.cssText='display:flex;flex-wrap:wrap;gap:6px';
+  const st={words:[],target:s}; orderState.push({st,out});
+  shuffle(s.split(' ')).forEach(w=>{ const b=document.createElement('button'); b.className='object-chip'; b.textContent=w;
+    b.onclick=()=>{ st.words.push(w); out.textContent=st.words.join(' '); b.disabled=true; out.style.color=''; }; chips.appendChild(b); });
+  const rs=document.createElement('button'); rs.className='object-chip'; rs.textContent='↺ Reset';
+  rs.onclick=()=>{ st.words=[]; out.textContent=''; out.style.color=''; chips.querySelectorAll('button').forEach(x=>x.disabled=false); };
+  row.append(out,chips,rs); $('orderGrid').appendChild(row);
+});
+function checkOrder(){ let ok=0;
+  orderState.forEach(({st,out})=>{ const good=normalize(st.words.join(' '))===normalize(st.target); out.style.color=good?'#1E9E90':'#d33'; if(good) ok++; });
+  const all=ok===orderState.length; feedback('fb5',all,'You build sentences like a pro! 🔤',`${ok} out of ${orderState.length} correct.`); if(all) earnStar(5); }
+
+/* 6. Q&A */
+[["nadar",1],["bailar",0],["leer",1],["cantar",0],["montar en bici",1],["ladrar",0]].forEach(([a,pos])=>{
+  const right=(pos?'Sí, puedo ':'No, no puedo ')+a+'.';
+  const opts=shuffle([right,(pos?'Sí, puedes ':'No, no puedes ')+a+'.',(pos?'Sí, puede ':'No, no puede ')+a+'.']);
+  const d=document.createElement('div'); d.className='fill-item';
+  d.innerHTML=`<span>${act(a).i} ¿Puedes ${a}?</span><select data-answer="${right}"><option value="">...</option>${opts.map(o=>`<option>${o}</option>`).join('')}</select>`;
+  $('qaGrid').appendChild(d);
+});
+
+/* 7. MEMORY */
+const pairs=[["Yo","puedo"],["Tú","puedes"],["Él / Ella","puede"],["no puedo","I can't"],["pero","but"],["¿Puedes…?","Can you…?"]];
+let cards=[]; pairs.forEach((p,i)=>{ cards.push({pair:i,label:p[0]}); cards.push({pair:i,label:p[1]}); }); cards=shuffle(cards);
+let flipped=[],matches=0,lock=false;
+cards.forEach(c=>{
+  const el=document.createElement('div'); el.className='mem-card'; el.dataset.state='hidden'; el.textContent='?';
+  el.onclick=()=>{
+    if(lock||el.dataset.state!=='hidden') return;
+    el.textContent=c.label; el.classList.add('flipped'); el.dataset.state='flipped'; flipped.push({el,c});
+    if(flipped.length===2){ lock=true; const [a,b]=flipped;
+      if(a.c.pair===b.c.pair){ [a,b].forEach(x=>{x.el.classList.add('matched'); x.el.classList.remove('flipped'); x.el.dataset.state='matched';});
+        matches++; $('memoryStatus').textContent=`Pairs found: ${matches} / ${pairs.length}`; flipped=[]; lock=false;
+        if(matches===pairs.length){ $('memoryStatus').textContent='You found all the pairs! 🃏🎉'; earnStar(7); }
+      } else setTimeout(()=>{ [a,b].forEach(x=>{x.el.textContent='?'; x.el.classList.remove('flipped'); x.el.dataset.state='hidden';}); flipped=[]; lock=false; },800);
+    }
+  };
+  $('memoryGrid').appendChild(el);
+});
+</script>
+</body>
+</html>

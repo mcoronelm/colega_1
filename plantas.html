@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Las plantas | Vocabulario y juegos interactivos</title>
+<style>
+:root{--green:#237a3b;--purple:#9748ff;--ink:#17211b;--line:#dce9df}
+*{box-sizing:border-box}
+body{margin:0;font-family:sans-serif;color:var(--ink);background:#f5fff7;padding:15px;line-height:1.4}
+header{text-align:center;padding:20px;background:#e9ffe9;border-radius:15px;margin-bottom:20px}
+h1{color:#1d612e;margin:5px 0}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tab{border:0;border-radius:10px;padding:12px 18px;font-weight:bold;cursor:pointer;background:#e9f1eb;color:#35553d}
+.tab.active{background:var(--green);color:white}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:white;border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:20px;box-shadow:0 4px 10px rgba(0,0,0,0.05)}
+button{cursor:pointer;padding:10px 16px;border-radius:8px;border:none;font-weight:bold;background:#237a3b;color:white;margin:4px}
+button.sec{background:#edf4ef;color:#31533a;border:1px solid #ccc}
+.flashcard{min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f1fff3;border:2px dashed #b5d7bd;border-radius:15px;margin:15px 0;cursor:pointer}
+.flashcard .big{font-size:2rem;font-weight:bold;color:#235f31}
+.flashcard .trans{font-size:1.3rem;color:var(--purple);margin-top:10px}
+.memory-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-top:15px}
+.memory-card{height:80px;background:#e3f2fd;border:2px solid #90caf9;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:bold;cursor:pointer;text-align:center;padding:5px}
+.memory-card.flipped{background:#fff;border-color:var(--purple);color:var(--purple)}
+.memory-card.matched{background:#e8f5e9;border-color:#66bb6a;color:#2e7d32;opacity:0.7}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.feedback{font-weight:bold;margin-top:10px}
+.good{color:#237a3b}.bad{color:#c62828}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌱 Las plantas</h1>
+  <p>Juegos y vocabulario para practicar</p>
+</header>
+
+<!-- NAVEGACIÓN SIMPLE POR PESTAÑAS -->
+<div class="tabs">
+  <button class="tab active" id="btn-tab-study" onclick="cambiarPestana('study')">🃏 Flashcards</button>
+  <button class="tab" id="btn-tab-games" onclick="cambiarPestana('games')">🎮 Juegos</button>
+  <button class="tab" id="btn-tab-vocab" onclick="cambiarPestana('vocab')">🌿 Vocabulario</button>
+</div>
+
+<!-- PESTAÑA 1: FLASHCARDS -->
+<section id="study" class="panel active">
+  <div class="card">
+    <h2>Tarjetas de Estudio</h2>
+    <p>Haz clic en la tarjeta para voltearla:</p>
+    <div class="flashcard" onclick="voltearFlashcard()">
+      <div class="big" id="flash-front">la raíz</div>
+      <div class="trans" id="flash-back" style="display:none;">the root</div>
+    </div>
+    <div style="text-align:center;">
+      <button class="sec" onclick="anteriorFlashcard()">← Anterior</button>
+      <button onclick="voltearFlashcard()">Voltear</button>
+      <button class="sec" onclick="siguienteFlashcard()">Siguiente →</button>
+    </div>
+  </div>
+</section>
+
+<!-- PESTAÑA 2: JUEGOS -->
+<section id="games" class="panel">
+  
+  <!-- JUEGO MEMORIA -->
+  <div class="card">
+    <h2>💧 Juego 1: Parejas (Memoria)</h2>
+    <p>Haz clic en dos tarjetas para encontrar las parejas en español e inglés:</p>
+    <div style="text-align:center;font-size:3rem;" id="plant-stage">🌱</div>
+    <div class="memory-grid" id="memory-grid"></div>
+    <div style="margin-top:15px;text-align:center;">
+      <button class="sec" onclick="iniciarMemoria()">Reiniciar Juego de Memoria</button>
+    </div>
+    <p class="feedback" id="memory-feedback" style="text-align:center;"></p>
+  </div>
+
+  <!-- JUEGO CONTRARRELOJ -->
+  <div class="card">
+    <h2>⏱️ Juego 2: Desafío Veloz</h2>
+    <div style="text-align:center;">
+      <div style="font-size:2rem;font-weight:bold;color:#c62828;" id="timer-text">30s</div>
+      <h3 id="quiz-question">Presiona el botón para empezar</h3>
+      <div class="quiz-options" id="quiz-options"></div>
+      <button style="margin-top:15px;font-size:1.1rem;" id="btn-start-speed" onclick="iniciarContrarreloj()">🚀 ¡Iniciar Desafío!</button>
+      <p class="feedback" id="speed-feedback"></p>
+    </div>
+  </div>
+
+</section>
+
+<!-- PESTAÑA 3: VOCABULARIO -->
+<section id="vocab" class="panel">
+  <div class="card">
+    <h2>Lista de Vocabulario</h2>
+    <ul id="lista-vocabulario" style="line-height:1.8;"></ul>
+  </div>
+</section>
+
+<script>
+// DATOS
+var listaVocabulario = [
+  {es:"la raíz", en:"the root"},
+  {es:"el tallo", en:"the stem"},
+  {es:"las hojas", en:"the leaves"},
+  {es:"la flor", en:"the flower"},
+  {es:"el fruto", en:"the fruit"},
+  {es:"la semilla", en:"the seed"},
+  {es:"la luz", en:"light"},
+  {es:"la tierra", en:"soil"},
+  {es:"el agua", en:"water"}
+];
+
+// PESTAÑAS
+function cambiarPestana(id) {
+  document.getElementById('study').style.display = 'none';
+  document.getElementById('games').style.display = 'none';
+  document.getElementById('vocab').style.display = 'none';
+  
+  document.getElementById('btn-tab-study').className = 'tab';
+  document.getElementById('btn-tab-games').className = 'tab';
+  document.getElementById('btn-tab-vocab').className = 'tab';
+
+  document.getElementById(id).style.display = 'block';
+  document.getElementById('btn-tab-' + id).className = 'tab active';
+}
+
+// FLASHCARDS
+var idxFlash = 0;
+function mostrarFlashcard() {
+  document.getElementById('flash-front').innerText = listaVocabulario[idxFlash].es;
+  document.getElementById('flash-back').innerText = listaVocabulario[idxFlash].en;
+  document.getElementById('flash-back').style.display = 'none';
+}
+function voltearFlashcard() {
+  var back = document.getElementById('flash-back');
+  back.style.display = (back.style.display === 'none') ? 'block' : 'none';
+}
+function siguienteFlashcard() {
+  idxFlash = (idxFlash + 1) % listaVocabulario.length;
+  mostrarFlashcard();
+}
+function anteriorFlashcard() {
+  idxFlash = (idxFlash - 1 + listaVocabulario.length) % listaVocabulario.length;
+  mostrarFlashcard();
+}
+
+// JUEGO MEMORIA
+var cartasVolteadas = [];
+var parejasEncontradas = 0;
+var plantasEmoji = ["🌱", "🌿", "🪴", "🌷", "🌻"];
+
+function iniciarMemoria() {
+  var grid = document.getElementById('memory-grid');
+  grid.innerHTML = '';
+  cartasVolteadas = [];
+  parejasEncontradas = 0;
+  document.getElementById('plant-stage').innerText = plantasEmoji[0];
+  document.getElementById('memory-feedback').innerText = '';
+
+  var muestra = listaVocabulario.slice(0, 4);
+  var cartas = [];
+  for (var i = 0; i < muestra.length; i++) {
+    cartas.push({ texto: muestra[i].es, id: i });
+    cartas.push({ texto: muestra[i].en, id: i });
+  }
+  cartas.sort(function() { return Math.random() - 0.5; });
+
+  for (var j = 0; j < cartas.length; j++) {
+    var div = document.createElement('div');
+    div.className = 'memory-card';
+    div.setAttribute('data-id', cartas[j].id);
+    div.setAttribute('data-texto', cartas[j].texto);
+    div.innerText = '❓';
+    div.onclick = function() { clicCartaMemoria(this); };
+    grid.appendChild(div);
+  }
+}
+
+function clicCartaMemoria(carta) {
+  if (cartasVolteadas.length >= 2 || carta.className.indexOf('flipped') !== -1 || carta.className.indexOf('matched') !== -1) return;
+
+  carta.className += ' flipped';
+  carta.innerText = carta.getAttribute('data-texto');
+  cartasVolteadas.push(carta);
+
+  if (cartasVolteadas.length === 2) {
+    var c1 = cartasVolteadas[0];
+    var c2 = cartasVolteadas[1];
+
+    if (c1.getAttribute('data-id') === c2.getAttribute('data-id')) {
+      c1.className += ' matched';
+      c2.className += ' matched';
+      cartasVolteadas = [];
+      parejasEncontradas++;
+      document.getElementById('plant-stage').innerText = plantasEmoji[Math.min(parejasEncontradas, plantasEmoji.length - 1)];
+      if (parejasEncontradas === 4) {
+        document.getElementById('memory-feedback').innerText = '¡Felicidades! Completaste las parejas. 🌸';
+        document.getElementById('memory-feedback').className = 'feedback good';
+      }
+    } else {
+      setTimeout(function() {
+        c1.className = 'memory-card';
+        c2.className = 'memory-card';
+        c1.innerText = '❓';
+        c2.innerText = '❓';
+        cartasVolteadas = [];
+      }, 1000);
+    }
+  }
+}
+
+// JUEGO CONTRARRELOJ
+var tiempoRestante = 30;
+var puntos = 0;
+var temporizador = null;
+var palabraActual = null;
+
+function iniciarContrarreloj() {
+  clearInterval(temporizador);
+  tiempoRestante = 30;
+  puntos = 0;
+  document.getElementById('timer-text').innerText = tiempoRestante + 's';
+  document.getElementById('btn-start-speed').disabled = true;
+  document.getElementById('speed-feedback').innerText = '';
+  siguientePregunta();
+
+  temporizador = setInterval(function() {
+    tiempoRestante--;
+    document.getElementById('timer-text').innerText = tiempoRestante + 's';
+    if (tiempoRestante <= 0) {
+      clearInterval(temporizador);
+      document.getElementById('btn-start-speed').disabled = false;
+      document.getElementById('quiz-question').innerText = '¡Tiempo agotado!';
+      document.getElementById('quiz-options').innerHTML = '';
+      document.getElementById('speed-feedback').innerText = 'Puntuación final: ' + puntos + ' aciertos 🏆';
+      document.getElementById('speed-feedback').className = 'feedback good';
+    }
+  }, 1000);
+}
+
+function siguientePregunta() {
+  if (tiempoRestante <= 0) return;
+  var azar = Math.floor(Math.random() * listaVocabulario.length);
+  palabraActual = listaVocabulario[azar];
+  document.getElementById('quiz-question').innerText = '¿Cómo se dice "' + palabraActual.es + '" en inglés?';
+
+  var opciones = [palabraActual.en];
+  while (opciones.length < 4) {
+    var otra = listaVocabulario[Math.floor(Math.random() * listaVocabulario.length)].en;
+    if (opciones.indexOf(otra) === -1) opciones.push(otra);
+  }
+  opciones.sort(function() { return Math.random() - 0.5; });
+
+  var cont = document.getElementById('quiz-options');
+  cont.innerHTML = '';
+  for (var i = 0; i < opciones.length; i++) {
+    var btn = document.createElement('button');
+    btn.innerText = opciones[i];
+    btn.setAttribute('data-res', opciones[i]);
+    btn.onclick = function() {
+      if (this.getAttribute('data-res') === palabraActual.en) {
+        puntos++;
+        document.getElementById('speed-feedback').innerText = '¡Correcto! +1';
+        document.getElementById('speed-feedback').className = 'feedback good';
+      } else {
+        document.getElementById('speed-feedback').innerText = '¡Incorrecto!';
+        document.getElementById('speed-feedback').className = 'feedback bad';
+      }
+      siguientePregunta();
+    };
+    cont.appendChild(btn);
+  }
+}
+
+// INICIALIZACIÓN
+(function() {
+  mostrarFlashcard();
+  iniciarMemoria();
+  
+  var ul = document.getElementById('lista-vocabulario');
+  for (var i = 0; i < listaVocabulario.length; i++) {
+    var li = document.createElement('li');
+    li.innerHTML = '<strong>' + listaVocabulario[i].es + '</strong> = ' + listaVocabulario[i].en;
+    ul.appendChild(li);
+  }
+})();
+</script>
+
+</body>
+</html>
