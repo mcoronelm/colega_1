@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz final · Unidad 1 🏆</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .q-list{display:flex;flex-direction:column;gap:14px;margin:14px 0}
+  .q-item{background:#FFF6EE;border:2px solid #ffd9c2;border-radius:16px;padding:12px 14px}
+  .q-item.correct{border-color:#1E9E90;background:#E8F7F5}
+  .q-item.wrong{border-color:#FF6B5A;background:#FFEDEA}
+  .q-text{font-weight:800;margin-bottom:8px}
+  .q-num{display:inline-block;min-width:26px;height:26px;line-height:26px;text-align:center;border-radius:50%;background:#1E9E90;color:#fff;font-size:.85rem;margin-right:6px}
+  .q-opts{display:flex;flex-wrap:wrap;gap:8px}
+  .q-opt{border:2px solid #ffd9c2;background:#fff;border-radius:12px;padding:8px 14px;font:inherit;font-weight:700;cursor:pointer;transition:transform .1s,background .2s}
+  .q-opt:hover{background:#FFF0E3}
+  .q-opt:active{transform:scale(.96)}
+  .q-opt.sel{background:#1E9E90;border-color:#1E9E90;color:#fff}
+  .q-opt:disabled{cursor:default;opacity:.85}
+  .q-input{width:100%;max-width:420px;padding:8px 12px;border:2px solid #ffd9c2;border-radius:12px;font:inherit}
+  .q-input.correct{border-color:#1E9E90;background:#E8F7F5}
+  .q-input.wrong{border-color:#FF6B5A;background:#FFEDEA}
+  .q-answer{margin-top:6px;font-size:.9rem;color:#c0392b;font-weight:700}
+  .q-progress{position:sticky;top:0;z-index:5;background:#fff;border-radius:0 0 14px 14px;padding:8px 12px;font-weight:800;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+  .result-box{text-align:center;padding:20px;border-radius:20px;background:#FFF6EE;border:3px dashed #FFC857;margin-top:16px;display:none}
+  .result-box .big{font-family:'Baloo 2',sans-serif;font-size:2.4rem;font-weight:800;color:#1E9E90}
+  .result-box .trophy{font-size:3rem}
+</style>
+
+</head>
+<body>
+
+  <!-- BANDERINES DE PAPEL PICADO -->
+  <div class="banner" id="banner">
+    <div class="flag">¡HOLA!</div>
+    <div class="flag">ELE</div>
+    <div class="flag">CURSO</div>
+    <div class="flag">NIÑOS</div>
+    <div class="flag">JUEGA</div>
+    <div class="flag">APRENDE</div>
+  </div>
+
+  <!-- HEADER -->
+<header>
+  <h1><a href="index.html" class="logo-link">MUNDO ELE</a></h1>
+  <p>Aprende español de forma divertida 🌟</p>
+</header>
+
+<!-- NAVBAR CONTENEDOR VACIÓ PARA IMPORTAR -->
+<nav class="navbar" id="navbar-container"></nav>
+
+
+<main>
+
+  <div class="q-progress" id="progress">Answered: 0 / 24</div>
+
+  <section class="card" id="quizCard">
+    <h2>🏆 Quiz final <span class="badge">Unidad 1</span></h2>
+    <p class="instructions">Answer all 24 questions. Click an answer or type it. Then press <b>Check my quiz</b>!</p>
+    <div id="quizBody"></div>
+    <button class="check-btn" id="checkBtn" onclick="checkQuiz()">Check my quiz ✅</button>
+    <div class="feedback" id="fbQuiz"></div>
+    <div class="result-box" id="resultBox">
+      <div class="trophy" id="trophy">🏆</div>
+      <div class="big" id="scoreText"></div>
+      <p id="scoreMsg"></p>
+      <button class="check-btn" onclick="location.reload()">Try again 🔄</button>
+    </div>
+  </section>
+
+</main>
+
+
+<div id="footer-container"></div>
+<script>
+  // Cargar Navbar
+  fetch('navbar.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('navbar-container').innerHTML = data;
+
+      // Activar comportamiento desplegable en dispositivos móviles
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        const link = item.querySelector('.nav-link');
+        if (link) {
+          link.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+              e.preventDefault();
+              navItems.forEach(otherItem => {
+                if (otherItem !== item) otherItem.classList.remove('active');
+              });
+              item.classList.toggle('active');
+            }
+          });
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.nav-item')) {
+          navItems.forEach(item => item.classList.remove('active'));
+        }
+      });
+    })
+    .catch(error => console.error('Error al cargar la navbar:', error));
+
+  // Cargar Footer
+  fetch('footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-container').innerHTML = data;
+    })
+    .catch(error => console.error('Error al cargar el footer:', error));
+</script>
+<script>
+const $ = id => document.getElementById(id);
+const shuffle = a => [...a].sort(()=>Math.random()-0.5);
+function normalize(s){return s.trim().toLowerCase().replace(/[¿?¡!.,]/g,"").replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i").replace(/ó/g,"o").replace(/ú/g,"u").replace(/\s+/g," ").trim();}
+function launchConfetti(){
+  const l=document.createElement('div'); l.className='confetti-layer'; document.body.appendChild(l);
+  const c=['#FF6B5A','#1E9E90','#FFC857','#FF8FA3','#5EA0D0'];
+  for(let i=0;i<60;i++){ const p=document.createElement('div'); p.className='confetti-piece'; p.style.left=Math.random()*100+'vw'; p.style.background=c[Math.floor(Math.random()*c.length)]; p.style.animationDuration=(2+Math.random()*1.5)+'s'; p.style.borderRadius=Math.random()>.5?'50%':'2px'; l.appendChild(p); }
+  setTimeout(()=>l.remove(),3600);
+}
+
+/* mc(question, correct, wrong1, wrong2[, wrong3]) / tx(prompt, "answer|alt", placeholder) */
+const mc=(q,right,...wrong)=>({type:'mc',q,right,opts:shuffle([right,...wrong])});
+const tx=(q,ans,ph)=>({type:'tx',q,ans:ans.split('|'),ph});
+
+const SECTIONS=[
+ {title:"1. 🦙 ¿Cómo te llamas?", qs:[
+  mc("How do you ask “What’s your name?”","¿Cómo te llamas?","¿Cómo se llama?","Yo me llamo","Tú te llamas"),
+  mc("Yo ___ Lalo.","me llamo","te llamas","se llama"),
+  mc("Ella ___ Pauli.","se llama","me llamo","te llamas"),
+  mc("Someone asks Beto: “¿Cómo te llamas?” Beto answers:","Yo me llamo Beto.","Tú te llamas Beto.","Él se llama Beto."),
+ ]},
+ {title:"2. 🧠 Yo sé… (saber)", qs:[
+  mc("“Yo sé” means…","I know how","I can","I like"),
+  mc("Tú ___ nadar. (you know how to swim)","sabes","sé","sabe"),
+  mc("Él ___ bailar. (he knows how to dance)","sabe","sé","sabes"),
+  mc("How do you say “I don’t know how to bark”?","Yo no sé ladrar.","Yo sé ladrar.","No me gusta ladrar.","Yo no sabes ladrar."),
+ ]},
+ {title:"3. 💪 Yo puedo… (poder)", qs:[
+  mc("“Yo no puedo” means…","I can’t","I can","I don’t like"),
+  mc("Ella ___ cantar. (she can sing)","puede","puedo","puedes"),
+  mc("Tú ___ montar en bici. (you can ride a bike)","puedes","puede","puedo"),
+  mc("Yo puedo cantar ___ no puedo bailar.","pero","y","o"),
+ ]},
+ {title:"4. 💛 Me gusta…", qs:[
+  mc("“Me gusta” means…","I like","I know how","I can"),
+  mc("“¿Te gusta nadar?” — “Sí, ___ nadar.”","me gusta","te gusta","no me gusta"),
+  mc("How do you say “I don’t like to sing”?","No me gusta cantar.","Me gusta cantar.","No puedo cantar."),
+  mc("“No muy bien” means…","not very good","yes","no"),
+ ]},
+ {title:"5. 🖼️ Vocabulary", qs:[
+  mc("🎸","tocar la guitarra","jugar al fútbol","hacer la cama"),
+  mc("⚽","jugar al fútbol","tocar la guitarra","montar en bici"),
+  mc("🪢","saltar a la comba","nadar","bailar"),
+  mc("Which verb? “Yo sé ___ el piano.” 🎹","tocar","jugar","hacer"),
+ ]},
+ {title:"6. ✍️ Write it in Spanish", qs:[
+  tx("I know how to read. 📖","Yo sé leer|Sé leer","Yo ..."),
+  tx("She can sing. 🎤","Ella puede cantar","Ella ..."),
+  tx("I like to dance. 💃","Me gusta bailar|Yo me gusta bailar","Me ..."),
+  tx("His name is Beto. 👦","Él se llama Beto|Se llama Beto","Él ..."),
+ ]},
+];
+
+const ALL=[]; let n=0;
+SECTIONS.forEach(sec=>{
+  const h=document.createElement('h3'); h.textContent=sec.title; h.style.cssText="margin:18px 0 6px;font-family:'Baloo 2',sans-serif";
+  $('quizBody').appendChild(h);
+  const list=document.createElement('div'); list.className='q-list'; $('quizBody').appendChild(list);
+  sec.qs.forEach(q=>{
+    n++; const item=document.createElement('div'); item.className='q-item';
+    const t=document.createElement('div'); t.className='q-text'; t.innerHTML=`<span class="q-num">${n}</span>${q.q}`; item.appendChild(t);
+    const st={q,el:item,value:null};
+    if(q.type==='mc'){
+      const box=document.createElement('div'); box.className='q-opts';
+      q.opts.forEach(o=>{ const b=document.createElement('button'); b.type='button'; b.className='q-opt'; b.textContent=o;
+        b.onclick=()=>{ box.querySelectorAll('.q-opt').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); st.value=o; updateProgress(); };
+        box.appendChild(b); });
+      item.appendChild(box); st.box=box;
+    } else {
+      const inp=document.createElement('input'); inp.type='text'; inp.className='q-input'; inp.placeholder=q.ph;
+      inp.oninput=()=>{ st.value=inp.value.trim()?inp.value:null; updateProgress(); };
+      item.appendChild(inp); st.inp=inp;
+    }
+    ALL.push(st); list.appendChild(item);
+  });
+});
+$('progress').textContent=`Answered: 0 / ${ALL.length}`;
+function updateProgress(){ $('progress').textContent=`Answered: ${ALL.filter(s=>s.value!==null).length} / ${ALL.length}`; }
+
+function checkQuiz(){
+  const missing=ALL.filter(s=>s.value===null).length;
+  if(missing){ const f=$('fbQuiz'); f.textContent=`You still have ${missing} unanswered question${missing>1?'s':''}. 🙂`; f.className='feedback bad'; return; }
+  let score=0;
+  ALL.forEach(s=>{
+    const q=s.q; let good;
+    if(q.type==='mc'){ good=s.value===q.right; s.box.querySelectorAll('.q-opt').forEach(b=>b.disabled=true); }
+    else { good=q.ans.map(normalize).includes(normalize(s.value)); s.inp.disabled=true; s.inp.classList.add(good?'correct':'wrong'); }
+    s.el.classList.add(good?'correct':'wrong');
+    if(good) score++;
+    else { const a=document.createElement('div'); a.className='q-answer'; a.textContent='✔ '+(q.type==='mc'?q.right:q.ans[0]); s.el.appendChild(a); }
+  });
+  $('checkBtn').style.display='none';
+  const pct=score/ALL.length;
+  $('scoreText').textContent=`${score} / ${ALL.length}`;
+  const [tr,msg]= pct===1?['🏆','Perfect! ¡Eres un campeón!']:pct>=.8?['🌟','Excellent work! ¡Muy bien!']:pct>=.6?['👍','Good job! Review the red ones and try again.']:['💪','Keep practicing! Go back to the lessons and try again.'];
+  $('trophy').textContent=tr; $('scoreMsg').textContent=msg;
+  $('fbQuiz').textContent=''; $('fbQuiz').className='feedback';
+  const rb=$('resultBox'); rb.style.display='block'; rb.scrollIntoView({behavior:'smooth',block:'center'});
+  if(pct>=.6) launchConfetti();
+}
+</script>
+</body>
+</html>
