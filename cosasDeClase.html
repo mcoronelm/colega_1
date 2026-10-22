@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Cosas de clase! 🎒</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin:18px 0}
+.flip-card{height:160px;perspective:1000px;cursor:pointer}
+.flip-card-inner{position:relative;width:100%;height:100%;text-align:center;transition:transform .6s;transform-style:preserve-3d}
+.flip-card.flipped .flip-card-inner{transform:rotateY(180deg)}
+.flip-card-front,.flip-card-back{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;backface-visibility:hidden;border-radius:16px;border:2px solid #ffd9c2;box-shadow:0 4px 10px rgba(0,0,0,.08);padding:10px}
+.flip-card-front{background:#FFF6EE;font-size:2.6rem}
+.flip-card-back{background:#1E9E90;color:#fff;transform:rotateY(180deg)}
+.fc-word{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:1.05rem}
+.fc-translation,.flip-hint{font-size:.85rem;opacity:.9}
+.flip-audio-btn{position:absolute;top:8px;right:8px;width:30px;height:30px;border:none;border-radius:50%;background:rgba(255,255,255,.3);color:#fff;cursor:pointer}
+.bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+.line-item{margin:12px 0;font-size:1.1rem}
+.pair-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:14px 0}
+.pic{border:4px solid #ddd;border-radius:14px;padding:8px;text-align:center;font-size:2.2rem;cursor:pointer;background:#fff}
+.pic small{display:block;font-size:.8rem;min-height:1.2em}
+.pic.ok{border-color:#2e9e5b}.pic.no{border-color:#e0554a}
+.art-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+</style>
+</head>
+<body>
+
+<div class="banner" id="banner">
+  <div class="flag">¡HOLA!</div><div class="flag">ELE</div><div class="flag">CURSO</div>
+  <div class="flag">NIÑOS</div><div class="flag">JUEGA</div><div class="flag">APRENDE</div>
+</div>
+
+<header>
+  <h1><a href="index.html" class="logo-link">MUNDO ELE</a></h1>
+  <p>Aprende español de forma divertida 🌟</p>
+</header>
+
+<nav class="navbar" id="navbar-container"></nav>
+
+<main>
+
+  <section class="card" id="cardFlash">
+    <h2>0. 🔄 Flashcards <span class="badge">Cosas de clase</span></h2>
+    <p class="instructions">Click each card to flip it and reveal the word and its meaning.</p>
+    <div class="flip-grid" id="flipGrid"></div>
+  </section>
+
+  <section class="card" id="card1">
+    <h2>1. 🎯 Sort the Objects <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Click a category to select it, then click the objects that belong there. Place them all!</p>
+    <div class="objects-pool" id="objectsPool"></div>
+    <div class="rooms-board" id="roomsBoard"></div>
+    <button class="check-btn" onclick="checkRooms()">Check</button>
+    <div class="feedback" id="fb1"></div>
+  </section>
+
+  <section class="card" id="card2">
+    <h2>2. ✍️ Name the Object <span class="badge">un / una</span></h2>
+    <p class="instructions">Look at each picture and write the object in Spanish, with <b>un</b> or <b>una</b>.</p>
+    <div class="num-grid" id="numGrid"></div>
+    <button class="check-btn" onclick="grade('#numGrid','fb2',2,'Excellent! You know your classroom things. 🌟')">Check</button>
+    <div class="feedback" id="fb2"></div>
+  </section>
+
+  <section class="card" id="card3">
+    <h2>3. 🗣️ Build a Sentence <span class="badge">tiene · es</span></h2>
+    <p class="instructions">Choose a person and an object, and see the complete sentence.</p>
+    <div class="birthday-box">
+      <div class="cake">🙋‍♀️🎒</div>
+      <div><select id="whoSel"></select> <select id="objSel"></select></div>
+      <div class="birthday-sentence" id="sent1"></div>
+    </div>
+    <div class="birthday-box">
+      <div class="cake">🤔❓</div>
+      <div><select id="askSel"></select></div>
+      <div class="birthday-sentence" id="sent2"></div>
+    </div>
+  </section>
+
+  <section class="card" id="card4">
+    <h2>4. ✏️ Complete the Missing Letter</h2>
+    <p class="instructions">Write the letter that's missing in each word.</p>
+    <div class="fill-grid" id="fillGrid"></div>
+    <button class="check-btn" onclick="grade('#fillGrid','fb4',4,'Amazing! You know all the words. 🏆')">Check</button>
+    <div class="feedback" id="fb4"></div>
+  </section>
+
+  <section class="card" id="card5">
+    <h2>5. 🔤 Unscramble the Letters</h2>
+    <p class="instructions">The letters of each word are mixed up. Write the correct word!</p>
+    <div class="scramble-grid" id="scrambleGrid"></div>
+    <button class="check-btn" onclick="grade('#scrambleGrid','fb5',5,'You unscrambled them all! 🌟')">Check</button>
+    <div class="feedback" id="fb5"></div>
+  </section>
+
+  <section class="card" id="card6">
+    <h2>6. 🔎 Word Search</h2>
+    <p class="instructions">Click the letters, in order, to spell out each word on the list. Click the last letter again to remove it.</p>
+    <div class="wordsearch-wrap">
+      <div class="ws-grid" id="wsGrid"></div>
+      <div class="ws-words" id="wsWords"></div>
+    </div>
+    <button class="check-btn" onclick="clearSel()">Clear selection</button>
+    <div class="feedback" id="fb6"></div>
+  </section>
+
+  <section class="card" id="card7">
+    <h2>7. 🃏 Memory Match: Object and Icon</h2>
+    <p class="instructions">Find the pairs: the object with its icon.</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="memory-status" id="memoryStatus">Pairs found: 0 / 6</div>
+  </section>
+
+  <section class="card" id="card8">
+    <h2>8. 📝 Escribe <span class="badge">Worksheet · Tiene = he/she has</span></h2>
+    <p class="instructions">What does each person have? Choose the right object from the box.</p>
+    <div class="bank" id="escBank"></div>
+    <div id="escGrid"></div>
+    <button class="check-btn" onclick="grade('#escGrid','fb8',8,'Perfect! Everyone has the right thing. 🎉')">Check</button>
+    <div class="feedback" id="fb8"></div>
+  </section>
+
+  <section class="card" id="card9">
+    <h2>9. 🌈 Une con flechas de colores <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Click a word (it gets a color), then click its picture. Match all of them!</p>
+    <div class="bank" id="matchWords"></div>
+    <div class="pair-grid" id="matchPics"></div>
+    <button class="check-btn" onclick="checkMatch()">Check</button>
+    <div class="feedback" id="fb9"></div>
+  </section>
+
+  <section class="card" id="card10">
+    <h2>10. ✅ Completa <span class="badge">Worksheet · un / una</span></h2>
+    <p class="instructions">Choose <b>un</b> or <b>una</b> for each word.</p>
+    <div class="art-grid" id="artGrid"></div>
+    <button class="check-btn" onclick="grade('#artGrid','fb10',10,'Great! You know un and una. ✅')">Check</button>
+    <div class="feedback" id="fb10"></div>
+  </section>
+
+  <section class="card" id="card11">
+    <h2>11. 🎧 Escucha y elige <span class="badge">Listening</span></h2>
+    <p class="instructions">Listen to the word and click the right picture.</p>
+    <div class="birthday-sentence" id="lPrompt" style="text-align:center"></div>
+    <div class="bank" id="lOpts"></div>
+    <button class="check-btn" onclick="lSay()">🔊 Listen again</button>
+    <div class="feedback" id="fb11"></div>
+  </section>
+
+</main>
+
+<div id="footer-container"></div>
+
+<script>
+fetch('navbar.html').then(r=>r.text()).then(d=>{
+  document.getElementById('navbar-container').innerHTML=d;
+  const items=document.querySelectorAll('.nav-item');
+  items.forEach(it=>{const l=it.querySelector('.nav-link');
+    if(l)l.addEventListener('click',e=>{if(innerWidth<=768){e.preventDefault();items.forEach(o=>o!==it&&o.classList.remove('active'));it.classList.toggle('active');}});});
+  document.addEventListener('click',e=>{if(!e.target.closest('.nav-item'))items.forEach(i=>i.classList.remove('active'));});
+}).catch(e=>console.error('Error al cargar la navbar:',e));
+fetch('footer.html').then(r=>r.text()).then(d=>{document.getElementById('footer-container').innerHTML=d;}).catch(e=>console.error('Error al cargar el footer:',e));
+</script>
+
+<script>
+/* ---------- VOCABULARY ---------- */
+const P="lápiz|un|pencil|✏️|e;cuaderno|un|notebook|📓|l;goma|una|eraser|🧽|e;pizarra|una|board|🪧|l;sacapuntas|un|sharpener|🌀|e;libro|un|book|📕|l;estuche|un|pencilcase|👝|g;cartera|una|backpack|🎒|g;regla|una|ruler|📏|e;pintura|una|crayon|🖍️|e;billetera|una|wallet|👛|g;mesa|una|table|🍽️|l"
+  .split(';').map(s=>{const[word,art,en,icon,cat]=s.split('|');return{word,art,en,icon,cat};});
+const ALT={cartera:"also: una mochila, un morral, un bolso"};
+const PRON={cuaderno:"coo-ah-DEHR-noh"};
+const CATS=["e","l","g"];
+const CAT_LABELS={e:"Escribir y dibujar",l:"Leer y aprender",g:"Llevar y guardar"};
+const CAT_ICONS={e:"✏️",l:"📚",g:"🎒"};
+const full=p=>p.art+' '+p.word;
+const aen=e=>(/^[aeiou]/.test(e)?'an ':'a ')+e;
+const $=id=>document.getElementById(id);
+const shuf=a=>[...a].sort(()=>Math.random()-.5);
+function mkOpts(sel,arr){arr.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o);});}
+
+function speakSpanish(text,rate=.85){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=rate;speechSynthesis.speak(u);
+}
+let starsEarned=0;
+function earnStar(n){
+  if(n<=starsEarned)return;
+  starsEarned=n;
+  document.querySelectorAll('.star').forEach(s=>{if(parseInt(s.dataset.i)<=starsEarned)s.classList.add('on');});
+  launchConfetti();
+}
+function launchConfetti(){
+  const layer=document.createElement('div');layer.className='confetti-layer';document.body.appendChild(layer);
+  const colors=['#FF6B5A','#1E9E90','#FFC857','#FF8FA3','#5EA0D0'];
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');p.className='confetti-piece';
+    p.style.left=Math.random()*100+'vw';p.style.background=colors[Math.random()*5|0];
+    p.style.animationDuration=(2+Math.random()*1.5)+'s';p.style.borderRadius=Math.random()>.5?'50%':'2px';
+    layer.appendChild(p);
+  }
+  setTimeout(()=>layer.remove(),3600);
+}
+function normalize(s){
+  return s.trim().toLowerCase().replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i").replace(/ó/g,"o").replace(/ú/g,"u").replace(/\s+/g," ");
+}
+/* Generic checker: every input/select inside `sel` has data-answer */
+function grade(sel,fb,n,ok){
+  const ins=document.querySelectorAll(sel+' input,'+sel+' select');let c=0;
+  ins.forEach(i=>{const g=normalize(i.value)===normalize(i.dataset.answer);i.classList.toggle('correct',g);i.classList.toggle('wrong',!g);if(g)c++;});
+  const f=$(fb),all=c===ins.length;
+  f.textContent=all?ok:`${c} out of ${ins.length} correct. The red ones need review.`;
+  f.className='feedback '+(all?'good':'bad');
+  if(all)earnStar(n);
+}
+
+/* ---------- 0. FLASHCARDS ---------- */
+P.forEach(a=>{
+  const card=document.createElement('div');card.className='flip-card';
+  card.innerHTML=`<div class="flip-card-inner">
+    <div class="flip-card-front"><div>${a.icon}</div><div class="flip-hint">${aen(a.en)}</div></div>
+    <div class="flip-card-back"><button type="button" class="flip-audio-btn" aria-label="Play pronunciation">🔊</button>
+      <div class="fc-word">${full(a)}</div><div class="fc-translation">${aen(a.en)}</div>
+      <div class="fc-translation">${PRON[a.word]||''}${ALT[a.word]||''}</div></div></div>`;
+  card.onclick=()=>{const was=card.classList.contains('flipped');card.classList.toggle('flipped');if(!was)speakSpanish(full(a));};
+  card.querySelector('.flip-audio-btn').onclick=e=>{e.stopPropagation();speakSpanish(full(a));};
+  $('flipGrid').appendChild(card);
+});
+
+/* ---------- 1. SORT ---------- */
+let selCat=null;const placed={};const slots={};
+shuf(P).forEach(o=>{
+  const b=document.createElement('button');b.className='object-chip';b.textContent=o.icon+' '+o.word;
+  b.onclick=()=>{
+    if(!selCat){$('fb1').textContent="First click a category, then click the object. 🎯";$('fb1').className='feedback bad';return;}
+    const t=document.createElement('span');t.className='item-tag';t.dataset.word=o.word;t.textContent=o.word;
+    slots[selCat].querySelector('.items').appendChild(t);placed[o.word]=selCat;b.disabled=true;
+  };
+  $('objectsPool').appendChild(b);
+});
+CATS.forEach(c=>{
+  const s=document.createElement('div');s.className='room-slot';
+  s.innerHTML=`<h3>${CAT_ICONS[c]} ${CAT_LABELS[c]}</h3><div class="items"></div><div class="hint-select">click to select</div>`;
+  s.onclick=()=>{Object.values(slots).forEach(x=>x.classList.remove('active'));s.classList.add('active');selCat=c;};
+  $('roomsBoard').appendChild(s);slots[c]=s;
+});
+function checkRooms(){
+  const fb=$('fb1');
+  if(Object.keys(placed).length<P.length){fb.textContent=`Place all ${P.length} objects first. 🎒`;fb.className='feedback bad';return;}
+  let c=0;
+  P.forEach(o=>{const t=document.querySelector(`.item-tag[data-word="${o.word}"]`),g=placed[o.word]===o.cat;
+    t.classList.toggle('correct',g);t.classList.toggle('wrong',!g);if(g)c++;});
+  if(c===P.length){fb.textContent="Perfect! 🎉 Every object is in the right place.";fb.className='feedback good';earnStar(1);}
+  else{fb.textContent=`You have ${c} out of ${P.length} correct. Try again!`;fb.className='feedback bad';}
+}
+
+/* ---------- 2. NAME THE OBJECT ---------- */
+P.forEach(p=>{
+  const d=document.createElement('div');d.className='num-item';
+  d.innerHTML=`<div class="digit">${p.icon}</div><small>${aen(p.en)}</small><input type="text" data-answer="${full(p)}" placeholder="un / una ...">`;
+  $('numGrid').appendChild(d);
+});
+
+/* ---------- 3. SENTENCES ---------- */
+mkOpts($('whoSel'),["Ana","Rubén","Elena","Julia","Él","Ella"].map(n=>[n,n]));
+mkOpts($('objSel'),P.map(a=>[full(a),a.icon+' '+full(a)]));
+mkOpts($('askSel'),P.map(a=>[full(a),a.icon+' '+full(a)]));
+function upd1(){$('sent1').innerHTML=`<b>${$('whoSel').value}</b> tiene <b>${$('objSel').value}</b>.`;earnStar(3);}
+function upd2(){$('sent2').innerHTML=`¿Qué es? → Es <b>${$('askSel').value}</b>.`;earnStar(3);}
+$('whoSel').onchange=$('objSel').onchange=upd1;$('askSel').onchange=upd2;upd1();upd2();
+
+/* ---------- 4. MISSING LETTER ---------- */
+[["lápiz",1],["cuaderno",3],["goma",2],["pizarra",3],["libro",2],["estuche",3],["cartera",2],["regla",2],["pintura",3],["mesa",1]].forEach(([w,i])=>{
+  const d=document.createElement('div');d.className='fill-item';
+  d.innerHTML=`<span>${w.slice(0,i)}</span><input maxlength="1" data-answer="${w[i]}"><span>${w.slice(i+1)}</span>`;
+  $('fillGrid').appendChild(d);
+});
+
+/* ---------- 5. UNSCRAMBLE ---------- */
+function scramble(w){let r;do{r=shuf(w.split('')).join('');}while(r===w);return r;}
+["goma","libro","regla","estuche","cuaderno","billetera"].forEach(w=>{
+  const d=document.createElement('div');d.className='scramble-item';
+  d.innerHTML=`<div class="scramble-word">${scramble(w).toUpperCase()}</div><input type="text" data-answer="${w}" placeholder="write the word...">`;
+  $('scrambleGrid').appendChild(d);
+});
+
+/* ---------- 6. WORD SEARCH ---------- */
+const WS=10,WW=["libro","regla","goma","estuche","cuaderno"];
+const G=Array.from({length:WS},()=>Array(WS).fill(null));
+WW.forEach(w=>{for(let t=0;t<300;t++){
+  const d=[[0,1],[1,0],[1,1]][Math.random()*3|0];
+  const r=Math.random()*(d[0]?WS-w.length+1:WS)|0,c=Math.random()*(d[1]?WS-w.length+1:WS)|0;
+  const cells=[...w].map((_,i)=>[r+d[0]*i,c+d[1]*i]);
+  if(cells.every(([y,x],i)=>!G[y][x]||G[y][x]===w[i])){cells.forEach(([y,x],i)=>G[y][x]=w[i]);break;}
+}});
+const ABC="ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+const wsC=[];let wsSel=[];const wsFound=new Set();
+for(let r=0;r<WS;r++){wsC.push([]);for(let c=0;c<WS;c++){
+  if(!G[r][c])G[r][c]=ABC[Math.random()*ABC.length|0];
+  const el=document.createElement('div');el.className='ws-cell';el.textContent=G[r][c].toUpperCase();
+  el.onclick=()=>toggleCell(r,c,el);$('wsGrid').appendChild(el);wsC[r].push(el);
+}}
+WW.forEach(w=>{const d=document.createElement('div');d.id='wsword-'+w;d.textContent='• '+w;$('wsWords').appendChild(d);});
+function toggleCell(r,c,el){
+  if(el.classList.contains('found'))return;
+  const i=wsSel.findIndex(s=>s[0]===r&&s[1]===c);
+  if(i===wsSel.length-1&&i!==-1){wsSel.pop();el.classList.remove('selected');return;}
+  if(i!==-1)return;
+  wsSel.push([r,c]);el.classList.add('selected');
+  const w=wsSel.map(([y,x])=>G[y][x]).join('');
+  if(WW.includes(w)&&!wsFound.has(w)){
+    wsFound.add(w);wsSel.forEach(([y,x])=>{wsC[y][x].classList.remove('selected');wsC[y][x].classList.add('found');});
+    $('wsword-'+w).classList.add('found-word');wsSel=[];
+    const fb=$('fb6');fb.className='feedback good';
+    if(wsFound.size===WW.length){fb.textContent="You found all the hidden words! 🔎🎉";earnStar(6);}
+    else fb.textContent=`Nice! You found "${w}". Keep looking.`;
+  }
+}
+function clearSel(){wsSel.forEach(([r,c])=>wsC[r][c].classList.remove('selected'));wsSel=[];}
+
+/* ---------- 7. MEMORY ---------- */
+const MP=[["✏️","lápiz"],["📓","cuaderno"],["📕","libro"],["📏","regla"],["🎒","cartera"],["👝","estuche"]];
+let mf=[],mm=0,ml=false;
+shuf(MP.flatMap((p,i)=>[[i,p[0]],[i,p[1]]])).forEach(([pair,label])=>{
+  const el=document.createElement('div');el.className='mem-card';el.textContent='?';
+  el.onclick=()=>{
+    if(ml||el.dataset.s)return;
+    el.textContent=label;el.classList.add('flipped');el.dataset.s=1;mf.push({el,pair});
+    if(mf.length<2)return;
+    ml=true;const[a,b]=mf;
+    if(a.pair===b.pair){
+      [a,b].forEach(x=>x.el.classList.replace('flipped','matched'));mm++;mf=[];ml=false;
+      $('memoryStatus').textContent=mm===MP.length?"You found all the pairs! 🃏🎉":`Pairs found: ${mm} / ${MP.length}`;
+      if(mm===MP.length)earnStar(7);
+    }else setTimeout(()=>{[a,b].forEach(x=>{x.el.textContent='?';x.el.classList.remove('flipped');delete x.el.dataset.s;});mf=[];ml=false;},800);
+  };
+  $('memoryGrid').appendChild(el);
+});
+
+/* ---------- 8. ESCRIBE (PDF 1) ---------- */
+/* Edit these pairs if the arrows in your worksheet say otherwise */
+const ESC=[["👩","Ana","una cartera"],["👦","Rubén","una regla"],["👩‍🦱","Elena","un cuaderno"],["👩‍🦰","Julia","un lápiz"],["🐶","Colega","un estuche"]];
+$('escBank').innerHTML=shuf(ESC).map(e=>`<span class="item-tag">${e[2]}</span>`).join('');
+ESC.forEach(([i,n,o])=>{
+  const d=document.createElement('div');d.className='line-item';
+  d.innerHTML=`${i} <b>${n}</b> tiene <select data-answer="${o}"></select>.`;
+  mkOpts(d.querySelector('select'),[["","..."],...shuf(ESC).map(e=>[e[2],e[2]])]);
+  $('escGrid').appendChild(d);
+});
+
+/* ---------- 9. UNE CON FLECHAS DE COLORES (PDF 2) ---------- */
+const MW=["cartera","goma","regla","mesa","lápiz","libro","sacapuntas","estuche"].map(w=>P.find(p=>p.word===w));
+const COL=["#e0554a","#2b7bd6","#2e9e5b","#e69a00","#8e44ad","#00a5a8","#d6458f","#6b4f2a"];
+let mSel=null;const mAssign={};const wordBtn={};
+MW.forEach((p,i)=>{
+  const b=document.createElement('button');b.className='object-chip';b.textContent=full(p);b.style.borderColor=COL[i];
+  b.onclick=()=>{mSel=p.word;Object.values(wordBtn).forEach(x=>x.style.background='');b.style.background=COL[i]+'33';};
+  $('matchWords').appendChild(b);wordBtn[p.word]=b;
+});
+const picEl={};
+shuf(MW).forEach(p=>{
+  const d=document.createElement('div');d.className='pic';d.innerHTML=`${p.icon}<small>${aen(p.en)}</small><small class="tag"></small>`;
+  d.onclick=()=>{
+    if(!mSel){$('fb9').textContent="First click a word, then click its picture. 🌈";$('fb9').className='feedback bad';return;}
+    for(const k in mAssign)if(mAssign[k]===mSel){mAssign[k]=null;picEl[k].style.borderColor='#ddd';picEl[k].querySelector('.tag').textContent='';}
+    const w=mSel,ci=MW.findIndex(x=>x.word===w);
+    mAssign[p.word]=w;d.style.borderColor=COL[ci];d.className='pic';
+    const t=d.querySelector('.tag');t.textContent=full(MW[ci]);t.style.color=COL[ci];t.style.fontWeight='700';
+  };
+  $('matchPics').appendChild(d);picEl[p.word]=d;
+});
+function checkMatch(){
+  const fb=$('fb9');let c=0;
+  if(MW.some(p=>!Object.values(mAssign).includes(p.word))){fb.textContent="Match all the words first. 🌈";fb.className='feedback bad';return;}
+  MW.forEach(p=>{const g=mAssign[p.word]===p.word;picEl[p.word].classList.toggle('ok',g);picEl[p.word].classList.toggle('no',!g);if(g)c++;});
+  if(c===MW.length){fb.textContent="Perfect! Every arrow is right. 🌈🎉";fb.className='feedback good';earnStar(9);}
+  else{fb.textContent=`${c} out of ${MW.length} correct. Fix the red ones!`;fb.className='feedback bad';}
+}
+
+/* ---------- 10. COMPLETA: UN / UNA ---------- */
+P.forEach(p=>{
+  const d=document.createElement('div');d.className='line-item';
+  d.innerHTML=`<select data-answer="${p.art}"></select> <b>${p.word}</b>`;
+  mkOpts(d.querySelector('select'),[["","..."],["un","un"],["una","una"]]);
+  $('artGrid').appendChild(d);
+});
+
+/* ---------- 11. ESCUCHA Y ELIGE ---------- */
+const lq=shuf(P).slice(0,6);let li=0;
+function lSay(){if(li<lq.length)speakSpanish(full(lq[li]));}
+function lShow(){
+  const fb=$('fb11'),box=$('lOpts');box.innerHTML='';
+  if(li>=lq.length){$('lPrompt').textContent='¡Muy bien! 🎉';fb.textContent="You listened really well! 🎧🌟";fb.className='feedback good';earnStar(11);return;}
+  $('lPrompt').textContent='👂 ¿Qué es?';
+  const ans=lq[li];
+  shuf([ans,...shuf(P.filter(p=>p!==ans)).slice(0,3)]).forEach(o=>{
+    const b=document.createElement('button');b.className='object-chip';b.innerHTML=`${o.icon} ${aen(o.en)}`;
+    b.onclick=()=>{
+      if(o===ans){li++;fb.textContent='';lShow();lSay();}
+      else{fb.textContent='Not that one. Listen again! 🔊';fb.className='feedback bad';}
+    };
+    box.appendChild(b);
+  });
+}
+lShow();lSay();
+</script>
+</body>
+</html>

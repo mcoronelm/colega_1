@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡El cuerpo! 🧍</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin:18px 0}
+.flip-card{height:150px;perspective:1000px;cursor:pointer}
+.flip-card-inner{position:relative;width:100%;height:100%;text-align:center;transition:transform .6s;transform-style:preserve-3d}
+.flip-card.flipped .flip-card-inner{transform:rotateY(180deg)}
+.flip-card-front,.flip-card-back{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;backface-visibility:hidden;border-radius:16px;border:2px solid #ffd9c2;box-shadow:0 4px 10px rgba(0,0,0,.08);padding:10px}
+.flip-card-front{background:#FFF6EE;font-size:2.6rem}
+.flip-card-back{background:#1E9E90;color:#fff;transform:rotateY(180deg)}
+.fc-word{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:1.05rem}
+.fc-translation,.flip-hint{font-size:.85rem;opacity:.85}
+.flip-audio-btn{position:absolute;top:8px;right:8px;width:30px;height:30px;border:none;border-radius:50%;background:rgba(255,255,255,.3);color:#fff;cursor:pointer}
+.body-wrap{position:relative;width:280px;max-width:100%;aspect-ratio:2/3}
+.body-wrap svg{position:absolute;inset:0;width:100%;height:100%}
+.body-wrap input,.body-wrap .hot{position:absolute;width:32px;height:32px;transform:translate(-50%,-50%);text-align:center;padding:0;border:2px solid #1E9E90;border-radius:8px}
+.body-wrap .hot{width:38px;height:38px;border-radius:50%;border-style:dashed;background:rgba(30,158,144,.12);cursor:pointer}
+.hot.ok{background:#8fd9a8}.hot.no{background:#ffb3a8}
+.row{display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:center;margin:10px 0}
+.song-line{font-size:1.1rem;line-height:2.3;margin:8px 0}
+.song-line input{width:95px;text-align:center}
+.bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+.lee-item{margin:10px 0;font-size:1.05rem}
+</style>
+</head>
+<body>
+
+<div class="banner" id="banner">
+  <div class="flag">¡HOLA!</div><div class="flag">ELE</div><div class="flag">CURSO</div>
+  <div class="flag">NIÑOS</div><div class="flag">JUEGA</div><div class="flag">APRENDE</div>
+</div>
+
+<header>
+  <h1><a href="index.html" class="logo-link">MUNDO ELE</a></h1>
+  <p>Aprende español de forma divertida 🌟</p>
+</header>
+
+<nav class="navbar" id="navbar-container"></nav>
+
+<main>
+
+  <section class="card" id="cardFlash">
+    <h2>0. 🔄 Flashcards <span class="badge">El cuerpo</span></h2>
+    <p class="instructions">Click each card to flip it and reveal the word and its meaning.</p>
+    <div class="flip-grid" id="flipGrid"></div>
+  </section>
+
+  <section class="card" id="card1">
+    <h2>1. 🎯 Sort the Body Parts <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Click a category to select it, then click the body parts that belong there. Place them all!</p>
+    <div class="objects-pool" id="objectsPool"></div>
+    <div class="rooms-board" id="roomsBoard"></div>
+    <button class="check-btn" onclick="checkRooms()">Check</button>
+    <div class="feedback" id="fb1"></div>
+  </section>
+
+  <section class="card" id="card2">
+    <h2>2. ✍️ Name the Part <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Look at each picture and write the body part, in Spanish.</p>
+    <div class="num-grid" id="numGrid"></div>
+    <button class="check-btn" onclick="grade('#numGrid','fb2',2,'Excellent! You know your body parts. 🌟')">Check</button>
+    <div class="feedback" id="fb2"></div>
+  </section>
+
+  <section class="card" id="card3">
+    <h2>3. 🗣️ Build a Sentence <span class="badge">mi / tu · mis / tus</span></h2>
+    <p class="instructions">Choose a person and a body part, and see the complete sentence.</p>
+    <div class="birthday-box">
+      <div class="cake">🙋‍♀️👆</div>
+      <div><select id="whoSel"></select> <select id="partSel"></select></div>
+      <div class="birthday-sentence" id="sent1"></div>
+    </div>
+    <div class="birthday-box">
+      <div class="cake">🤔❓</div>
+      <div><select id="askSel"></select></div>
+      <div class="birthday-sentence" id="sent2"></div>
+    </div>
+  </section>
+
+  <section class="card" id="card4">
+    <h2>4. ✏️ Complete the Missing Letter</h2>
+    <p class="instructions">Write the letter that's missing in each word.</p>
+    <div class="fill-grid" id="fillGrid"></div>
+    <button class="check-btn" onclick="grade('#fillGrid','fb4',4,'Amazing! You know all the words. 🏆')">Check</button>
+    <div class="feedback" id="fb4"></div>
+  </section>
+
+  <section class="card" id="card5">
+    <h2>5. 🔤 Unscramble the Letters</h2>
+    <p class="instructions">The letters of each word are mixed up. Write the correct word!</p>
+    <div class="scramble-grid" id="scrambleGrid"></div>
+    <button class="check-btn" onclick="grade('#scrambleGrid','fb5',5,'You unscrambled them all! 🌟')">Check</button>
+    <div class="feedback" id="fb5"></div>
+  </section>
+
+  <section class="card" id="card6">
+    <h2>6. 🔎 Word Search</h2>
+    <p class="instructions">Click the letters, in order, to spell out each word on the list. Click the last letter again to remove it.</p>
+    <div class="wordsearch-wrap">
+      <div class="ws-grid" id="wsGrid"></div>
+      <div class="ws-words" id="wsWords"></div>
+    </div>
+    <button class="check-btn" onclick="clearSel()">Clear selection</button>
+    <div class="feedback" id="fb6"></div>
+  </section>
+
+  <section class="card" id="card7">
+    <h2>7. 🃏 Memory Match: Body Part and Icon</h2>
+    <p class="instructions">Find the pairs: the body part with its icon.</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="memory-status" id="memoryStatus">Pairs found: 0 / 6</div>
+  </section>
+
+  <section class="card" id="card8">
+    <h2>8. 🔢 Numera <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Write the number of each word in the box on the correct part of the body.</p>
+    <div class="row"><div id="numList"></div><div class="body-wrap" id="numBody"></div></div>
+    <button class="check-btn" onclick="grade('#numBody','fb8',8,'Perfect! Every number is in the right place. 🎉')">Check</button>
+    <div class="feedback" id="fb8"></div>
+  </section>
+
+  <section class="card" id="card9">
+    <h2>9. 🧩 Completa y une <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Complete each word. The English word helps you!</p>
+    <div class="num-grid" id="compGrid"></div>
+    <button class="check-btn" onclick="grade('#compGrid','fb9',9,'Great! All the words are complete. 🧩')">Check</button>
+    <div class="feedback" id="fb9"></div>
+  </section>
+
+  <section class="card" id="card10">
+    <h2>10. 📖 Lee y escribe <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Read the words in the box and choose the right one for each picture description.</p>
+    <div class="bank" id="leeBank"></div>
+    <div id="leeGrid"></div>
+    <button class="check-btn" onclick="grade('#leeGrid','fb10',10,'Excellent reading! 📖')">Check</button>
+    <div class="feedback" id="fb10"></div>
+  </section>
+
+  <section class="card" id="card11">
+    <h2>11. 👆 Toca tu ___ <span class="badge">Listen &amp; touch</span></h2>
+    <p class="instructions">Listen and read the instruction. Then click that part of the body!</p>
+    <div class="birthday-sentence" id="tPrompt" style="text-align:center"></div>
+    <div class="row"><div class="body-wrap" id="touchBody"></div></div>
+    <button class="check-btn" onclick="tSay()">🔊 Listen again</button>
+    <div class="feedback" id="fb11"></div>
+  </section>
+
+  <section class="card" id="card12">
+    <h2>12. 🎵 Cabeza, hombros, rodillas y pies <span class="badge">Song</span></h2>
+    <p class="instructions">Watch and sing along. Then fill in the missing words of the song.</p>
+    <div style="max-width:560px;margin:auto"><iframe style="width:100%;aspect-ratio:16/9;border:0;border-radius:12px" src="https://www.youtube.com/embed/Ovc3IG3pBBQ" title="Cabeza Hombros Rodillas Y Pies | Super Simple Español" allowfullscreen></iframe></div>
+    <div id="songCloze"></div>
+    <button class="check-btn" onclick="grade('#songCloze','fb12',12,'You know the song! 🎶')">Check</button>
+    <button class="check-btn" id="fastBtn" onclick="faster()">⚡ ¡Más rápido! (speed 1/5)</button>
+    <div class="feedback" id="fb12"></div>
+  </section>
+
+  <section class="card" id="card13">
+    <h2>13. 🎶 Put the Song in Order</h2>
+    <p class="instructions">Click the body parts in the order they appear in the song.</p>
+    <div class="bank" id="songBank"></div>
+    <div class="birthday-sentence" id="songSeq" style="text-align:center;min-height:2em"></div>
+    <button class="check-btn" onclick="checkSong()">Check</button>
+    <button class="check-btn" onclick="resetSong()">Start again</button>
+    <div class="feedback" id="fb13"></div>
+  </section>
+
+</main>
+
+<div id="footer-container"></div>
+
+<script>
+fetch('navbar.html').then(r=>r.text()).then(d=>{
+  document.getElementById('navbar-container').innerHTML=d;
+  const items=document.querySelectorAll('.nav-item');
+  items.forEach(it=>{const l=it.querySelector('.nav-link');
+    if(l)l.addEventListener('click',e=>{if(innerWidth<=768){e.preventDefault();items.forEach(o=>o!==it&&o.classList.remove('active'));it.classList.toggle('active');}});});
+  document.addEventListener('click',e=>{if(!e.target.closest('.nav-item'))items.forEach(i=>i.classList.remove('active'));});
+}).catch(e=>console.error('Error al cargar la navbar:',e));
+fetch('footer.html').then(r=>r.text()).then(d=>{document.getElementById('footer-container').innerHTML=d;}).catch(e=>console.error('Error al cargar el footer:',e));
+</script>
+
+<script>
+/* ---------- VOCABULARY ---------- */
+const P="cabeza|la|head|🙂|c;cuello|el|neck|🦒|c;ojos|los|eyes|👀|c;orejas|las|ears|👂|c;boca|la|mouth|👄|c;nariz|la|nose|👃|c;hombros|los|shoulders|🤷|b;brazo|el|arm|💪|b;codo|el|elbow|🦾|b;mano|la|hand|✋|b;dedos|los|fingers / toes|🖐️|b;axila|la|armpit|🙆|b;tronco|el|body / torso|👕|t;barriga|la|belly|🤰|t;pierna|la|leg|🦵|t;rodilla|la|knee|🧎|t;tobillo|el|ankle|🧦|t;pie|el|foot|🦶|t;cola|la|tail|🦊|a;pata|la|paw|🐾|a"
+  .split(';').map(s=>{const[word,art,en,icon,cat]=s.split('|');return{word,art,en,icon,cat};});
+const CATS=["c","b","t","a"];
+const CAT_LABELS={c:"Cabeza y cara",b:"Brazos y manos",t:"Tronco y piernas",a:"Animales"};
+const CAT_ICONS={c:"🙂",b:"💪",t:"🦵",a:"🐾"};
+const PL=new Set(["ojos","orejas","hombros","dedos"]);
+const ART=w=>P.find(p=>p.word===w).art;
+const poss=(w,p)=>p+(PL.has(w)?'s':'');
+const $=id=>document.getElementById(id);
+const shuf=a=>[...a].sort(()=>Math.random()-.5);
+function mkOpts(sel,arr){arr.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o);});}
+
+function speakSpanish(text,rate=.85){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=rate;speechSynthesis.speak(u);
+}
+let starsEarned=0;
+function earnStar(n){
+  if(n<=starsEarned)return;
+  starsEarned=n;
+  document.querySelectorAll('.star').forEach(s=>{if(parseInt(s.dataset.i)<=starsEarned)s.classList.add('on');});
+  launchConfetti();
+}
+function launchConfetti(){
+  const layer=document.createElement('div');layer.className='confetti-layer';document.body.appendChild(layer);
+  const colors=['#FF6B5A','#1E9E90','#FFC857','#FF8FA3','#5EA0D0'];
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');p.className='confetti-piece';
+    p.style.left=Math.random()*100+'vw';p.style.background=colors[Math.random()*5|0];
+    p.style.animationDuration=(2+Math.random()*1.5)+'s';p.style.borderRadius=Math.random()>.5?'50%':'2px';
+    layer.appendChild(p);
+  }
+  setTimeout(()=>layer.remove(),3600);
+}
+function normalize(s){
+  return s.trim().toLowerCase().replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i").replace(/ó/g,"o").replace(/ú/g,"u").replace(/\s+/g," ");
+}
+const nz=s=>normalize(s).replace(/^(el|la|los|las) /,'');
+/* Generic checker: every input/select inside `sel` has data-answer (articles are optional) */
+function grade(sel,fb,n,ok){
+  const ins=document.querySelectorAll(sel+' input,'+sel+' select');let c=0;
+  ins.forEach(i=>{const g=nz(i.value)===nz(i.dataset.answer);i.classList.toggle('correct',g);i.classList.toggle('wrong',!g);if(g)c++;});
+  const f=$(fb),all=c===ins.length;
+  f.textContent=all?ok:`${c} out of ${ins.length} correct. The red ones need review.`;
+  f.className='feedback '+(all?'good':'bad');
+  if(all)earnStar(n);
+}
+
+/* ---------- 0. FLASHCARDS ---------- */
+P.forEach(a=>{
+  const card=document.createElement('div');card.className='flip-card';
+  card.innerHTML=`<div class="flip-card-inner">
+    <div class="flip-card-front"><div>${a.icon}</div><div class="flip-hint">the ${a.en}</div></div>
+    <div class="flip-card-back"><button type="button" class="flip-audio-btn" aria-label="Play pronunciation">🔊</button>
+      <div class="fc-word">${a.art} ${a.word}</div><div class="fc-translation">the ${a.en}</div></div></div>`;
+  card.onclick=()=>{const was=card.classList.contains('flipped');card.classList.toggle('flipped');if(!was)speakSpanish(a.art+' '+a.word);};
+  card.querySelector('.flip-audio-btn').onclick=e=>{e.stopPropagation();speakSpanish(a.art+' '+a.word);};
+  $('flipGrid').appendChild(card);
+});
+
+/* ---------- 1. SORT ---------- */
+let selCat=null;const placed={};const slots={};
+shuf(P).forEach(o=>{
+  const b=document.createElement('button');b.className='object-chip';b.textContent=o.icon+' '+o.word;
+  b.onclick=()=>{
+    if(!selCat){$('fb1').textContent="First click a category, then click the body part. 🎯";$('fb1').className='feedback bad';return;}
+    const t=document.createElement('span');t.className='item-tag';t.dataset.word=o.word;t.textContent=o.word;
+    slots[selCat].querySelector('.items').appendChild(t);placed[o.word]=selCat;b.disabled=true;
+  };
+  $('objectsPool').appendChild(b);
+});
+CATS.forEach(c=>{
+  const s=document.createElement('div');s.className='room-slot';
+  s.innerHTML=`<h3>${CAT_ICONS[c]} ${CAT_LABELS[c]}</h3><div class="items"></div><div class="hint-select">click to select</div>`;
+  s.onclick=()=>{Object.values(slots).forEach(x=>x.classList.remove('active'));s.classList.add('active');selCat=c;};
+  $('roomsBoard').appendChild(s);slots[c]=s;
+});
+function checkRooms(){
+  const fb=$('fb1');
+  if(Object.keys(placed).length<P.length){fb.textContent=`Place all ${P.length} body parts first. 🧍`;fb.className='feedback bad';return;}
+  let c=0;
+  P.forEach(o=>{const t=document.querySelector(`.item-tag[data-word="${o.word}"]`),g=placed[o.word]===o.cat;
+    t.classList.toggle('correct',g);t.classList.toggle('wrong',!g);if(g)c++;});
+  if(c===P.length){fb.textContent="Perfect! 🎉 Every body part is in the right place.";fb.className='feedback good';earnStar(1);}
+  else{fb.textContent=`You have ${c} out of ${P.length} correct. Try again!`;fb.className='feedback bad';}
+}
+
+/* ---------- 2. NAME THE PART ---------- */
+[["🙂","cabeza"],["👀","ojos"],["👂","orejas"],["👃","nariz"],["👄","boca"],["✋","mano"],["💪","brazo"],["🦵","pierna"],["🦶","pie"]].forEach(([i,w])=>{
+  const d=document.createElement('div');d.className='num-item';
+  d.innerHTML=`<div class="digit">${i}</div><input type="text" data-answer="${w}" placeholder="write here...">`;
+  $('numGrid').appendChild(d);
+});
+
+/* ---------- 3. SENTENCES ---------- */
+mkOpts($('whoSel'),[["yo","Yo"],["tú","Tú"]]);
+mkOpts($('partSel'),P.map(a=>[a.word,a.icon+' '+a.word]));
+mkOpts($('askSel'),P.map(a=>[a.word,a.icon+' '+a.word]));
+function upd1(){const w=$('partSel').value,y=$('whoSel').value==='yo';
+  $('sent1').innerHTML=`<b>${y?'Yo':'Tú'}</b> ${y?'toco':'tocas'} <b>${poss(w,y?'mi':'tu')}</b> ${w}.`;earnStar(3);}
+function upd2(){const w=$('askSel').value,e=PL.has(w)?'están':'está';
+  $('sent2').innerHTML=`¿Dónde ${e} <b>${poss(w,'tu')}</b> ${w}? ¡Aquí ${e} <b>${poss(w,'mi')}</b> ${w}!`;earnStar(3);}
+$('whoSel').onchange=$('partSel').onchange=upd1;$('askSel').onchange=upd2;upd1();upd2();
+
+/* ---------- 4. MISSING LETTER ---------- */
+[["cuello",2],["brazo",2],["mano",1],["boca",1],["nariz",2],["rodilla",3],["tobillo",3],["codo",1],["pierna",3],["cabeza",2]].forEach(([w,i])=>{
+  const d=document.createElement('div');d.className='fill-item';
+  d.innerHTML=`<span>${w.slice(0,i)}</span><input maxlength="1" data-answer="${w[i]}"><span>${w.slice(i+1)}</span>`;
+  $('fillGrid').appendChild(d);
+});
+
+/* ---------- 5. UNSCRAMBLE ---------- */
+function scramble(w){let r;do{r=shuf(w.split('')).join('');}while(r===w);return r;}
+["mano","boca","nariz","brazo","pierna","cuello"].forEach(w=>{
+  const d=document.createElement('div');d.className='scramble-item';
+  d.innerHTML=`<div class="scramble-word">${scramble(w).toUpperCase()}</div><input type="text" data-answer="${w}" placeholder="write the word...">`;
+  $('scrambleGrid').appendChild(d);
+});
+
+/* ---------- 6. WORD SEARCH ---------- */
+const WS=10,WW=["cuello","codo","mano","pierna","nariz"];
+const G=Array.from({length:WS},()=>Array(WS).fill(null));
+WW.forEach(w=>{for(let t=0;t<300;t++){
+  const d=[[0,1],[1,0],[1,1]][Math.random()*3|0];
+  const r=Math.random()*(d[0]?WS-w.length+1:WS)|0,c=Math.random()*(d[1]?WS-w.length+1:WS)|0;
+  const cells=[...w].map((_,i)=>[r+d[0]*i,c+d[1]*i]);
+  if(cells.every(([y,x],i)=>!G[y][x]||G[y][x]===w[i])){cells.forEach(([y,x],i)=>G[y][x]=w[i]);break;}
+}});
+const ABC="ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+const wsC=[];let wsSel=[];const wsFound=new Set();
+for(let r=0;r<WS;r++){wsC.push([]);for(let c=0;c<WS;c++){
+  if(!G[r][c])G[r][c]=ABC[Math.random()*ABC.length|0];
+  const el=document.createElement('div');el.className='ws-cell';el.textContent=G[r][c].toUpperCase();
+  el.onclick=()=>toggleCell(r,c,el);$('wsGrid').appendChild(el);wsC[r].push(el);
+}}
+WW.forEach(w=>{const d=document.createElement('div');d.id='wsword-'+w;d.textContent='• '+w;$('wsWords').appendChild(d);});
+function toggleCell(r,c,el){
+  if(el.classList.contains('found'))return;
+  const i=wsSel.findIndex(s=>s[0]===r&&s[1]===c);
+  if(i===wsSel.length-1&&i!==-1){wsSel.pop();el.classList.remove('selected');return;}
+  if(i!==-1)return;
+  wsSel.push([r,c]);el.classList.add('selected');
+  const w=wsSel.map(([y,x])=>G[y][x]).join('');
+  if(WW.includes(w)&&!wsFound.has(w)){
+    wsFound.add(w);wsSel.forEach(([y,x])=>{wsC[y][x].classList.remove('selected');wsC[y][x].classList.add('found');});
+    $('wsword-'+w).classList.add('found-word');wsSel=[];
+    const fb=$('fb6');fb.className='feedback good';
+    if(wsFound.size===WW.length){fb.textContent="You found all the hidden words! 🔎🎉";earnStar(6);}
+    else fb.textContent=`Nice! You found "${w}". Keep looking.`;
+  }
+}
+function clearSel(){wsSel.forEach(([r,c])=>wsC[r][c].classList.remove('selected'));wsSel=[];}
+
+/* ---------- 7. MEMORY ---------- */
+const MP=[["👀","ojos"],["👂","orejas"],["👃","nariz"],["👄","boca"],["✋","mano"],["🦶","pie"]];
+let mf=[],mm=0,ml=false;
+shuf(MP.flatMap((p,i)=>[[i,p[0]],[i,p[1]]])).forEach(([pair,label])=>{
+  const el=document.createElement('div');el.className='mem-card';el.textContent='?';
+  el.onclick=()=>{
+    if(ml||el.dataset.s)return;
+    el.textContent=label;el.classList.add('flipped');el.dataset.s=1;mf.push({el,pair});
+    if(mf.length<2)return;
+    ml=true;const[a,b]=mf;
+    if(a.pair===b.pair){
+      [a,b].forEach(x=>x.el.classList.replace('flipped','matched'));mm++;mf=[];ml=false;
+      $('memoryStatus').textContent=mm===MP.length?"You found all the pairs! 🃏🎉":`Pairs found: ${mm} / ${MP.length}`;
+      if(mm===MP.length)earnStar(7);
+    }else setTimeout(()=>{[a,b].forEach(x=>{x.el.textContent='?';x.el.classList.remove('flipped');delete x.el.dataset.s;});mf=[];ml=false;},800);
+  };
+  $('memoryGrid').appendChild(el);
+});
+
+/* ---------- BODY FIGURE (used by 8 and 11) ---------- */
+const PT={cabeza:[100,35],cuello:[100,64],hombros:[120,80],brazo:[70,93],codo:[45,110],mano:[22,152],tronco:[100,115],pierna:[91,179],rodilla:[82,208],pie:[70,268]};
+const SVG=`<svg viewBox="0 0 200 300"><g stroke="#c9a58b" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="100" cy="35" r="22" fill="#fff6ee"/><path d="M100 57V150M100 80L45 108L22 150M100 80L155 108L178 150M100 150L82 208L76 268L62 270M100 150L118 208L124 268L138 270"/></g></svg>`;
+function body(el,mode){
+  el.innerHTML=SVG;
+  for(const k in PT){
+    const e=document.createElement(mode==='in'?'input':'button');
+    if(mode==='in')e.maxLength=2;else e.className='hot';
+    e.dataset.pt=k;e.style.left=PT[k][0]/2+'%';e.style.top=PT[k][1]/3+'%';el.appendChild(e);
+  }
+}
+
+/* ---------- 8. NUMERA ---------- */
+const NUM=["pierna","cabeza","codo","cuello","mano","brazo","pie","rodilla","tronco","hombros"];
+$('numList').innerHTML=NUM.map((w,i)=>`<div style="margin:6px 0"><b>${i+1}.</b> ${ART(w)} ${w}</div>`).join('');
+body($('numBody'),'in');
+document.querySelectorAll('#numBody input').forEach(i=>i.dataset.answer=NUM.indexOf(i.dataset.pt)+1);
+
+/* ---------- 9. COMPLETA Y UNE ---------- */
+[["c_____","cuello","the neck"],["m___","mano","the hand"],["p_____","pierna","the leg"],["b___","boca","the mouth"],["__e","pie","the foot"]].forEach(([pat,w,en])=>{
+  const d=document.createElement('div');d.className='num-item';
+  d.innerHTML=`<div class="digit" style="font-size:1.5rem;letter-spacing:3px">${pat.split('').join(' ')}</div><small>${en}</small><input type="text" data-answer="${w}" placeholder="write the word...">`;
+  $('compGrid').appendChild(d);
+});
+
+/* ---------- 10. LEE Y ESCRIBE ---------- */
+const LEE=[["🙋 touching the head","cabeza"],["🙋 touching the knee","rodilla"],["🙋 touching the elbow","codo"],["🙋 touching the foot","pie"],["🙋 touching the neck","cuello"]];
+$('leeBank').innerHTML=shuf(LEE).map(l=>`<span class="item-tag">${l[1]}</span>`).join('');
+LEE.forEach(([h,w])=>{
+  const d=document.createElement('div');d.className='lee-item';
+  d.innerHTML=`${h} → Toca tu <select data-answer="${w}"></select>.`;
+  mkOpts(d.querySelector('select'),[["","..."],...shuf(LEE).map(l=>[l[1],l[1]])]);
+  $('leeGrid').appendChild(d);
+});
+
+/* ---------- 11. TOCA TU ___ ---------- */
+const tq=shuf(Object.keys(PT)).slice(0,8);let ti=0;
+const tText=()=>`Toca ${poss(tq[ti],'tu')} ${tq[ti]}`;
+function tSay(){if(ti<tq.length)speakSpanish(tText());}
+function tShow(){$('tPrompt').textContent=ti<tq.length?`👂 ${tText()}`:'¡Muy bien! 🎉';}
+body($('touchBody'),'hot');
+document.querySelectorAll('#touchBody .hot').forEach(h=>h.onclick=()=>{
+  if(ti>=tq.length)return;
+  if(h.dataset.pt===tq[ti]){
+    h.classList.add('ok');setTimeout(()=>h.classList.remove('ok'),600);ti++;tShow();
+    const fb=$('fb11');
+    if(ti===tq.length){fb.textContent="You touched all the parts! 👆🌟";fb.className='feedback good';earnStar(11);}
+    else{fb.textContent='';tSay();}
+  }else{
+    h.classList.add('no');setTimeout(()=>h.classList.remove('no'),600);
+    $('fb11').textContent=`Not that one. ${tText()}`;$('fb11').className='feedback bad';
+  }
+});
+tShow();
+
+/* ---------- 12. SONG: FILL IN THE WORDS + SPEED ---------- */
+["Cabeza, [[hombros]], [[rodillas]] y [[pies]], rodillas y pies.","Y [[ojos]] y [[orejas]] y [[boca]] y [[nariz]]."].forEach(t=>{
+  const d=document.createElement('div');d.className='song-line';
+  d.innerHTML=t.replace(/\[\[(.+?)\]\]/g,'<input type="text" data-answer="$1">');
+  $('songCloze').appendChild(d);
+});
+let lvl=0;const RATES=[.7,.9,1.1,1.3,1.5];
+function faster(){
+  speakSpanish("Cabeza, hombros, rodillas y pies, rodillas y pies",RATES[lvl]);
+  lvl=(lvl+1)%RATES.length;
+  $('fastBtn').textContent=`⚡ ¡Más rápido! (speed ${lvl+1}/5)`;
+}
+
+/* ---------- 13. SONG ORDER ---------- */
+const SONG=["cabeza","hombros","rodillas","pies","ojos","orejas","boca","nariz"];let sSel=[];
+shuf(SONG).forEach(w=>{
+  const b=document.createElement('button');b.className='object-chip';b.textContent=w;
+  b.onclick=()=>{sSel.push(w);b.disabled=true;$('songSeq').textContent=sSel.join(' → ');speakSpanish(w);};
+  $('songBank').appendChild(b);
+});
+function resetSong(){sSel=[];$('songSeq').textContent='';$('fb13').textContent='';document.querySelectorAll('#songBank button').forEach(b=>b.disabled=false);}
+function checkSong(){
+  const fb=$('fb13');
+  if(sSel.length<SONG.length){fb.textContent="Click all 8 words first. 🎶";fb.className='feedback bad';return;}
+  if(sSel.join()===SONG.join()){fb.textContent="That's the song! 🎤🎉";fb.className='feedback good';earnStar(13);}
+  else{fb.textContent="Not quite the right order. Listen to the song and start again!";fb.className='feedback bad';}
+}
+</script>
+</body>
+</html>
