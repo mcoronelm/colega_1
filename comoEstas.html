@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Cómo estás? 👋</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin:18px 0}
+.flip-card{height:160px;perspective:1000px;cursor:pointer}
+.flip-card-inner{position:relative;width:100%;height:100%;text-align:center;transition:transform .6s;transform-style:preserve-3d}
+.flip-card.flipped .flip-card-inner{transform:rotateY(180deg)}
+.flip-card-front,.flip-card-back{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;backface-visibility:hidden;border-radius:16px;border:2px solid #ffd9c2;box-shadow:0 4px 10px rgba(0,0,0,.08);padding:10px}
+.flip-card-front{background:#FFF6EE;font-size:2.6rem}
+.flip-card-back{background:#1E9E90;color:#fff;transform:rotateY(180deg)}
+.fc-word{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:1.1rem}
+.fc-translation,.flip-hint{font-size:.85rem;opacity:.9}
+.flip-audio-btn{position:absolute;top:8px;right:8px;width:30px;height:30px;border:none;border-radius:50%;background:rgba(255,255,255,.3);color:#fff;cursor:pointer}
+.bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+.line-item{margin:10px 0;font-size:1.1rem}
+.scene-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:12px 0}
+.scene{border-radius:16px;padding:14px;text-align:center;font-size:3rem}
+.scene:nth-child(1){background:#cdeefc}.scene:nth-child(2){background:#ffe3a8}.scene:nth-child(3){background:#2b3558}
+.scene select{font-size:1rem;display:block;margin:8px auto 0}
+.vowels{font-size:1.2rem;font-weight:800}
+</style>
+</head>
+<body>
+
+<div class="banner" id="banner">
+  <div class="flag">¡HOLA!</div><div class="flag">ELE</div><div class="flag">CURSO</div>
+  <div class="flag">NIÑOS</div><div class="flag">JUEGA</div><div class="flag">APRENDE</div>
+</div>
+
+<header>
+  <h1><a href="index.html" class="logo-link">MUNDO ELE</a></h1>
+  <p>Aprende español de forma divertida 🌟</p>
+</header>
+
+<nav class="navbar" id="navbar-container"></nav>
+
+<main>
+
+  <section class="card" id="cardFlash">
+    <h2>0. 🔄 Flashcards <span class="badge">¿Cómo estás?</span></h2>
+    <p class="instructions">Click each card to flip it and reveal the phrase and its meaning.</p>
+    <div class="flip-grid" id="flipGrid"></div>
+  </section>
+
+  <section class="card" id="card1">
+    <h2>1. 🎯 Sort the Phrases <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Click a category to select it, then click the phrases that belong there. Place them all!</p>
+    <div class="objects-pool" id="objectsPool"></div>
+    <div class="rooms-board" id="roomsBoard"></div>
+    <button class="check-btn" onclick="checkRooms()">Check</button>
+    <div class="feedback" id="fb1"></div>
+  </section>
+
+  <section class="card" id="card2">
+    <h2>2. ✍️ Name It <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Look at each picture and write the Spanish phrase.</p>
+    <div class="num-grid" id="numGrid"></div>
+    <button class="check-btn" onclick="grade('#numGrid','fb2',2,'Excellent! You know your greetings. 🌟')">Check</button>
+    <div class="feedback" id="fb2"></div>
+  </section>
+
+  <section class="card" id="card3">
+    <h2>3. 🗣️ Build a Conversation <span class="badge">Hola · Adiós</span></h2>
+    <p class="instructions">Choose the options and read the complete conversation.</p>
+    <div class="birthday-box">
+      <div class="cake">💬</div>
+      <div><select id="greetSel"></select> <select id="moodSel"></select></div>
+      <div class="birthday-sentence" id="sent1"></div>
+    </div>
+    <div class="birthday-box">
+      <div class="cake">🌎</div>
+      <div><select id="wordSel"></select> <select id="countrySel"></select></div>
+      <div class="birthday-sentence" id="sent2"></div>
+    </div>
+  </section>
+
+  <section class="card" id="card4">
+    <h2>4. ✏️ Complete the Missing Letter</h2>
+    <p class="instructions">Write the letter that's missing in each word.</p>
+    <div class="fill-grid" id="fillGrid"></div>
+    <button class="check-btn" onclick="grade('#fillGrid','fb4',4,'Amazing! You know all the words. 🏆')">Check</button>
+    <div class="feedback" id="fb4"></div>
+  </section>
+
+  <section class="card" id="card5">
+    <h2>5. 🔤 Unscramble the Letters</h2>
+    <p class="instructions">The letters of each word are mixed up. Write the correct word!</p>
+    <div class="scramble-grid" id="scrambleGrid"></div>
+    <button class="check-btn" onclick="grade('#scrambleGrid','fb5',5,'You unscrambled them all! 🌟')">Check</button>
+    <div class="feedback" id="fb5"></div>
+  </section>
+
+  <section class="card" id="card6">
+    <h2>6. 🔎 Word Search</h2>
+    <p class="instructions">Click the letters, in order, to spell out each word on the list. Click the last letter again to remove it.</p>
+    <div class="wordsearch-wrap">
+      <div class="ws-grid" id="wsGrid"></div>
+      <div class="ws-words" id="wsWords"></div>
+    </div>
+    <button class="check-btn" onclick="clearSel()">Clear selection</button>
+    <div class="feedback" id="fb6"></div>
+  </section>
+
+  <section class="card" id="card7">
+    <h2>7. 🃏 Memory Match: Phrase and Icon</h2>
+    <p class="instructions">Find the pairs: the phrase with its icon.</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="memory-status" id="memoryStatus">Pairs found: 0 / 6</div>
+  </section>
+
+  <section class="card" id="card8">
+    <h2>8. 🔤 Las vocales <span class="badge">Aa Ee Ii Oo Uu</span></h2>
+    <p class="instructions">Listen to the vowel and click the correct one.</p>
+    <div class="birthday-sentence" id="vPrompt" style="text-align:center"></div>
+    <div class="bank vowels" id="vOpts"></div>
+    <button class="check-btn" onclick="vSay()">🔊 Listen again</button>
+    <div class="feedback" id="fb8"></div>
+  </section>
+
+  <section class="card" id="card9">
+    <h2>9. 🅰️ Write the Vowels</h2>
+    <p class="instructions">The vowels are missing! Write the complete word.</p>
+    <div class="num-grid" id="vowGrid"></div>
+    <button class="check-btn" onclick="grade('#vowGrid','fb9',9,'Great! You found all the vowels. 🅰️🎉')">Check</button>
+    <div class="feedback" id="fb9"></div>
+  </section>
+
+  <section class="card" id="card10">
+    <h2>10. 🌅 Buenos días, buenas tardes, buenas noches <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Choose the right greeting for each picture.</p>
+    <div class="scene-grid" id="sceneGrid"></div>
+    <button class="check-btn" onclick="grade('#sceneGrid','fb10',10,'Perfect! You know the greetings of the day. 🌅')">Check</button>
+    <div class="feedback" id="fb10"></div>
+  </section>
+
+  <section class="card" id="card11">
+    <h2>11. 🎵 Hola, España <span class="badge">Song · Worksheet</span></h2>
+    <p class="instructions">Complete the song with the words from the box. (2) means you sing the line twice!</p>
+    <div class="bank" id="songBank"></div>
+    <div id="songGrid"></div>
+    <button class="check-btn" onclick="grade('#songGrid','fb11',11,'You know the song! 🎶')">Check</button>
+    <button class="check-btn" onclick="singSong()">🔊 Listen</button>
+    <div class="feedback" id="fb11"></div>
+  </section>
+
+  <section class="card" id="card12">
+    <h2>12. 🎧 Escucha y elige <span class="badge">Listening</span></h2>
+    <p class="instructions">Listen to the phrase and click what it means.</p>
+    <div class="birthday-sentence" id="lPrompt" style="text-align:center"></div>
+    <div class="bank" id="lOpts"></div>
+    <button class="check-btn" onclick="lSay()">🔊 Listen again</button>
+    <div class="feedback" id="fb12"></div>
+  </section>
+
+</main>
+
+<div id="footer-container"></div>
+
+<script>
+fetch('navbar.html').then(r=>r.text()).then(d=>{
+  document.getElementById('navbar-container').innerHTML=d;
+  const items=document.querySelectorAll('.nav-item');
+  items.forEach(it=>{const l=it.querySelector('.nav-link');
+    if(l)l.addEventListener('click',e=>{if(innerWidth<=768){e.preventDefault();items.forEach(o=>o!==it&&o.classList.remove('active'));it.classList.toggle('active');}});});
+  document.addEventListener('click',e=>{if(!e.target.closest('.nav-item'))items.forEach(i=>i.classList.remove('active'));});
+}).catch(e=>console.error('Error al cargar la navbar:',e));
+fetch('footer.html').then(r=>r.text()).then(d=>{document.getElementById('footer-container').innerHTML=d;}).catch(e=>console.error('Error al cargar el footer:',e));
+</script>
+
+<script>
+/* ---------- VOCABULARY ---------- */
+const P="hola|hello|👋|s|;¿cómo estás?|how are you?|🗣️|s|;¿qué tal?|what's up?|🤙|s|khe tahl;buenos días|good morning|☀️|s|;buenas tardes|good afternoon|🌇|s|;buenas noches|good night|🌙|s|;adiós|bye|😢|d|;chao|bye bye|✌️|d|;hasta luego|see you later|🔜|d|;bien|good|🙂|r|bee-EHN;más o menos|so-so|😐|r|;mal|bad|🙁|r|;gracias|thank you|🙏|r|"
+  .split(';').map(s=>{const[word,en,icon,cat,pron]=s.split('|');return{word,en,icon,cat,pron};});
+const CATS=["s","d","r"];
+const CAT_LABELS={s:"Saludos",d:"Despedidas",r:"Respuestas"};
+const CAT_ICONS={s:"👋",d:"🔜",r:"🙂"};
+const cap=s=>s.replace(/[a-záéíóúñ]/,c=>c.toUpperCase());
+const $=id=>document.getElementById(id);
+const shuf=a=>[...a].sort(()=>Math.random()-.5);
+function mkOpts(sel,arr){arr.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o);});}
+
+function speakSpanish(text,rate=.85){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=rate;speechSynthesis.speak(u);
+}
+let starsEarned=0;
+function earnStar(n){
+  if(n<=starsEarned)return;
+  starsEarned=n;
+  document.querySelectorAll('.star').forEach(s=>{if(parseInt(s.dataset.i)<=starsEarned)s.classList.add('on');});
+  launchConfetti();
+}
+function launchConfetti(){
+  const layer=document.createElement('div');layer.className='confetti-layer';document.body.appendChild(layer);
+  const colors=['#FF6B5A','#1E9E90','#FFC857','#FF8FA3','#5EA0D0'];
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');p.className='confetti-piece';
+    p.style.left=Math.random()*100+'vw';p.style.background=colors[Math.random()*5|0];
+    p.style.animationDuration=(2+Math.random()*1.5)+'s';p.style.borderRadius=Math.random()>.5?'50%':'2px';
+    layer.appendChild(p);
+  }
+  setTimeout(()=>layer.remove(),3600);
+}
+function normalize(s){
+  return s.trim().toLowerCase().replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i").replace(/ó/g,"o").replace(/ú/g,"u").replace(/[¿?¡!.]/g,"").replace(/\s+/g," ");
+}
+/* Generic checker: every input/select inside `sel` has data-answer */
+function grade(sel,fb,n,ok){
+  const ins=document.querySelectorAll(sel+' input,'+sel+' select');let c=0;
+  ins.forEach(i=>{const g=normalize(i.value)===normalize(i.dataset.answer);i.classList.toggle('correct',g);i.classList.toggle('wrong',!g);if(g)c++;});
+  const f=$(fb),all=c===ins.length;
+  f.textContent=all?ok:`${c} out of ${ins.length} correct. The red ones need review.`;
+  f.className='feedback '+(all?'good':'bad');
+  if(all)earnStar(n);
+}
+
+/* ---------- 0. FLASHCARDS ---------- */
+P.forEach(a=>{
+  const card=document.createElement('div');card.className='flip-card';
+  card.innerHTML=`<div class="flip-card-inner">
+    <div class="flip-card-front"><div>${a.icon}</div><div class="flip-hint">${a.en}</div></div>
+    <div class="flip-card-back"><button type="button" class="flip-audio-btn" aria-label="Play pronunciation">🔊</button>
+      <div class="fc-word">${cap(a.word)}</div><div class="fc-translation">${a.en}</div>
+      <div class="fc-translation">${a.pron||''}</div></div></div>`;
+  card.onclick=()=>{const was=card.classList.contains('flipped');card.classList.toggle('flipped');if(!was)speakSpanish(a.word);};
+  card.querySelector('.flip-audio-btn').onclick=e=>{e.stopPropagation();speakSpanish(a.word);};
+  $('flipGrid').appendChild(card);
+});
+
+/* ---------- 1. SORT ---------- */
+let selCat=null;const placed={};const slots={};
+shuf(P).forEach(o=>{
+  const b=document.createElement('button');b.className='object-chip';b.textContent=o.icon+' '+cap(o.word);
+  b.onclick=()=>{
+    if(!selCat){$('fb1').textContent="First click a category, then click the phrase. 🎯";$('fb1').className='feedback bad';return;}
+    const t=document.createElement('span');t.className='item-tag';t.dataset.word=o.word;t.textContent=cap(o.word);
+    slots[selCat].querySelector('.items').appendChild(t);placed[o.word]=selCat;b.disabled=true;
+  };
+  $('objectsPool').appendChild(b);
+});
+CATS.forEach(c=>{
+  const s=document.createElement('div');s.className='room-slot';
+  s.innerHTML=`<h3>${CAT_ICONS[c]} ${CAT_LABELS[c]}</h3><div class="items"></div><div class="hint-select">click to select</div>`;
+  s.onclick=()=>{Object.values(slots).forEach(x=>x.classList.remove('active'));s.classList.add('active');selCat=c;};
+  $('roomsBoard').appendChild(s);slots[c]=s;
+});
+function checkRooms(){
+  const fb=$('fb1');
+  if(Object.keys(placed).length<P.length){fb.textContent=`Place all ${P.length} phrases first. 👋`;fb.className='feedback bad';return;}
+  let c=0;
+  P.forEach(o=>{const t=document.querySelector(`.item-tag[data-word="${o.word}"]`),g=placed[o.word]===o.cat;
+    t.classList.toggle('correct',g);t.classList.toggle('wrong',!g);if(g)c++;});
+  if(c===P.length){fb.textContent="Perfect! 🎉 Every phrase is in the right place.";fb.className='feedback good';earnStar(1);}
+  else{fb.textContent=`You have ${c} out of ${P.length} correct. Try again!`;fb.className='feedback bad';}
+}
+
+/* ---------- 2. NAME IT ---------- */
+[["🙁","mal","bad"],["😐","más o menos","so-so"],["🙂","bien","good"],["👋","hola","hello"],["☀️","buenos días","good morning"],["🌇","buenas tardes","good afternoon"],["🌙","buenas noches","good night"],["🙏","gracias","thank you"],["✌️","chao","bye bye"]].forEach(([i,w,en])=>{
+  const d=document.createElement('div');d.className='num-item';
+  d.innerHTML=`<div class="digit">${i}</div><small>${en}</small><input type="text" data-answer="${w}" placeholder="write here...">`;
+  $('numGrid').appendChild(d);
+});
+
+/* ---------- 3. CONVERSATIONS ---------- */
+mkOpts($('greetSel'),["Hola","Buenos días","Buenas tardes","Buenas noches"].map(g=>[g,g]));
+mkOpts($('moodSel'),[["bien","🙂 bien"],["más o menos","😐 más o menos"],["mal","🙁 mal"]]);
+mkOpts($('wordSel'),["Hola","Adiós","Chao","Hasta luego"].map(g=>[g,g]));
+mkOpts($('countrySel'),["España","Argentina","Venezuela","Perú"].map(g=>[g,g]));
+function upd1(){$('sent1').innerHTML=`<b>${$('greetSel').value}</b>. ¿Cómo estás? → Yo <b>${$('moodSel').value}</b>, gracias. ¿Cómo estás tú?`;earnStar(3);}
+function upd2(){$('sent2').innerHTML=`<b>${$('wordSel').value}</b>, <b>${$('countrySel').value}</b>.`;earnStar(3);}
+$('greetSel').onchange=$('moodSel').onchange=upd1;$('wordSel').onchange=$('countrySel').onchange=upd2;upd1();upd2();
+
+/* ---------- 4. MISSING LETTER ---------- */
+[["hola",1],["gracias",2],["bien",1],["adiós",2],["chao",2],["tardes",2],["noches",3],["luego",2],["días",1],["tal",1]].forEach(([w,i])=>{
+  const d=document.createElement('div');d.className='fill-item';
+  d.innerHTML=`<span>${w.slice(0,i)}</span><input maxlength="1" data-answer="${w[i]}"><span>${w.slice(i+1)}</span>`;
+  $('fillGrid').appendChild(d);
+});
+
+/* ---------- 5. UNSCRAMBLE ---------- */
+function scramble(w){let r;do{r=shuf(w.split('')).join('');}while(r===w);return r;}
+["hola","adiós","gracias","noches","tardes","luego"].forEach(w=>{
+  const d=document.createElement('div');d.className='scramble-item';
+  d.innerHTML=`<div class="scramble-word">${scramble(w).toUpperCase()}</div><input type="text" data-answer="${w}" placeholder="write the word...">`;
+  $('scrambleGrid').appendChild(d);
+});
+
+/* ---------- 6. WORD SEARCH ---------- */
+const WS=10,WW=["hola","bien","chao","gracias","noches","tardes"];
+const G=Array.from({length:WS},()=>Array(WS).fill(null));
+WW.forEach(w=>{for(let t=0;t<300;t++){
+  const d=[[0,1],[1,0],[1,1]][Math.random()*3|0];
+  const r=Math.random()*(d[0]?WS-w.length+1:WS)|0,c=Math.random()*(d[1]?WS-w.length+1:WS)|0;
+  const cells=[...w].map((_,i)=>[r+d[0]*i,c+d[1]*i]);
+  if(cells.every(([y,x],i)=>!G[y][x]||G[y][x]===w[i])){cells.forEach(([y,x],i)=>G[y][x]=w[i]);break;}
+}});
+const ABC="ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+const wsC=[];let wsSel=[];const wsFound=new Set();
+for(let r=0;r<WS;r++){wsC.push([]);for(let c=0;c<WS;c++){
+  if(!G[r][c])G[r][c]=ABC[Math.random()*ABC.length|0];
+  const el=document.createElement('div');el.className='ws-cell';el.textContent=G[r][c].toUpperCase();
+  el.onclick=()=>toggleCell(r,c,el);$('wsGrid').appendChild(el);wsC[r].push(el);
+}}
+WW.forEach(w=>{const d=document.createElement('div');d.id='wsword-'+w;d.textContent='• '+w;$('wsWords').appendChild(d);});
+function toggleCell(r,c,el){
+  if(el.classList.contains('found'))return;
+  const i=wsSel.findIndex(s=>s[0]===r&&s[1]===c);
+  if(i===wsSel.length-1&&i!==-1){wsSel.pop();el.classList.remove('selected');return;}
+  if(i!==-1)return;
+  wsSel.push([r,c]);el.classList.add('selected');
+  const w=wsSel.map(([y,x])=>G[y][x]).join('');
+  if(WW.includes(w)&&!wsFound.has(w)){
+    wsFound.add(w);wsSel.forEach(([y,x])=>{wsC[y][x].classList.remove('selected');wsC[y][x].classList.add('found');});
+    $('wsword-'+w).classList.add('found-word');wsSel=[];
+    const fb=$('fb6');fb.className='feedback good';
+    if(wsFound.size===WW.length){fb.textContent="You found all the hidden words! 🔎🎉";earnStar(6);}
+    else fb.textContent=`Nice! You found "${w}". Keep looking.`;
+  }
+}
+function clearSel(){wsSel.forEach(([r,c])=>wsC[r][c].classList.remove('selected'));wsSel=[];}
+
+/* ---------- 7. MEMORY ---------- */
+const MP=[["🙁","mal"],["😐","más o menos"],["🙂","bien"],["👋","hola"],["☀️","buenos días"],["🌙","buenas noches"]];
+let mf=[],mm=0,ml=false;
+shuf(MP.flatMap((p,i)=>[[i,p[0]],[i,p[1]]])).forEach(([pair,label])=>{
+  const el=document.createElement('div');el.className='mem-card';el.textContent='?';
+  el.onclick=()=>{
+    if(ml||el.dataset.s)return;
+    el.textContent=label;el.classList.add('flipped');el.dataset.s=1;mf.push({el,pair});
+    if(mf.length<2)return;
+    ml=true;const[a,b]=mf;
+    if(a.pair===b.pair){
+      [a,b].forEach(x=>x.el.classList.replace('flipped','matched'));mm++;mf=[];ml=false;
+      $('memoryStatus').textContent=mm===MP.length?"You found all the pairs! 🃏🎉":`Pairs found: ${mm} / ${MP.length}`;
+      if(mm===MP.length)earnStar(7);
+    }else setTimeout(()=>{[a,b].forEach(x=>{x.el.textContent='?';x.el.classList.remove('flipped');delete x.el.dataset.s;});mf=[];ml=false;},800);
+  };
+  $('memoryGrid').appendChild(el);
+});
+
+/* ---------- 8. LAS VOCALES (listening) ---------- */
+const VQ=shuf(["a","e","i","o","u","a","e","i","o","u"]).slice(0,8);let vi=0;
+function vSay(){if(vi<VQ.length)speakSpanish(VQ[vi],.7);}
+function vShow(){
+  const fb=$('fb8'),box=$('vOpts');box.innerHTML='';
+  if(vi>=VQ.length){$('vPrompt').textContent='¡Muy bien! 🎉';fb.textContent="You know the vowels! 🔤🌟";fb.className='feedback good';earnStar(8);return;}
+  $('vPrompt').textContent='👂 ¿Qué vocal es?';
+  ["a","e","i","o","u"].forEach(v=>{
+    const b=document.createElement('button');b.className='object-chip';b.textContent=v.toUpperCase()+v;
+    b.onclick=()=>{if(v===VQ[vi]){vi++;fb.textContent='';vShow();vSay();}else{fb.textContent='Not that one. Listen again! 🔊';fb.className='feedback bad';}};
+    box.appendChild(b);
+  });
+}
+vShow();
+
+/* ---------- 9. WRITE THE VOWELS ---------- */
+[["hola","h _ l _"],["bien","b _ _ n"],["adiós","_ d _ _ s"],["gracias","g r _ c _ _ s"],["noches","n _ c h _ s"],["tardes","t _ r d _ s"]].forEach(([w,pat])=>{
+  const d=document.createElement('div');d.className='num-item';
+  d.innerHTML=`<div class="digit" style="font-size:1.5rem;letter-spacing:3px">${pat}</div><input type="text" data-answer="${w}" placeholder="write the word...">`;
+  $('vowGrid').appendChild(d);
+});
+
+/* ---------- 10. SCENES ---------- */
+[["☀️🐓","buenos días"],["🌇🏡","buenas tardes"],["🌙⭐","buenas noches"]].forEach(([pic,w])=>{
+  const d=document.createElement('div');d.className='scene';
+  d.innerHTML=`${pic}<select data-answer="${w}"></select>`;
+  mkOpts(d.querySelector('select'),[["","..."],["buenos días","¡Buenos días!"],["buenas tardes","¡Buenas tardes!"],["buenas noches","¡Buenas noches!"]]);
+  $('sceneGrid').appendChild(d);
+});
+
+/* ---------- 11. SONG: HOLA, ESPAÑA ---------- */
+const SB=["Hola","Hola","Buenos días","Cómo estás","Gracias","Adiós"];
+$('songBank').innerHTML=shuf(SB).map(w=>`<span class="item-tag">${w}</span>`).join('');
+const SL=[
+ "Hola, España,",
+ "[[Hola]], Argentina,",
+ "[[Hola]], ¿qué tal? (2)",
+ "Hola, [[Buenos días]]. (2)",
+ "¿[[Cómo estás]]? (2)",
+ "Yo bien, [[Gracias]]. (2)",
+ "¿Cómo estás tú? (2)",
+ "Adiós, Venezuela,",
+ "[[Adiós]], Perú."];
+SL.forEach(t=>{
+  const d=document.createElement('div');d.className='line-item';
+  d.innerHTML=t.replace(/\[\[(.+?)\]\]/g,'<select data-answer="$1"></select>');
+  d.querySelectorAll('select').forEach(s=>mkOpts(s,[["","..."],...[...new Set(SB)].map(w=>[w,w])]));
+  $('songGrid').appendChild(d);
+});
+function singSong(){speakSpanish("Hola, España. Hola, Argentina. Hola, ¿qué tal? Hola, buenos días. ¿Cómo estás? Yo bien, gracias. ¿Cómo estás tú? Adiós, Venezuela. Adiós, Perú.",.8);}
+
+/* ---------- 12. ESCUCHA Y ELIGE ---------- */
+const lq=shuf(P).slice(0,6);let li=0;
+function lSay(){if(li<lq.length)speakSpanish(lq[li].word);}
+function lShow(){
+  const fb=$('fb12'),box=$('lOpts');box.innerHTML='';
+  if(li>=lq.length){$('lPrompt').textContent='¡Muy bien! 🎉';fb.textContent="You listened really well! 🎧🌟";fb.className='feedback good';earnStar(12);return;}
+  $('lPrompt').textContent='👂 ¿Qué significa?';
+  const ans=lq[li];
+  shuf([ans,...shuf(P.filter(p=>p!==ans)).slice(0,3)]).forEach(o=>{
+    const b=document.createElement('button');b.className='object-chip';b.innerHTML=`${o.icon} ${o.en}`;
+    b.onclick=()=>{
+      if(o===ans){li++;fb.textContent='';lShow();lSay();}
+      else{fb.textContent='Not that one. Listen again! 🔊';fb.className='feedback bad';}
+    };
+    box.appendChild(b);
+  });
+}
+lShow();
+</script>
+</body>
+</html>

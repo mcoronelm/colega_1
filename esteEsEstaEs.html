@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Este es, esta es! 👈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin:18px 0}
+.flip-card{height:160px;perspective:1000px;cursor:pointer}
+.flip-card-inner{position:relative;width:100%;height:100%;text-align:center;transition:transform .6s;transform-style:preserve-3d}
+.flip-card.flipped .flip-card-inner{transform:rotateY(180deg)}
+.flip-card-front,.flip-card-back{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;backface-visibility:hidden;border-radius:16px;border:2px solid #ffd9c2;box-shadow:0 4px 10px rgba(0,0,0,.08);padding:10px}
+.flip-card-front{background:#FFF6EE;font-size:2.6rem}
+.flip-card-back{background:#1E9E90;color:#fff;transform:rotateY(180deg)}
+.fc-word{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:1.15rem}
+.fc-translation,.flip-hint{font-size:.85rem;opacity:.9}
+.flip-audio-btn{position:absolute;top:8px;right:8px;width:30px;height:30px;border:none;border-radius:50%;background:rgba(255,255,255,.3);color:#fff;cursor:pointer}
+.bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+.line-item{margin:12px 0;font-size:1.1rem}
+.art-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.say-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:12px 0}
+.say-row button{font-size:2.6rem;border:3px solid #1E9E90;border-radius:16px;background:#FFF6EE;padding:8px 14px;cursor:pointer}
+.say-row button.done{background:#cdeec9}
+.txt{width:100%;max-width:420px;padding:8px;font-size:1.05rem;border-radius:10px;border:2px solid #1E9E90}
+</style>
+</head>
+<body>
+
+<div class="banner" id="banner">
+  <div class="flag">¡HOLA!</div><div class="flag">ELE</div><div class="flag">CURSO</div>
+  <div class="flag">NIÑOS</div><div class="flag">JUEGA</div><div class="flag">APRENDE</div>
+</div>
+
+<header>
+  <h1><a href="index.html" class="logo-link">MUNDO ELE</a></h1>
+  <p>Aprende español de forma divertida 🌟</p>
+</header>
+
+<nav class="navbar" id="navbar-container"></nav>
+
+<main>
+
+  <section class="card" id="cardFlash">
+    <h2>0. 🔄 Flashcards <span class="badge">Este es · Esta es</span></h2>
+    <p class="instructions">Click each card to flip it and reveal the word and its meaning.</p>
+    <div class="flip-grid" id="flipGrid"></div>
+  </section>
+
+  <section class="card" id="card1">
+    <h2>1. 🎯 Sort the Words <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Click a category to select it, then click the words that belong there. Place them all!</p>
+    <div class="objects-pool" id="objectsPool"></div>
+    <div class="rooms-board" id="roomsBoard"></div>
+    <button class="check-btn" onclick="checkRooms()">Check</button>
+    <div class="feedback" id="fb1"></div>
+  </section>
+
+  <section class="card" id="card2">
+    <h2>2. ✍️ Name the Family <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Look at each picture and write the family word in Spanish.</p>
+    <div class="num-grid" id="numGrid"></div>
+    <button class="check-btn" onclick="grade('#numGrid','fb2',2,'Excellent! You know your family words. 🌟')">Check</button>
+    <div class="feedback" id="fb2"></div>
+  </section>
+
+  <section class="card" id="card3">
+    <h2>3. 🗣️ Build a Sentence <span class="badge">este · esta · es · se llama</span></h2>
+    <p class="instructions">Choose the options and see the complete sentences.</p>
+    <div class="birthday-box"><div class="cake">👈</div><div><select id="b1"></select></div><div class="birthday-sentence" id="s1"></div></div>
+    <div class="birthday-box"><div class="cake">👈👈</div><div><select id="b2"></select></div><div class="birthday-sentence" id="s2"></div></div>
+    <div class="birthday-box"><div class="cake">🙋</div><div><select id="b3"></select></div><div class="birthday-sentence" id="s3"></div></div>
+    <div class="birthday-box"><div class="cake">🏷️</div><div><select id="b4"></select></div><div class="birthday-sentence" id="s4"></div></div>
+  </section>
+
+  <section class="card" id="card4">
+    <h2>4. ✏️ Complete the Missing Letter</h2>
+    <p class="instructions">Write the letter that's missing in each word.</p>
+    <div class="fill-grid" id="fillGrid"></div>
+    <button class="check-btn" onclick="grade('#fillGrid','fb4',4,'Amazing! You know all the words. 🏆')">Check</button>
+    <div class="feedback" id="fb4"></div>
+  </section>
+
+  <section class="card" id="card5">
+    <h2>5. 🔤 Unscramble the Letters</h2>
+    <p class="instructions">The letters of each word are mixed up. Write the correct word!</p>
+    <div class="scramble-grid" id="scrambleGrid"></div>
+    <button class="check-btn" onclick="grade('#scrambleGrid','fb5',5,'You unscrambled them all! 🌟')">Check</button>
+    <div class="feedback" id="fb5"></div>
+  </section>
+
+  <section class="card" id="card6">
+    <h2>6. 🔎 Word Search</h2>
+    <p class="instructions">Click the letters, in order, to spell out each word on the list. Click the last letter again to remove it.</p>
+    <div class="wordsearch-wrap">
+      <div class="ws-grid" id="wsGrid"></div>
+      <div class="ws-words" id="wsWords"></div>
+    </div>
+    <button class="check-btn" onclick="clearSel()">Clear selection</button>
+    <div class="feedback" id="fb6"></div>
+  </section>
+
+  <section class="card" id="card7">
+    <h2>7. 🃏 Memory Match</h2>
+    <p class="instructions">Find the pairs: the pronoun with its verb, and the picture with its phrase.</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="memory-status" id="memoryStatus">Pairs found: 0 / 6</div>
+  </section>
+
+  <section class="card" id="card8">
+    <h2>8. 🌟 Our Review: Esta es mi... <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Complete each sentence. Remember: <b>Él</b> se llama... / <b>Ella</b> se llama...</p>
+    <div id="revGrid"></div>
+    <button class="check-btn" onclick="grade('#revGrid','fb8',8,'Perfect review! 🌟')">Check</button>
+    <div class="feedback" id="fb8"></div>
+  </section>
+
+  <section class="card" id="card9">
+    <h2>9. 🏷️ ¿Cómo se llama? <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Antonio, Isabel and Pablo! Choose <b>Él</b> or <b>Ella</b>, and the right name.</p>
+    <div id="nameGrid"></div>
+    <button class="check-btn" onclick="grade('#nameGrid','fb9',9,'Great! You know who is who. 🏷️')">Check</button>
+    <div class="feedback" id="fb9"></div>
+  </section>
+
+  <section class="card" id="card10">
+    <h2>10. 👈 Los demostrativos <span class="badge">este · esta · estos · estas</span></h2>
+    <p class="instructions">People, objects and places <b>near the speaker</b>. Choose the right word: masculine or feminine, singular or plural.</p>
+    <div class="art-grid" id="demGrid"></div>
+    <button class="check-btn" onclick="grade('#demGrid','fb10',10,'Excellent! You know the demostrativos. 👈')">Check</button>
+    <div class="feedback" id="fb10"></div>
+  </section>
+
+  <section class="card" id="card11">
+    <h2>11. 🙋 SER <span class="badge">to be: soy · eres · es · son</span></h2>
+    <p class="instructions">Choose the right form of the verb <b>ser</b>.</p>
+    <div class="art-grid" id="serGrid"></div>
+    <button class="check-btn" onclick="grade('#serGrid','fb11',11,'Great! You know the verb SER. 🙋')">Check</button>
+    <div class="feedback" id="fb11"></div>
+  </section>
+
+  <section class="card" id="card12">
+    <h2>12. 🎩 ¿Tú o usted? <span class="badge">你 · 您</span></h2>
+    <p class="instructions"><b>Tú</b> (你) is informal: friends, family, kids. <b>Usted</b> (您) is formal: respect. Which one do you use?</p>
+    <div class="art-grid" id="tuGrid"></div>
+    <button class="check-btn" onclick="grade('#tuGrid','fb12',12,'Perfect! You know when to use tú and usted. 🎩')">Check</button>
+    <div class="feedback" id="fb12"></div>
+  </section>
+
+  <section class="card" id="card13">
+    <h2>13. ✅ Completa: Este es mi... / Esta es mi... <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Choose <b>Este</b> or <b>Esta</b> for each family word.</p>
+    <div class="art-grid" id="compGrid"></div>
+    <button class="check-btn" onclick="grade('#compGrid','fb13',13,'Great! Este and esta, no problem. ✅')">Check</button>
+    <div class="feedback" id="fb13"></div>
+  </section>
+
+  <section class="card" id="card14">
+    <h2>14. 👆 See, Point and Say <span class="badge">Señala y di</span></h2>
+    <p class="instructions">Click each family member and listen: "Este es mi... / Esta es mi...". Say it out loud too!</p>
+    <div class="say-row" id="sayRow"></div>
+    <div class="birthday-sentence" id="saySent" style="text-align:center;min-height:2em"></div>
+    <div class="feedback" id="fb14"></div>
+  </section>
+
+  <section class="card" id="card15">
+    <h2>15. 📝 Responde <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Answer about your own family, like this: "Mi mamá se llama ..."</p>
+    <div class="line-item">¿Cómo se llama tu mamá?<br><input class="txt" id="q1" placeholder="Mi mamá se llama ..."></div>
+    <div class="line-item">¿Cómo se llama tu papá?<br><input class="txt" id="q2" placeholder="Mi papá se llama ..."></div>
+    <button class="check-btn" onclick="doneQ()">I'm done!</button>
+    <div class="feedback" id="fb15"></div>
+  </section>
+
+</main>
+
+<div id="footer-container"></div>
+
+<script>
+fetch('navbar.html').then(r=>r.text()).then(d=>{
+  document.getElementById('navbar-container').innerHTML=d;
+  const items=document.querySelectorAll('.nav-item');
+  items.forEach(it=>{const l=it.querySelector('.nav-link');
+    if(l)l.addEventListener('click',e=>{if(innerWidth<=768){e.preventDefault();items.forEach(o=>o!==it&&o.classList.remove('active'));it.classList.toggle('active');}});});
+  document.addEventListener('click',e=>{if(!e.target.closest('.nav-item'))items.forEach(i=>i.classList.remove('active'));});
+}).catch(e=>console.error('Error al cargar la navbar:',e));
+fetch('footer.html').then(r=>r.text()).then(d=>{document.getElementById('footer-container').innerHTML=d;}).catch(e=>console.error('Error al cargar el footer:',e));
+</script>
+
+<script>
+/* ---------- VOCABULARY ---------- */
+const P="este|this (masc.)|👈|d|;esta|this (fem.)|👈|d|;estos|these (masc.)|👈👈|d|;estas|these (fem.)|👈👈|d|;soy|I am|🙋|v|yo soy;eres|you are|🫵|v|tú eres;es|he / she is · you (formal) are|☝️|v|él, ella, usted es;son|they are · you all are|👥|v|ellos, ellas, ustedes son;mi|my|🙋|u|;tú|you (informal)|🫵|u|你;usted|you (formal)|🎩|u|您;mamá|mom|👩|f|;papá|dad|👨|f|;abuelo|grandfather|👴|f|;abuela|grandmother|👵|f|;hermano|brother|👦|f|;hermana|sister|👧|f|;padres|parents|👨‍👩|f|;abuelos|grandparents|👴👵|f|;hermanos|siblings|👦👧|f|"
+  .split(';').map(s=>{const[word,en,icon,cat,alt]=s.split('|');return{word,en,icon,cat,alt};});
+const CATS=["d","v","u","f"];
+const CAT_LABELS={d:"Demostrativos",v:"Verbo SER",u:"Palabras útiles",f:"La familia"};
+const CAT_ICONS={d:"👈",v:"🙋",u:"🎩",f:"👪"};
+const FEM=new Set(["mamá","abuela","hermana"]);
+const dem=w=>FEM.has(w)?'Esta':'Este';
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+const $=id=>document.getElementById(id);
+const shuf=a=>[...a].sort(()=>Math.random()-.5);
+function mkOpts(sel,arr){arr.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o);});}
+const S=(ans,opts)=>`<select data-answer="${ans}">${['',...opts].map(o=>`<option value="${o}">${o||'...'}</option>`).join('')}</select>`;
+function rows(id,items){items.forEach(h=>{const d=document.createElement('div');d.className='line-item';d.innerHTML=h;$(id).appendChild(d);});}
+
+function speakSpanish(text,rate=.85){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=rate;speechSynthesis.speak(u);
+}
+let starsEarned=0;
+function earnStar(n){
+  if(n<=starsEarned)return;
+  starsEarned=n;
+  document.querySelectorAll('.star').forEach(s=>{if(parseInt(s.dataset.i)<=starsEarned)s.classList.add('on');});
+  launchConfetti();
+}
+function launchConfetti(){
+  const layer=document.createElement('div');layer.className='confetti-layer';document.body.appendChild(layer);
+  const colors=['#FF6B5A','#1E9E90','#FFC857','#FF8FA3','#5EA0D0'];
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');p.className='confetti-piece';
+    p.style.left=Math.random()*100+'vw';p.style.background=colors[Math.random()*5|0];
+    p.style.animationDuration=(2+Math.random()*1.5)+'s';p.style.borderRadius=Math.random()>.5?'50%':'2px';
+    layer.appendChild(p);
+  }
+  setTimeout(()=>layer.remove(),3600);
+}
+function normalize(s){
+  return s.trim().toLowerCase().replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i").replace(/ó/g,"o").replace(/ú/g,"u").replace(/\s+/g," ");
+}
+/* Generic checker: every input/select inside `sel` has data-answer */
+function grade(sel,fb,n,ok){
+  const ins=document.querySelectorAll(sel+' input,'+sel+' select');let c=0;
+  ins.forEach(i=>{const g=normalize(i.value)===normalize(i.dataset.answer);i.classList.toggle('correct',g);i.classList.toggle('wrong',!g);if(g)c++;});
+  const f=$(fb),all=c===ins.length;
+  f.textContent=all?ok:`${c} out of ${ins.length} correct. The red ones need review.`;
+  f.className='feedback '+(all?'good':'bad');
+  if(all)earnStar(n);
+}
+
+/* ---------- 0. FLASHCARDS ---------- */
+P.forEach(a=>{
+  const card=document.createElement('div');card.className='flip-card';
+  card.innerHTML=`<div class="flip-card-inner">
+    <div class="flip-card-front"><div>${a.icon}</div><div class="flip-hint">${a.en}</div></div>
+    <div class="flip-card-back"><button type="button" class="flip-audio-btn" aria-label="Play pronunciation">🔊</button>
+      <div class="fc-word">${a.word}</div><div class="fc-translation">${a.en}</div>
+      <div class="fc-translation">${a.alt||''}</div></div></div>`;
+  card.onclick=()=>{const was=card.classList.contains('flipped');card.classList.toggle('flipped');if(!was)speakSpanish(a.word);};
+  card.querySelector('.flip-audio-btn').onclick=e=>{e.stopPropagation();speakSpanish(a.word);};
+  $('flipGrid').appendChild(card);
+});
+
+/* ---------- 1. SORT ---------- */
+let selCat=null;const placed={};const slots={};
+shuf(P).forEach(o=>{
+  const b=document.createElement('button');b.className='object-chip';b.textContent=o.icon+' '+o.word;
+  b.onclick=()=>{
+    if(!selCat){$('fb1').textContent="First click a category, then click the word. 🎯";$('fb1').className='feedback bad';return;}
+    const t=document.createElement('span');t.className='item-tag';t.dataset.word=o.word;t.textContent=o.word;
+    slots[selCat].querySelector('.items').appendChild(t);placed[o.word]=selCat;b.disabled=true;
+  };
+  $('objectsPool').appendChild(b);
+});
+CATS.forEach(c=>{
+  const s=document.createElement('div');s.className='room-slot';
+  s.innerHTML=`<h3>${CAT_ICONS[c]} ${CAT_LABELS[c]}</h3><div class="items"></div><div class="hint-select">click to select</div>`;
+  s.onclick=()=>{Object.values(slots).forEach(x=>x.classList.remove('active'));s.classList.add('active');selCat=c;};
+  $('roomsBoard').appendChild(s);slots[c]=s;
+});
+function checkRooms(){
+  const fb=$('fb1');
+  if(Object.keys(placed).length<P.length){fb.textContent=`Place all ${P.length} words first. 👈`;fb.className='feedback bad';return;}
+  let c=0;
+  P.forEach(o=>{const t=document.querySelector(`.item-tag[data-word="${o.word}"]`),g=placed[o.word]===o.cat;
+    t.classList.toggle('correct',g);t.classList.toggle('wrong',!g);if(g)c++;});
+  if(c===P.length){fb.textContent="Perfect! 🎉 Every word is in the right place.";fb.className='feedback good';earnStar(1);}
+  else{fb.textContent=`You have ${c} out of ${P.length} correct. Try again!`;fb.className='feedback bad';}
+}
+
+/* ---------- 2. NAME THE FAMILY ---------- */
+P.filter(p=>p.cat==='f').forEach(p=>{
+  const d=document.createElement('div');d.className='num-item';
+  d.innerHTML=`<div class="digit">${p.icon}</div><small>${p.en}</small><input type="text" data-answer="${p.word}" placeholder="write here...">`;
+  $('numGrid').appendChild(d);
+});
+
+/* ---------- 3. SENTENCES ---------- */
+const SING=["mamá","papá","abuelo","abuela","hermano","hermana"];
+const ICON=Object.fromEntries(P.map(p=>[p.word,p.icon]));
+mkOpts($('b1'),SING.map(w=>[w,ICON[w]+' '+w]));
+mkOpts($('b2'),["padres","abuelos","hermanos"].map(w=>[w,ICON[w]+' '+w]));
+const PRON=[["yo","soy","feliz"],["tú","eres","feliz"],["él","es","feliz"],["ella","es","feliz"],["usted","es","feliz"],["ellos","son","felices"],["ellas","son","felices"],["ustedes","son","felices"]];
+mkOpts($('b3'),PRON.map(p=>[p[0],cap(p[0])]));
+const NAMES={Grace:"Ella",Juan:"Él",Antonio:"Él",Isabel:"Ella",Pablo:"Él"};
+mkOpts($('b4'),Object.keys(NAMES).map(n=>[n,n]));
+function u1(){const w=$('b1').value;$('s1').innerHTML=`<b>${dem(w)}</b> es mi ${w}.`;earnStar(3);}
+function u2(){$('s2').innerHTML=`<b>Estos</b> son mis ${$('b2').value}.`;earnStar(3);}
+function u3(){const p=PRON.find(x=>x[0]===$('b3').value);$('s3').innerHTML=`${cap(p[0])} <b>${p[1]}</b> ${p[2]}.`;earnStar(3);}
+function u4(){const n=$('b4').value;$('s4').innerHTML=`<b>${NAMES[n]}</b> se llama ${n}.`;earnStar(3);}
+$('b1').onchange=u1;$('b2').onchange=u2;$('b3').onchange=u3;$('b4').onchange=u4;u1();u2();u3();u4();
+
+/* ---------- 4. MISSING LETTER ---------- */
+[["este",1],["esta",2],["estos",3],["estas",3],["soy",1],["eres",1],["usted",2],["abuelo",3],["hermana",3],["mamá",1]].forEach(([w,i])=>{
+  const d=document.createElement('div');d.className='fill-item';
+  d.innerHTML=`<span>${w.slice(0,i)}</span><input maxlength="1" data-answer="${w[i]}"><span>${w.slice(i+1)}</span>`;
+  $('fillGrid').appendChild(d);
+});
+
+/* ---------- 5. UNSCRAMBLE ---------- */
+function scramble(w){let r;do{r=shuf(w.split('')).join('');}while(r===w);return r;}
+["usted","eres","abuela","hermano","estos","papá"].forEach(w=>{
+  const d=document.createElement('div');d.className='scramble-item';
+  d.innerHTML=`<div class="scramble-word">${scramble(w).toUpperCase()}</div><input type="text" data-answer="${w}" placeholder="write the word...">`;
+  $('scrambleGrid').appendChild(d);
+});
+
+/* ---------- 6. WORD SEARCH ---------- */
+const WS=10,WW=["este","estos","estas","eres","soy","usted"];
+const G=Array.from({length:WS},()=>Array(WS).fill(null));
+WW.forEach(w=>{for(let t=0;t<300;t++){
+  const d=[[0,1],[1,0],[1,1]][Math.random()*3|0];
+  const r=Math.random()*(d[0]?WS-w.length+1:WS)|0,c=Math.random()*(d[1]?WS-w.length+1:WS)|0;
+  const cells=[...w].map((_,i)=>[r+d[0]*i,c+d[1]*i]);
+  if(cells.every(([y,x],i)=>!G[y][x]||G[y][x]===w[i])){cells.forEach(([y,x],i)=>G[y][x]=w[i]);break;}
+}});
+const ABC="ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+const wsC=[];let wsSel=[];const wsFound=new Set();
+for(let r=0;r<WS;r++){wsC.push([]);for(let c=0;c<WS;c++){
+  if(!G[r][c])G[r][c]=ABC[Math.random()*ABC.length|0];
+  const el=document.createElement('div');el.className='ws-cell';el.textContent=G[r][c].toUpperCase();
+  el.onclick=()=>toggleCell(r,c,el);$('wsGrid').appendChild(el);wsC[r].push(el);
+}}
+WW.forEach(w=>{const d=document.createElement('div');d.id='wsword-'+w;d.textContent='• '+w;$('wsWords').appendChild(d);});
+function toggleCell(r,c,el){
+  if(el.classList.contains('found'))return;
+  const i=wsSel.findIndex(s=>s[0]===r&&s[1]===c);
+  if(i===wsSel.length-1&&i!==-1){wsSel.pop();el.classList.remove('selected');return;}
+  if(i!==-1)return;
+  wsSel.push([r,c]);el.classList.add('selected');
+  const w=wsSel.map(([y,x])=>G[y][x]).join('');
+  if(WW.includes(w)&&!wsFound.has(w)){
+    wsFound.add(w);wsSel.forEach(([y,x])=>{wsC[y][x].classList.remove('selected');wsC[y][x].classList.add('found');});
+    $('wsword-'+w).classList.add('found-word');wsSel=[];
+    const fb=$('fb6');fb.className='feedback good';
+    if(wsFound.size===WW.length){fb.textContent="You found all the hidden words! 🔎🎉";earnStar(6);}
+    else fb.textContent=`Nice! You found "${w}". Keep looking.`;
+  }
+}
+function clearSel(){wsSel.forEach(([r,c])=>wsC[r][c].classList.remove('selected'));wsSel=[];}
+
+/* ---------- 7. MEMORY ---------- */
+const MP=[["yo","soy"],["tú","eres"],["él","es"],["ellos","son"],["👩","esta mamá"],["👨","este papá"]];
+let mf=[],mm=0,ml=false;
+shuf(MP.flatMap((p,i)=>[[i,p[0]],[i,p[1]]])).forEach(([pair,label])=>{
+  const el=document.createElement('div');el.className='mem-card';el.textContent='?';
+  el.onclick=()=>{
+    if(ml||el.dataset.s)return;
+    el.textContent=label;el.classList.add('flipped');el.dataset.s=1;mf.push({el,pair});
+    if(mf.length<2)return;
+    ml=true;const[a,b]=mf;
+    if(a.pair===b.pair){
+      [a,b].forEach(x=>x.el.classList.replace('flipped','matched'));mm++;mf=[];ml=false;
+      $('memoryStatus').textContent=mm===MP.length?"You found all the pairs! 🃏🎉":`Pairs found: ${mm} / ${MP.length}`;
+      if(mm===MP.length)earnStar(7);
+    }else setTimeout(()=>{[a,b].forEach(x=>{x.el.textContent='?';x.el.classList.remove('flipped');delete x.el.dataset.s;});mf=[];ml=false;},800);
+  };
+  $('memoryGrid').appendChild(el);
+});
+
+/* ---------- 8. OUR REVIEW ---------- */
+/* Grace and Juan come from the worksheet; the other family members have no name there */
+[["👩","mamá","Grace","Ella"],["👨","papá","Juan","Él"],["👦","hermano"],["👧","hermana"],["👴","abuelo"],["👵","abuela"]].forEach(([i,w,n,p])=>{
+  rows('revGrid',[`${i} ${S(dem(w),['Este','Esta'])} es mi <b>${w}</b>.${n?` ${S(p,['Él','Ella'])} se llama <b>${n}</b>.`:''}`]);
+});
+
+/* ---------- 9. ¿CÓMO SE LLAMA? ---------- */
+[["🧔","Antonio","Él"],["👩","Isabel","Ella"],["👴","Pablo","Él"]].forEach(([i,n,p])=>{
+  rows('nameGrid',[`¿Cómo se llama? ${i} ${S(p,['Él','Ella'])} se llama ${S(n,['Antonio','Isabel','Pablo'])}.`]);
+});
+
+/* ---------- 10. LOS DEMOSTRATIVOS ---------- */
+[["👦","niño","este"],["👧","niña","esta"],["👦👦","niños","estos"],["👧👧","niñas","estas"],["📕","libro","este"],["🏠","casa","esta"],["✏️✏️","lápices","estos"],["🪑🪑","sillas","estas"],["👴👵","abuelos","estos"],["👧","hermana","esta"]].forEach(([i,w,a])=>{
+  rows('demGrid',[`${S(a,['este','esta','estos','estas'])} ${i} ${w}`]);
+});
+
+/* ---------- 11. SER ---------- */
+[["Yo","soy",""],["Tú","eres",""],["Él / Ella / Usted","es",""],["Ellos / Ustedes","son",""],["Yo","soy","feliz."],["Tú","eres","mi amigo."],["Ella","es","mi mamá."],["Usted","es","el profesor."],["Ellos","son","mis abuelos."],["Mi papá","es","Juan."]].forEach(([a,v,c])=>{
+  rows('serGrid',[`${a} ${S(v,['soy','eres','es','son'])} ${c}`]);
+});
+
+/* ---------- 12. TÚ O USTED ---------- */
+[["your best friend","tú"],["your teacher","usted"],["a little kid","tú"],["an older lady you don't know","usted"],["your sister","tú"],["the school principal","usted"]].forEach(([w,a])=>{
+  rows('tuGrid',[`Talking to <b>${w}</b>: ${S(a,['tú','usted'])}`]);
+});
+
+/* ---------- 13. COMPLETA ---------- */
+shuf(SING).forEach(w=>{rows('compGrid',[`${S(dem(w),['Este','Esta'])} es mi <b>${w}</b>`]);});
+
+/* ---------- 14. SEE, POINT AND SAY ---------- */
+const said=new Set();
+SING.forEach(w=>{
+  const b=document.createElement('button');b.textContent=ICON[w];b.title=w;
+  b.onclick=()=>{
+    const t=`${dem(w)} es mi ${w}`;$('saySent').textContent=t+'.';speakSpanish(t);b.classList.add('done');said.add(w);
+    if(said.size===SING.length){$('fb14').textContent="You said them all! 👆🌟";$('fb14').className='feedback good';earnStar(14);}
+  };
+  $('sayRow').appendChild(b);
+});
+
+/* ---------- 15. RESPONDE ---------- */
+function doneQ(){
+  const fb=$('fb15');
+  if(!$('q1').value.trim()||!$('q2').value.trim()){fb.textContent="Answer both questions first. ✍️";fb.className='feedback bad';return;}
+  fb.textContent="¡Muy bien! Thank you for sharing your family. 👨‍👩‍👧‍👦🌟";fb.className='feedback good';earnStar(15);
+}
+</script>
+</body>
+</html>

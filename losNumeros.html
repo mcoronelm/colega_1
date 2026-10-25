@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Los números y la edad! 🔢</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;margin:18px 0}
+.flip-card{height:150px;perspective:1000px;cursor:pointer}
+.flip-card-inner{position:relative;width:100%;height:100%;text-align:center;transition:transform .6s;transform-style:preserve-3d}
+.flip-card.flipped .flip-card-inner{transform:rotateY(180deg)}
+.flip-card-front,.flip-card-back{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;backface-visibility:hidden;border-radius:16px;border:2px solid #ffd9c2;box-shadow:0 4px 10px rgba(0,0,0,.08);padding:10px}
+.flip-card-front{background:#FFF6EE;font-size:2.6rem;font-family:'Baloo 2',sans-serif;font-weight:800}
+.flip-card-back{background:#1E9E90;color:#fff;transform:rotateY(180deg)}
+.fc-word{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:1.15rem}
+.fc-translation,.flip-hint{font-size:.85rem;opacity:.9;font-weight:500}
+.flip-audio-btn{position:absolute;top:8px;right:8px;width:30px;height:30px;border:none;border-radius:50%;background:rgba(255,255,255,.3);color:#fff;cursor:pointer}
+.bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+.line-item{margin:12px 0;font-size:1.1rem}
+.art-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.snake{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}
+.snake button{width:52px;height:52px;border-radius:50%;border:none;color:#fff;font-size:1.3rem;font-weight:800;cursor:pointer;font-family:'Baloo 2',sans-serif}
+.pair-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:14px 0}
+.pic{border:4px solid #ddd;border-radius:14px;padding:8px;text-align:center;font-size:2.2rem;cursor:pointer;background:#fff}
+.pic small{display:block;font-size:.95rem;min-height:1.2em}
+.pic.ok{border-color:#2e9e5b}.pic.no{border-color:#e0554a}
+.tbl{display:grid;grid-template-columns:repeat(5,64px);gap:6px;justify-content:center;margin:12px 0}
+.tbl div,.tbl input{height:56px;text-align:center;font-size:1.5rem;font-weight:800;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0;box-sizing:border-box;width:100%}
+.tbl div{background:#fdf6c8;color:#2b6cb0}
+.tbl input{border:2px solid #9bb7d4;background:#e6eef7}
+.dict{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:12px 0}
+.dict input{width:56px;height:56px;border-radius:50%;text-align:center;font-size:1.4rem;font-weight:800;border:2px solid #1E9E90;padding:0}
+.nw{font-size:1.1rem;margin:4px 0}
+.txt{width:100%;max-width:420px;padding:8px;font-size:1.05rem;border-radius:10px;border:2px solid #1E9E90}
+</style>
+</head>
+<body>
+
+<div class="banner" id="banner">
+  <div class="flag">¡HOLA!</div><div class="flag">ELE</div><div class="flag">CURSO</div>
+  <div class="flag">NIÑOS</div><div class="flag">JUEGA</div><div class="flag">APRENDE</div>
+</div>
+
+<header>
+  <h1><a href="index.html" class="logo-link">MUNDO ELE</a></h1>
+  <p>Aprende español de forma divertida 🌟</p>
+</header>
+
+<nav class="navbar" id="navbar-container"></nav>
+
+<main>
+
+  <section class="card" id="cardFlash">
+    <h2>0. 🔄 Flashcards <span class="badge">Los números · La edad</span></h2>
+    <p class="instructions">Click each card to flip it and reveal the word. The last cards are for talking about age!</p>
+    <div class="flip-grid" id="flipGrid"></div>
+  </section>
+
+  <section class="card" id="card1">
+    <h2>1. 🎯 Sort the Numbers <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Click a group to select it, then click the numbers that belong there. Place them all!</p>
+    <div class="objects-pool" id="objectsPool"></div>
+    <div class="rooms-board" id="roomsBoard"></div>
+    <button class="check-btn" onclick="checkRooms()">Check</button>
+    <div class="feedback" id="fb1"></div>
+  </section>
+
+  <section class="card" id="card2">
+    <h2>2. ✍️ Write the Number <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Look at each number and write it in Spanish.</p>
+    <div class="num-grid" id="numGrid"></div>
+    <button class="check-btn" onclick="grade('#numGrid','fb2',2,'Excellent! You know your numbers. 🌟')">Check</button>
+    <div class="feedback" id="fb2"></div>
+  </section>
+
+  <section class="card" id="card3">
+    <h2>3. 🗣️ Build a Sentence <span class="badge">tengo · tiene · años</span></h2>
+    <p class="instructions">Choose the options and see the complete sentences.</p>
+    <div class="birthday-box"><div class="cake">🎂</div><div><select id="b1"></select></div><div class="birthday-sentence" id="s1"></div></div>
+    <div class="birthday-box"><div class="cake">🎈</div><div><select id="b2"></select> <select id="b2n"></select></div><div class="birthday-sentence" id="s2"></div></div>
+    <div class="birthday-box"><div class="cake">👫</div><div><select id="b3"></select> <select id="b3g"></select></div><div class="birthday-sentence" id="s3"></div></div>
+  </section>
+
+  <section class="card" id="card4">
+    <h2>4. ✏️ Complete the Missing Letter</h2>
+    <p class="instructions">Write the letter that's missing in each number.</p>
+    <div class="fill-grid" id="fillGrid"></div>
+    <button class="check-btn" onclick="grade('#fillGrid','fb4',4,'Amazing! You know all the numbers. 🏆')">Check</button>
+    <div class="feedback" id="fb4"></div>
+  </section>
+
+  <section class="card" id="card5">
+    <h2>5. 🔤 Unscramble the Letters</h2>
+    <p class="instructions">The letters of each number are mixed up. Write the correct word!</p>
+    <div class="scramble-grid" id="scrambleGrid"></div>
+    <button class="check-btn" onclick="grade('#scrambleGrid','fb5',5,'You unscrambled them all! 🌟')">Check</button>
+    <div class="feedback" id="fb5"></div>
+  </section>
+
+  <section class="card" id="card6">
+    <h2>6. 🃏 Memory Match: Number and Word</h2>
+    <p class="instructions">Find the pairs: the digit with its word.</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="memory-status" id="memoryStatus">Pairs found: 0 / 6</div>
+  </section>
+
+  <section class="card" id="card7">
+    <h2>7. 🐍 La serpiente de los números <span class="badge">Los números</span></h2>
+    <p class="instructions">Click each number on the snake to hear it and see how it's written. Click at least 10!</p>
+    <div class="snake" id="snake"></div>
+    <div class="birthday-sentence" id="snakeSay" style="text-align:center;min-height:2em"></div>
+    <div class="feedback" id="fb7"></div>
+  </section>
+
+  <section class="card" id="card8">
+    <h2>8. 👫 ¿Cuántos hermanos tienes? <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Look at the family and write a sentence: "Tengo un hermano y una hermana." Remember: <b>un / una</b> for 1, and <b>hermanos / hermanas</b> for more.</p>
+    <div class="line-item">👦 → 👧👦 &nbsp; <i>Tengo un hermano y una hermana.</i></div>
+    <div id="hermGrid"></div>
+    <button class="check-btn" onclick="grade('#hermGrid','fb8',8,'Perfect! You know how to talk about siblings. 👫')">Check</button>
+    <div class="feedback" id="fb8"></div>
+  </section>
+
+  <section class="card" id="card9">
+    <h2>9. 🔎 Rodea los números y escríbelos <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Find the numbers 1 to 10 in the grid. Click the letters in order (left to right, or top to bottom). Each word you find gets written on the list!</p>
+    <div class="wordsearch-wrap">
+      <div class="ws-grid" id="wsGrid"></div>
+      <div class="ws-words" id="wsWords"></div>
+    </div>
+    <button class="check-btn" onclick="clearSel()">Clear selection</button>
+    <div class="feedback" id="fb9"></div>
+  </section>
+
+  <section class="card" id="card10">
+    <h2>10. 🎧 Dictado de números <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Listen to 6 numbers and write them with digits.</p>
+    <div class="dict" id="dictGrid"></div>
+    <button class="check-btn" onclick="sayDict()">🔊 Listen</button>
+    <button class="check-btn" onclick="grade('#dictGrid','fb10',10,'Perfect dictation! 🎧🌟')">Check</button>
+    <button class="check-btn" onclick="newDict()">🔄 New dictation</button>
+    <div class="feedback" id="fb10"></div>
+  </section>
+
+  <section class="card" id="card11">
+    <h2>11. 🧮 Completa la tabla del 1 al 20 <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Write the missing numbers.</p>
+    <div class="tbl" id="tbl"></div>
+    <button class="check-btn" onclick="grade('#tbl','fb11',11,'Perfect! The table is complete. 🧮')">Check</button>
+    <div class="feedback" id="fb11"></div>
+  </section>
+
+  <section class="card" id="card12">
+    <h2>12. 🎂 ¿Cuántos años tienes? <span class="badge">tengo · tienes · tiene</span></h2>
+    <p class="instructions"><b>cuántos</b> = how many · <b>años</b> = years · <b>tienes</b> = you have · <b>tiene</b> = he/she has. Choose the right verb.</p>
+    <div class="art-grid" id="verbGrid"></div>
+    <button class="check-btn" onclick="grade('#verbGrid','fb12',12,'Great! You know tengo, tienes and tiene. 🎂')">Check</button>
+    <div class="feedback" id="fb12"></div>
+  </section>
+
+  <section class="card" id="card13">
+    <h2>13. 🌈 Une con flechas <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Click a sentence (it gets a color), then click the cake with the right number of candles.</p>
+    <div class="bank" id="matchWords"></div>
+    <div class="pair-grid" id="matchPics"></div>
+    <button class="check-btn" onclick="checkMatch()">Check</button>
+    <div class="feedback" id="fb13"></div>
+  </section>
+
+  <section class="card" id="card14">
+    <h2>14. 👂 Escucha y elige <span class="badge">Listening</span></h2>
+    <p class="instructions">Listen to the number and click the right digit.</p>
+    <div class="birthday-sentence" id="lPrompt" style="text-align:center"></div>
+    <div class="bank" id="lOpts"></div>
+    <button class="check-btn" onclick="lSay()">🔊 Listen again</button>
+    <div class="feedback" id="fb14"></div>
+  </section>
+
+</main>
+
+<div id="footer-container"></div>
+
+<script>
+fetch('navbar.html').then(r=>r.text()).then(d=>{
+  document.getElementById('navbar-container').innerHTML=d;
+  const items=document.querySelectorAll('.nav-item');
+  items.forEach(it=>{const l=it.querySelector('.nav-link');
+    if(l)l.addEventListener('click',e=>{if(innerWidth<=768){e.preventDefault();items.forEach(o=>o!==it&&o.classList.remove('active'));it.classList.toggle('active');}});});
+  document.addEventListener('click',e=>{if(!e.target.closest('.nav-item'))items.forEach(i=>i.classList.remove('active'));});
+}).catch(e=>console.error('Error al cargar la navbar:',e));
+fetch('footer.html').then(r=>r.text()).then(d=>{document.getElementById('footer-container').innerHTML=d;}).catch(e=>console.error('Error al cargar el footer:',e));
+</script>
+
+<script>
+/* ---------- VOCABULARY ---------- */
+const NUMW=["uno","dos","tres","cuatro","cinco","seis","siete","ocho","nueve","diez","once","doce","trece","catorce","quince","dieciséis","diecisiete","dieciocho","diecinueve","veinte"];
+const NUMS=NUMW.map((w,i)=>({n:i+1,word:w,cat:'abcd'[i/5|0]}));
+const CATS=["a","b","c","d"];
+const CAT_LABELS={a:"1 al 5",b:"6 al 10",c:"11 al 15",d:"16 al 20"};
+const CAT_ICONS={a:"🖐️",b:"🙌",c:"🦶",d:"🎉"};
+const WORDS=[["cuántos","how many","❓"],["años","years","🎂"],["tengo","I have","🙋"],["tienes","you have","🫵"],["tiene","he / she has","☝️"]];
+const $=id=>document.getElementById(id);
+const shuf=a=>[...a].sort(()=>Math.random()-.5);
+function mkOpts(sel,arr){arr.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o);});}
+const S=(ans,opts)=>`<select data-answer="${ans}">${['',...opts].map(o=>`<option value="${o}">${o||'...'}</option>`).join('')}</select>`;
+function rows(id,items){items.forEach(h=>{const d=document.createElement('div');d.className='line-item';d.innerHTML=h;$(id).appendChild(d);});}
+
+function speakSpanish(text,rate=.85){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=rate;speechSynthesis.speak(u);
+}
+let starsEarned=0;
+function earnStar(n){
+  if(n<=starsEarned)return;
+  starsEarned=n;
+  document.querySelectorAll('.star').forEach(s=>{if(parseInt(s.dataset.i)<=starsEarned)s.classList.add('on');});
+  launchConfetti();
+}
+function launchConfetti(){
+  const layer=document.createElement('div');layer.className='confetti-layer';document.body.appendChild(layer);
+  const colors=['#FF6B5A','#1E9E90','#FFC857','#FF8FA3','#5EA0D0'];
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');p.className='confetti-piece';
+    p.style.left=Math.random()*100+'vw';p.style.background=colors[Math.random()*5|0];
+    p.style.animationDuration=(2+Math.random()*1.5)+'s';p.style.borderRadius=Math.random()>.5?'50%':'2px';
+    layer.appendChild(p);
+  }
+  setTimeout(()=>layer.remove(),3600);
+}
+function normalize(s){
+  return s.trim().toLowerCase().replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i").replace(/ó/g,"o").replace(/ú/g,"u").replace(/[.,¿?¡!]/g,"").replace(/\s+/g," ");
+}
+/* Generic checker: every input/select inside `sel` has data-answer */
+function grade(sel,fb,n,ok){
+  const ins=document.querySelectorAll(sel+' input,'+sel+' select');let c=0;
+  ins.forEach(i=>{const g=normalize(i.value)===normalize(i.dataset.answer);i.classList.toggle('correct',g);i.classList.toggle('wrong',!g);if(g)c++;});
+  const f=$(fb),all=c===ins.length;
+  f.textContent=all?ok:`${c} out of ${ins.length} correct. The red ones need review.`;
+  f.className='feedback '+(all?'good':'bad');
+  if(all)earnStar(n);
+}
+
+/* ---------- 0. FLASHCARDS ---------- */
+[...NUMS.map(x=>[x.word,String(x.n),x.n+'']),...WORDS.map(([w,en,i])=>[w,en,i])].forEach(([word,en,icon],idx)=>{
+  const isNum=idx<NUMS.length;
+  const card=document.createElement('div');card.className='flip-card';
+  card.innerHTML=`<div class="flip-card-inner">
+    <div class="flip-card-front"><div>${icon}</div>${isNum?'':`<div class="flip-hint">${en}</div>`}</div>
+    <div class="flip-card-back"><button type="button" class="flip-audio-btn" aria-label="Play pronunciation">🔊</button>
+      <div class="fc-word">${word}</div>${isNum?'':`<div class="fc-translation">${en}</div>`}</div></div>`;
+  card.onclick=()=>{const was=card.classList.contains('flipped');card.classList.toggle('flipped');if(!was)speakSpanish(word);};
+  card.querySelector('.flip-audio-btn').onclick=e=>{e.stopPropagation();speakSpanish(word);};
+  $('flipGrid').appendChild(card);
+});
+
+/* ---------- 1. SORT ---------- */
+let selCat=null;const placed={};const slots={};
+shuf(NUMS).forEach(o=>{
+  const b=document.createElement('button');b.className='object-chip';b.textContent=o.n+' · '+o.word;
+  b.onclick=()=>{
+    if(!selCat){$('fb1').textContent="First click a group, then click the number. 🎯";$('fb1').className='feedback bad';return;}
+    const t=document.createElement('span');t.className='item-tag';t.dataset.word=o.word;t.textContent=o.n+' '+o.word;
+    slots[selCat].querySelector('.items').appendChild(t);placed[o.word]=selCat;b.disabled=true;
+  };
+  $('objectsPool').appendChild(b);
+});
+CATS.forEach(c=>{
+  const s=document.createElement('div');s.className='room-slot';
+  s.innerHTML=`<h3>${CAT_ICONS[c]} ${CAT_LABELS[c]}</h3><div class="items"></div><div class="hint-select">click to select</div>`;
+  s.onclick=()=>{Object.values(slots).forEach(x=>x.classList.remove('active'));s.classList.add('active');selCat=c;};
+  $('roomsBoard').appendChild(s);slots[c]=s;
+});
+function checkRooms(){
+  const fb=$('fb1');
+  if(Object.keys(placed).length<NUMS.length){fb.textContent=`Place all ${NUMS.length} numbers first. 🔢`;fb.className='feedback bad';return;}
+  let c=0;
+  NUMS.forEach(o=>{const t=document.querySelector(`.item-tag[data-word="${o.word}"]`),g=placed[o.word]===o.cat;
+    t.classList.toggle('correct',g);t.classList.toggle('wrong',!g);if(g)c++;});
+  if(c===NUMS.length){fb.textContent="Perfect! 🎉 Every number is in the right group.";fb.className='feedback good';earnStar(1);}
+  else{fb.textContent=`You have ${c} out of ${NUMS.length} correct. Try again!`;fb.className='feedback bad';}
+}
+
+/* ---------- 2. WRITE THE NUMBER ---------- */
+shuf(NUMS).slice(0,12).forEach(o=>{
+  const d=document.createElement('div');d.className='num-item';
+  d.innerHTML=`<div class="digit">${o.n}</div><input type="text" data-answer="${o.word}" placeholder="write here...">`;
+  $('numGrid').appendChild(d);
+});
+
+/* ---------- 3. SENTENCES ---------- */
+const nopts=NUMW.map((w,i)=>[w,(i+1)+' · '+w]);
+mkOpts($('b1'),nopts);
+mkOpts($('b2'),[["Él","Él"],["Ella","Ella"]]);mkOpts($('b2n'),nopts);
+mkOpts($('b3'),NUMW.slice(0,5).map((w,i)=>[String(i+1),(i+1)+' · '+w]));
+mkOpts($('b3g'),[["hermano","hermano(s)"],["hermana","hermana(s)"]]);
+function u1(){$('s1').innerHTML=`¿Cuántos años tienes? → Yo tengo <b>${$('b1').value}</b> años.`;earnStar(3);}
+function u2(){$('s2').innerHTML=`¿Cuántos años tiene ${$('b2').value.toLowerCase()}? → <b>${$('b2').value}</b> tiene <b>${$('b2n').value}</b> años.`;earnStar(3);}
+function u3(){const n=+$('b3').value,f=$('b3g').value==='hermana';
+  const c=n===1?(f?'una':'un'):NUMW[n-1];
+  $('s3').innerHTML=`Tengo <b>${c}</b> ${f?'hermana':'hermano'}${n>1?'s':''}.`;earnStar(3);}
+$('b1').onchange=u1;$('b2').onchange=$('b2n').onchange=u2;$('b3').onchange=$('b3g').onchange=u3;u1();u2();u3();
+
+/* ---------- 4. MISSING LETTER ---------- */
+[["cuatro",2],["cinco",1],["siete",2],["nueve",2],["diez",1],["once",2],["doce",1],["trece",2],["quince",2],["veinte",2]].forEach(([w,i])=>{
+  const d=document.createElement('div');d.className='fill-item';
+  d.innerHTML=`<span>${w.slice(0,i)}</span><input maxlength="1" data-answer="${w[i]}"><span>${w.slice(i+1)}</span>`;
+  $('fillGrid').appendChild(d);
+});
+
+/* ---------- 5. UNSCRAMBLE ---------- */
+function scramble(w){let r;do{r=shuf(w.split('')).join('');}while(r===w);return r;}
+["tres","seis","ocho","nueve","catorce","quince"].forEach(w=>{
+  const d=document.createElement('div');d.className='scramble-item';
+  d.innerHTML=`<div class="scramble-word">${scramble(w).toUpperCase()}</div><input type="text" data-answer="${w}" placeholder="write the word...">`;
+  $('scrambleGrid').appendChild(d);
+});
+
+/* ---------- 6. MEMORY ---------- */
+const MP=[["2","dos"],["4","cuatro"],["6","seis"],["8","ocho"],["10","diez"],["12","doce"]];
+let mf=[],mm=0,ml=false;
+shuf(MP.flatMap((p,i)=>[[i,p[0]],[i,p[1]]])).forEach(([pair,label])=>{
+  const el=document.createElement('div');el.className='mem-card';el.textContent='?';
+  el.onclick=()=>{
+    if(ml||el.dataset.s)return;
+    el.textContent=label;el.classList.add('flipped');el.dataset.s=1;mf.push({el,pair});
+    if(mf.length<2)return;
+    ml=true;const[a,b]=mf;
+    if(a.pair===b.pair){
+      [a,b].forEach(x=>x.el.classList.replace('flipped','matched'));mm++;mf=[];ml=false;
+      $('memoryStatus').textContent=mm===MP.length?"You found all the pairs! 🃏🎉":`Pairs found: ${mm} / ${MP.length}`;
+      if(mm===MP.length)earnStar(6);
+    }else setTimeout(()=>{[a,b].forEach(x=>{x.el.textContent='?';x.el.classList.remove('flipped');delete x.el.dataset.s;});mf=[];ml=false;},800);
+  };
+  $('memoryGrid').appendChild(el);
+});
+
+/* ---------- 7. THE SNAKE ---------- */
+const SC=["#e0554a","#e69a00","#f2c200","#2e9e5b","#2b7bd6","#8e44ad"];const heard=new Set();
+NUMS.forEach(o=>{
+  const b=document.createElement('button');b.textContent=o.n;b.style.background=SC[(o.n-1)%SC.length];
+  b.onclick=()=>{
+    $('snakeSay').innerHTML=`<b>${o.n}</b> = ${o.word}`;speakSpanish(o.word);heard.add(o.n);
+    if(heard.size>=10){$('fb7').textContent="You explored the whole snake! 🐍🌟";$('fb7').className='feedback good';earnStar(7);}
+  };
+  $('snake').appendChild(b);
+});
+
+/* ---------- 8. ¿CUÁNTOS HERMANOS TIENES? ---------- */
+/* Edit these if the faces in your worksheet show different siblings */
+[["👧","👦👦","tengo dos hermanos"],["🧒","👧👧","tengo dos hermanas"],["👧","👦👧👦👧","tengo dos hermanos y dos hermanas"]].forEach(([me,sib,ans])=>{
+  rows('hermGrid',[`${me} → ${sib} &nbsp; <input class="txt" type="text" data-answer="${ans}" placeholder="Tengo ...">`]);
+});
+
+/* ---------- 9. RODEA LOS NÚMEROS ---------- */
+const ROWS=["ASBCUNODE","FEGHSIETE","TIIOJNKLM","RSNCOUPQC","ERSHTEUDI","SVDOSVWIN","XYZABELEC","CUATRODZO"];
+const WW=NUMW.slice(0,10).map(w=>w.toUpperCase());
+const G=ROWS.map(r=>r.split(''));
+$('wsGrid').style.gridTemplateColumns='repeat(9,1fr)';
+const wsC=[];let wsSel=[];const wsFound=new Set();
+G.forEach((row,r)=>{wsC.push([]);row.forEach((ch,c)=>{
+  const el=document.createElement('div');el.className='ws-cell';el.textContent=ch;
+  el.onclick=()=>toggleCell(r,c,el);$('wsGrid').appendChild(el);wsC[r].push(el);
+});});
+WW.forEach((w,i)=>{const d=document.createElement('div');d.className='nw';d.id='nw-'+w;d.textContent=`${i+1}. ........`;$('wsWords').appendChild(d);});
+function toggleCell(r,c,el){
+  if(el.classList.contains('found'))return;
+  const i=wsSel.findIndex(s=>s[0]===r&&s[1]===c);
+  if(i===wsSel.length-1&&i!==-1){wsSel.pop();el.classList.remove('selected');return;}
+  if(i!==-1)return;
+  wsSel.push([r,c]);el.classList.add('selected');
+  const w=wsSel.map(([y,x])=>G[y][x]).join('');
+  if(WW.includes(w)&&!wsFound.has(w)){
+    wsFound.add(w);wsSel.forEach(([y,x])=>{wsC[y][x].classList.remove('selected');wsC[y][x].classList.add('found');});
+    $('nw-'+w).textContent=`${WW.indexOf(w)+1}. ${NUMW[WW.indexOf(w)]}`;$('nw-'+w).classList.add('found-word');wsSel=[];
+    const fb=$('fb9');fb.className='feedback good';
+    if(wsFound.size===WW.length){fb.textContent="You found all the numbers! 🔎🎉";earnStar(9);}
+    else fb.textContent=`Nice! You found "${NUMW[WW.indexOf(w)]}". Keep looking.`;
+  }
+}
+function clearSel(){wsSel.forEach(([r,c])=>wsC[r][c].classList.remove('selected'));wsSel=[];}
+
+/* ---------- 10. DICTADO ---------- */
+let dq=[];
+for(let i=0;i<6;i++){const inp=document.createElement('input');inp.type='text';inp.inputMode='numeric';inp.maxLength=2;$('dictGrid').appendChild(inp);
+  if(i<5){const s=document.createElement('span');s.textContent='–';$('dictGrid').appendChild(s);}}
+function newDict(){
+  dq=Array.from({length:6},()=>1+Math.random()*20|0);
+  document.querySelectorAll('#dictGrid input').forEach((inp,i)=>{inp.value='';inp.dataset.answer=dq[i];inp.classList.remove('correct','wrong');});
+  $('fb10').textContent='';
+}
+function sayDict(){speakSpanish(dq.map(n=>NUMW[n-1]).join(', '),.7);}
+newDict();
+
+/* ---------- 11. TABLE 1-20 ---------- */
+const GIVEN=new Set([1,3,6,9,12,13,20]);
+for(let n=1;n<=20;n++){
+  if(GIVEN.has(n)){const d=document.createElement('div');d.textContent=n;$('tbl').appendChild(d);}
+  else{const i=document.createElement('input');i.type='text';i.inputMode='numeric';i.maxLength=2;i.dataset.answer=n;$('tbl').appendChild(i);}
+}
+
+/* ---------- 12. TENGO / TIENES / TIENE ---------- */
+[["¿Cuántos años","tienes","tú?"],["¿Cuántos años","tiene","él?"],["Yo","tengo","siete años."],["Ella","tiene","ocho años."],["Tú","tienes","nueve años."],["Él","tiene","cinco años."],["Yo","tengo","diez años."],["¿Cuántos años","tiene","ella?"]].forEach(([a,v,c])=>{
+  rows('verbGrid',[`${a} ${S(v,['tengo','tienes','tiene'])} ${c}`]);
+});
+
+/* ---------- 13. UNE CON FLECHAS ---------- */
+const COL=["#e0554a","#2b7bd6","#2e9e5b","#e69a00","#8e44ad","#d6458f"];
+const KIDS=[4,9,6,5,8,7];
+let mSel=null;const mAssign={};const wordBtn={};
+KIDS.forEach((n,i)=>{
+  const b=document.createElement('button');b.className='object-chip';b.textContent=`Yo tengo ${NUMW[n-1]} años.`;b.style.borderColor=COL[i];
+  b.onclick=()=>{mSel=n;Object.values(wordBtn).forEach(x=>x.style.background='');b.style.background=COL[i]+'33';};
+  $('matchWords').appendChild(b);wordBtn[n]=b;
+});
+const picEl={};
+shuf(KIDS).forEach(n=>{
+  const d=document.createElement('div');d.className='pic';d.innerHTML=`🎂<small>${'🕯️'.repeat(n)}</small><small class="tag"></small>`;
+  d.onclick=()=>{
+    if(!mSel){$('fb13').textContent="First click a sentence, then click its cake. 🌈";$('fb13').className='feedback bad';return;}
+    for(const k in mAssign)if(mAssign[k]===mSel){mAssign[k]=null;picEl[k].style.borderColor='#ddd';picEl[k].querySelector('.tag').textContent='';}
+    const ci=KIDS.indexOf(mSel);mAssign[n]=mSel;d.style.borderColor=COL[ci];d.className='pic';
+    const t=d.querySelector('.tag');t.textContent=NUMW[mSel-1];t.style.color=COL[ci];t.style.fontWeight='700';
+  };
+  $('matchPics').appendChild(d);picEl[n]=d;
+});
+function checkMatch(){
+  const fb=$('fb13');let c=0;
+  if(KIDS.some(n=>!Object.values(mAssign).includes(n))){fb.textContent="Match all the sentences first. 🌈";fb.className='feedback bad';return;}
+  KIDS.forEach(n=>{const g=mAssign[n]===n;picEl[n].classList.toggle('ok',g);picEl[n].classList.toggle('no',!g);if(g)c++;});
+  if(c===KIDS.length){fb.textContent="Perfect! Every cake has its owner. 🎂🎉";fb.className='feedback good';earnStar(13);}
+  else{fb.textContent=`${c} out of ${KIDS.length} correct. Fix the red ones!`;fb.className='feedback bad';}
+}
+
+/* ---------- 14. ESCUCHA Y ELIGE ---------- */
+const lq=shuf(NUMS).slice(0,6);let li=0;
+function lSay(){if(li<lq.length)speakSpanish(lq[li].word);}
+function lShow(){
+  const fb=$('fb14'),box=$('lOpts');box.innerHTML='';
+  if(li>=lq.length){$('lPrompt').textContent='¡Muy bien! 🎉';fb.textContent="You listened really well! 🎧🌟";fb.className='feedback good';earnStar(14);return;}
+  $('lPrompt').textContent='👂 ¿Qué número es?';
+  const ans=lq[li];
+  shuf([ans,...shuf(NUMS.filter(p=>p!==ans)).slice(0,3)]).forEach(o=>{
+    const b=document.createElement('button');b.className='object-chip';b.style.fontSize='1.4rem';b.textContent=o.n;
+    b.onclick=()=>{
+      if(o===ans){li++;fb.textContent='';lShow();lSay();}
+      else{fb.textContent='Not that one. Listen again! 🔊';fb.className='feedback bad';}
+    };
+    box.appendChild(b);
+  });
+}
+lShow();
+</script>
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Tengo siete años! 🎂</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;margin:18px 0}
+.flip-card{height:150px;perspective:1000px;cursor:pointer}
+.flip-card-inner{position:relative;width:100%;height:100%;text-align:center;transition:transform .6s;transform-style:preserve-3d}
+.flip-card.flipped .flip-card-inner{transform:rotateY(180deg)}
+.flip-card-front,.flip-card-back{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;backface-visibility:hidden;border-radius:16px;border:2px solid #ffd9c2;box-shadow:0 4px 10px rgba(0,0,0,.08);padding:10px}
+.flip-card-front{background:#FFF6EE;font-size:2.6rem;font-family:'Baloo 2',sans-serif;font-weight:800}
+.flip-card-back{background:#1E9E90;color:#fff;transform:rotateY(180deg)}
+.fc-word{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:1.15rem}
+.fc-translation,.flip-hint{font-size:.85rem;opacity:.9;font-weight:500}
+.flip-audio-btn{position:absolute;top:8px;right:8px;width:30px;height:30px;border:none;border-radius:50%;background:rgba(255,255,255,.3);color:#fff;cursor:pointer}
+.bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+.line-item{margin:12px 0;font-size:1.1rem}
+.pair-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:14px 0}
+.pic{border:4px solid #ddd;border-radius:14px;padding:8px;text-align:center;font-size:2.2rem;cursor:pointer;background:#fff}
+.pic small{display:block;font-size:.95rem;min-height:1.2em}
+.pic.ok{border-color:#2e9e5b}.pic.no{border-color:#e0554a}
+.cake-big{text-align:center;font-size:3rem}
+.cake-big small{display:block;font-size:1.3rem}
+.txt{padding:8px;font-size:1.05rem;border-radius:10px;border:2px solid #1E9E90;width:130px;text-align:center}
+.copy-in{width:100%;max-width:380px;padding:8px;font-size:1.05rem;border-radius:10px;border:2px solid #1E9E90}
+#draw{width:100%;max-width:360px;aspect-ratio:1/1;border:6px double #1E9E90;border-radius:12px;background:#fff;touch-action:none;display:block;margin:8px auto}
+.bingo{display:grid;grid-template-columns:repeat(3,84px);gap:8px;justify-content:center;margin:12px 0}
+.bingo button{height:70px;font-size:1.8rem;font-weight:800;border-radius:12px;border:3px solid #1E9E90;background:#FFF6EE;cursor:pointer;font-family:'Baloo 2',sans-serif}
+.bingo button.on{background:#cdeec9}
+</style>
+</head>
+<body>
+
+<div class="banner" id="banner">
+  <div class="flag">¡HOLA!</div><div class="flag">ELE</div><div class="flag">CURSO</div>
+  <div class="flag">NIÑOS</div><div class="flag">JUEGA</div><div class="flag">APRENDE</div>
+</div>
+
+<header>
+  <h1><a href="index.html" class="logo-link">MUNDO ELE</a></h1>
+  <p>Aprende español de forma divertida 🌟</p>
+</header>
+
+<nav class="navbar" id="navbar-container"></nav>
+
+<main>
+
+  <section class="card" id="cardFlash">
+    <h2>0. 🔄 Flashcards <span class="badge">La edad</span></h2>
+    <p class="instructions">Click each card to flip it and reveal the word and its meaning.</p>
+    <div class="flip-grid" id="flipGrid"></div>
+  </section>
+
+  <section class="card" id="card1">
+    <h2>1. 🎯 Pregunta o respuesta <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Click a group to select it, then click the sentences that belong there: is it a <b>question</b> or an <b>answer</b>?</p>
+    <div class="objects-pool" id="objectsPool"></div>
+    <div class="rooms-board" id="roomsBoard"></div>
+    <button class="check-btn" onclick="checkRooms()">Check</button>
+    <div class="feedback" id="fb1"></div>
+  </section>
+
+  <section class="card" id="card2">
+    <h2>2. ✍️ Write the Number <span class="badge">1 al 12</span></h2>
+    <p class="instructions">Look at each number and write it in Spanish.</p>
+    <div class="num-grid" id="numGrid"></div>
+    <button class="check-btn" onclick="grade('#numGrid','fb2',2,'Excellent! You know your numbers. 🌟')">Check</button>
+    <div class="feedback" id="fb2"></div>
+  </section>
+
+  <section class="card" id="card3">
+    <h2>3. 🗣️ Build a Conversation <span class="badge">tengo · tiene · años</span></h2>
+    <p class="instructions">Choose the options and read the complete conversations.</p>
+    <div class="birthday-box"><div class="cake">🧑‍🏫💬</div><div><select id="b1"></select></div><div class="birthday-sentence" id="s1"></div></div>
+    <div class="birthday-box"><div class="cake">🎈</div><div><select id="b2"></select> <select id="b2n"></select></div><div class="birthday-sentence" id="s2"></div></div>
+  </section>
+
+  <section class="card" id="card4">
+    <h2>4. ✏️ Complete the Missing Letter</h2>
+    <p class="instructions">Write the letter that's missing in each word.</p>
+    <div class="fill-grid" id="fillGrid"></div>
+    <button class="check-btn" onclick="grade('#fillGrid','fb4',4,'Amazing! You know all the words. 🏆')">Check</button>
+    <div class="feedback" id="fb4"></div>
+  </section>
+
+  <section class="card" id="card5">
+    <h2>5. 🔤 Put the Sentence in Order</h2>
+    <p class="instructions">The words are mixed up. Click them in the right order. Use ↺ to start a sentence again.</p>
+    <div id="ordGrid"></div>
+    <button class="check-btn" onclick="checkOrd()">Check</button>
+    <div class="feedback" id="fb5"></div>
+  </section>
+
+  <section class="card" id="card6">
+    <h2>6. 🃏 Memory Match: Number and Word</h2>
+    <p class="instructions">Find the pairs: the digit with its word.</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="memory-status" id="memoryStatus">Pairs found: 0 / 6</div>
+  </section>
+
+  <section class="card" id="card7">
+    <h2>7. 🕯️ Practica con tus compañeros <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Listen to the question and look at the candles. How old are you? Click the right answer.</p>
+    <div class="cake-big" id="cakeBig"></div>
+    <div class="birthday-sentence" id="pPrompt" style="text-align:center"></div>
+    <div class="bank" id="pOpts"></div>
+    <button class="check-btn" onclick="pSay()">🔊 Listen again</button>
+    <div class="feedback" id="fb7"></div>
+  </section>
+
+  <section class="card" id="card8">
+    <h2>8. 🌈 Une con flechas <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Click a sentence (it gets a color), then click the cake with the right number of candles.</p>
+    <div class="bank" id="matchWords"></div>
+    <div class="pair-grid" id="matchPics"></div>
+    <button class="check-btn" onclick="checkMatch()">Check</button>
+    <div class="feedback" id="fb8"></div>
+  </section>
+
+  <section class="card" id="card9">
+    <h2>9. ✍️ Copia <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Copy each sentence carefully. Don't forget the capital letter and the period!</p>
+    <div id="copyGrid"></div>
+    <button class="check-btn" onclick="grade('#copyGrid','fb9',9,'Perfect copying! ✍️🌟')">Check</button>
+    <div class="feedback" id="fb9"></div>
+  </section>
+
+  <section class="card" id="card10">
+    <h2>10. 🎨 ¿Cuántos años tienes tú? <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Draw yourself in the frame. Then complete: Yo ... ... ... (Yo <b>tengo</b> + your age in words + <b>años</b>).</p>
+    <div style="text-align:center">🎨 <input type="color" id="pen" value="#1E9E90"> <button class="check-btn" onclick="clearDraw()">🧽 Clear drawing</button></div>
+    <canvas id="draw" width="400" height="400"></canvas>
+    <div class="line-item" style="text-align:center">Yo <input class="txt" id="a1"> <input class="txt" id="a2"> <input class="txt" id="a3"></div>
+    <div style="text-align:center"><button class="check-btn" onclick="checkAge()">Check</button></div>
+    <div class="feedback" id="fb10"></div>
+  </section>
+
+  <section class="card" id="card11">
+    <h2>11. 👂 Escucha y elige <span class="badge">Listening</span></h2>
+    <p class="instructions">Listen to the number and click the right digit.</p>
+    <div class="birthday-sentence" id="lPrompt" style="text-align:center"></div>
+    <div class="bank" id="lOpts"></div>
+    <button class="check-btn" onclick="lSay()">🔊 Listen again</button>
+    <div class="feedback" id="fb11"></div>
+  </section>
+
+  <section class="card" id="card12">
+    <h2>12. 🎲 Juega: ¡BINGO! <span class="badge">Game</span></h2>
+    <p class="instructions">This is your bingo card. Click <b>Call a number</b> and listen. If you have that number on your card, click it. Fill the whole card to win!</p>
+    <div class="bingo" id="bingoGrid"></div>
+    <div class="birthday-sentence" id="bingoCall" style="text-align:center;min-height:2em"></div>
+    <div style="text-align:center"><button class="check-btn" onclick="callNum()">🎲 Call a number</button></div>
+    <div class="feedback" id="fb12"></div>
+  </section>
+
+</main>
+
+<div id="footer-container"></div>
+
+<script>
+fetch('navbar.html').then(r=>r.text()).then(d=>{
+  document.getElementById('navbar-container').innerHTML=d;
+  const items=document.querySelectorAll('.nav-item');
+  items.forEach(it=>{const l=it.querySelector('.nav-link');
+    if(l)l.addEventListener('click',e=>{if(innerWidth<=768){e.preventDefault();items.forEach(o=>o!==it&&o.classList.remove('active'));it.classList.toggle('active');}});});
+  document.addEventListener('click',e=>{if(!e.target.closest('.nav-item'))items.forEach(i=>i.classList.remove('active'));});
+}).catch(e=>console.error('Error al cargar la navbar:',e));
+fetch('footer.html').then(r=>r.text()).then(d=>{document.getElementById('footer-container').innerHTML=d;}).catch(e=>console.error('Error al cargar el footer:',e));
+</script>
+
+<script>
+/* ---------- VOCABULARY ---------- */
+const NUMW=["uno","dos","tres","cuatro","cinco","seis","siete","ocho","nueve","diez","once","doce"];
+const WORDS=[["cuántos","how many / how much","❓"],["años","years","🎂"],["tienes","you have","🫵"],["tengo","I have","🙋"],["tiene","he / she has","☝️"],["yo","I","🙋"],["tú","you","🫵"]];
+const $=id=>document.getElementById(id);
+const shuf=a=>[...a].sort(()=>Math.random()-.5);
+function mkOpts(sel,arr){arr.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o);});}
+const sent=n=>`Yo tengo ${NUMW[n-1]} años.`;
+
+function speakSpanish(text,rate=.85){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=rate;speechSynthesis.speak(u);
+}
+let starsEarned=0;
+function earnStar(n){
+  if(n<=starsEarned)return;
+  starsEarned=n;
+  document.querySelectorAll('.star').forEach(s=>{if(parseInt(s.dataset.i)<=starsEarned)s.classList.add('on');});
+  launchConfetti();
+}
+function launchConfetti(){
+  const layer=document.createElement('div');layer.className='confetti-layer';document.body.appendChild(layer);
+  const colors=['#FF6B5A','#1E9E90','#FFC857','#FF8FA3','#5EA0D0'];
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');p.className='confetti-piece';
+    p.style.left=Math.random()*100+'vw';p.style.background=colors[Math.random()*5|0];
+    p.style.animationDuration=(2+Math.random()*1.5)+'s';p.style.borderRadius=Math.random()>.5?'50%':'2px';
+    layer.appendChild(p);
+  }
+  setTimeout(()=>layer.remove(),3600);
+}
+function normalize(s){
+  return s.trim().toLowerCase().replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i").replace(/ó/g,"o").replace(/ú/g,"u").replace(/[.,¿?¡!]/g,"").replace(/\s+/g," ");
+}
+/* Generic checker: every input/select inside `sel` has data-answer */
+function grade(sel,fb,n,ok){
+  const ins=document.querySelectorAll(sel+' input,'+sel+' select');let c=0;
+  ins.forEach(i=>{const g=normalize(i.value)===normalize(i.dataset.answer);i.classList.toggle('correct',g);i.classList.toggle('wrong',!g);if(g)c++;});
+  const f=$(fb),all=c===ins.length;
+  f.textContent=all?ok:`${c} out of ${ins.length} correct. The red ones need review.`;
+  f.className='feedback '+(all?'good':'bad');
+  if(all)earnStar(n);
+}
+
+/* ---------- 0. FLASHCARDS ---------- */
+[...NUMW.map((w,i)=>[w,'',String(i+1)]),...WORDS].forEach(([word,en,icon])=>{
+  const card=document.createElement('div');card.className='flip-card';
+  card.innerHTML=`<div class="flip-card-inner">
+    <div class="flip-card-front"><div>${icon}</div>${en?`<div class="flip-hint">${en}</div>`:''}</div>
+    <div class="flip-card-back"><button type="button" class="flip-audio-btn" aria-label="Play pronunciation">🔊</button>
+      <div class="fc-word">${word}</div>${en?`<div class="fc-translation">${en}</div>`:''}</div></div>`;
+  card.onclick=()=>{const was=card.classList.contains('flipped');card.classList.toggle('flipped');if(!was)speakSpanish(word);};
+  card.querySelector('.flip-audio-btn').onclick=e=>{e.stopPropagation();speakSpanish(word);};
+  $('flipGrid').appendChild(card);
+});
+
+/* ---------- 1. SORT: QUESTION OR ANSWER ---------- */
+const SQ=[["¿Cuántos años tienes?","p"],["Yo tengo siete años.","r"],["¿Cuántos años tiene ella?","p"],["Él tiene ocho años.","r"],["Yo tengo once años.","r"],["¿Cuántos años tiene él?","p"],["Ella tiene cuatro años.","r"]];
+const CATS=["p","r"],CAT_LABELS={p:"Preguntas",r:"Respuestas"},CAT_ICONS={p:"❓",r:"🗣️"};
+let selCat=null;const placed={};const slots={};
+shuf(SQ.map((s,i)=>[...s,i])).forEach(([t,c,i])=>{
+  const b=document.createElement('button');b.className='object-chip';b.textContent=t;
+  b.onclick=()=>{
+    if(!selCat){$('fb1').textContent="First click a group, then click the sentence. 🎯";$('fb1').className='feedback bad';return;}
+    const tag=document.createElement('span');tag.className='item-tag';tag.dataset.i=i;tag.textContent=t;
+    slots[selCat].querySelector('.items').appendChild(tag);placed[i]=selCat;b.disabled=true;
+  };
+  $('objectsPool').appendChild(b);
+});
+CATS.forEach(c=>{
+  const s=document.createElement('div');s.className='room-slot';
+  s.innerHTML=`<h3>${CAT_ICONS[c]} ${CAT_LABELS[c]}</h3><div class="items"></div><div class="hint-select">click to select</div>`;
+  s.onclick=()=>{Object.values(slots).forEach(x=>x.classList.remove('active'));s.classList.add('active');selCat=c;};
+  $('roomsBoard').appendChild(s);slots[c]=s;
+});
+function checkRooms(){
+  const fb=$('fb1');
+  if(Object.keys(placed).length<SQ.length){fb.textContent=`Place all ${SQ.length} sentences first. ❓`;fb.className='feedback bad';return;}
+  let c=0;
+  SQ.forEach(([t,k],i)=>{const tag=document.querySelector(`.item-tag[data-i="${i}"]`),g=placed[i]===k;
+    tag.classList.toggle('correct',g);tag.classList.toggle('wrong',!g);if(g)c++;});
+  if(c===SQ.length){fb.textContent="Perfect! 🎉 You know questions and answers.";fb.className='feedback good';earnStar(1);}
+  else{fb.textContent=`You have ${c} out of ${SQ.length} correct. Try again!`;fb.className='feedback bad';}
+}
+
+/* ---------- 2. WRITE THE NUMBER ---------- */
+NUMW.forEach((w,i)=>{
+  const d=document.createElement('div');d.className='num-item';
+  d.innerHTML=`<div class="digit">${i+1}</div><input type="text" data-answer="${w}" placeholder="write here...">`;
+  $('numGrid').appendChild(d);
+});
+
+/* ---------- 3. CONVERSATIONS ---------- */
+const nopts=NUMW.map((w,i)=>[w,(i+1)+' · '+w]);
+mkOpts($('b1'),nopts);mkOpts($('b2'),[["Él","Él"],["Ella","Ella"]]);mkOpts($('b2n'),nopts);
+function u1(){$('s1').innerHTML=`Profe: ¿Cuántos años tienes?<br>Alumno: Yo tengo <b>${$('b1').value}</b> años.`;earnStar(3);}
+function u2(){const p=$('b2').value;$('s2').innerHTML=`¿Cuántos años tiene ${p.toLowerCase()}?<br><b>${p}</b> tiene <b>${$('b2n').value}</b> años.`;earnStar(3);}
+$('b1').onchange=u1;$('b2').onchange=$('b2n').onchange=u2;u1();u2();
+
+/* ---------- 4. MISSING LETTER ---------- */
+[["cuántos",3],["años",1],["tienes",2],["tengo",2],["tiene",3],["cuatro",2],["siete",2],["ocho",1],["once",2],["doce",1]].forEach(([w,i])=>{
+  const d=document.createElement('div');d.className='fill-item';
+  d.innerHTML=`<span>${w.slice(0,i)}</span><input maxlength="1" data-answer="${w[i]}"><span>${w.slice(i+1)}</span>`;
+  $('fillGrid').appendChild(d);
+});
+
+/* ---------- 5. PUT THE SENTENCE IN ORDER ---------- */
+const ORD=["Yo tengo siete años.","¿Cuántos años tienes?","Él tiene ocho años.","Ella tiene cuatro años."];const ordSel=[];
+ORD.forEach((s,k)=>{
+  const row=document.createElement('div');row.className='line-item';
+  const disp=document.createElement('div');disp.className='birthday-sentence';disp.style.minHeight='1.6em';
+  const bank=document.createElement('div');bank.className='bank';ordSel[k]=[];
+  shuf(s.split(' ')).forEach(w=>{
+    const b=document.createElement('button');b.className='object-chip';b.textContent=w;
+    b.onclick=()=>{ordSel[k].push(w);b.disabled=true;disp.textContent=ordSel[k].join(' ');speakSpanish(w);};
+    bank.appendChild(b);
+  });
+  const r=document.createElement('button');r.className='check-btn';r.textContent='↺';
+  r.onclick=()=>{ordSel[k]=[];disp.textContent='';bank.querySelectorAll('button').forEach(x=>x.disabled=false);};
+  bank.appendChild(r);row.append(disp,bank);$('ordGrid').appendChild(row);
+});
+function checkOrd(){
+  const fb=$('fb5');let c=0;ORD.forEach((s,k)=>{if(ordSel[k].join(' ')===s)c++;});
+  if(c===ORD.length){fb.textContent="Perfect! All the sentences are in order. 🔤🎉";fb.className='feedback good';earnStar(5);}
+  else{fb.textContent=`${c} out of ${ORD.length} sentences are right. Use ↺ and try again!`;fb.className='feedback bad';}
+}
+
+/* ---------- 6. MEMORY ---------- */
+const MP=[["4","cuatro"],["5","cinco"],["7","siete"],["8","ocho"],["9","nueve"],["11","once"]];
+let mf=[],mm=0,ml=false;
+shuf(MP.flatMap((p,i)=>[[i,p[0]],[i,p[1]]])).forEach(([pair,label])=>{
+  const el=document.createElement('div');el.className='mem-card';el.textContent='?';
+  el.onclick=()=>{
+    if(ml||el.dataset.s)return;
+    el.textContent=label;el.classList.add('flipped');el.dataset.s=1;mf.push({el,pair});
+    if(mf.length<2)return;
+    ml=true;const[a,b]=mf;
+    if(a.pair===b.pair){
+      [a,b].forEach(x=>x.el.classList.replace('flipped','matched'));mm++;mf=[];ml=false;
+      $('memoryStatus').textContent=mm===MP.length?"You found all the pairs! 🃏🎉":`Pairs found: ${mm} / ${MP.length}`;
+      if(mm===MP.length)earnStar(6);
+    }else setTimeout(()=>{[a,b].forEach(x=>{x.el.textContent='?';x.el.classList.remove('flipped');delete x.el.dataset.s;});mf=[];ml=false;},800);
+  };
+  $('memoryGrid').appendChild(el);
+});
+
+/* ---------- 7. PRACTICA CON TUS COMPAÑEROS ---------- */
+const pq=shuf([...Array(12)].map((_,i)=>i+1)).slice(0,6);let pi=0;
+function pSay(){speakSpanish('¿Cuántos años tienes?');}
+function pShow(){
+  const fb=$('fb7'),box=$('pOpts');box.innerHTML='';
+  if(pi>=pq.length){$('cakeBig').innerHTML='🎉';$('pPrompt').textContent='¡Muy bien! 🎉';fb.textContent="Great conversation practice! 🕯️🌟";fb.className='feedback good';earnStar(7);return;}
+  const n=pq[pi];
+  $('cakeBig').innerHTML=`🎂<small>${'🕯️'.repeat(n)}</small>`;$('pPrompt').textContent='¿Cuántos años tienes?';
+  shuf([n,...shuf([...Array(12)].map((_,i)=>i+1).filter(x=>x!==n)).slice(0,3)]).forEach(o=>{
+    const b=document.createElement('button');b.className='object-chip';b.textContent=sent(o);
+    b.onclick=()=>{
+      if(o===n){pi++;fb.textContent='';speakSpanish(sent(n));setTimeout(()=>{pShow();pSay();},1800);}
+      else{fb.textContent='Count the candles again! 🕯️';fb.className='feedback bad';}
+    };
+    box.appendChild(b);
+  });
+}
+pShow();
+
+/* ---------- 8. UNE CON FLECHAS ---------- */
+const COL=["#e0554a","#2b7bd6","#2e9e5b","#e69a00"];
+const AGES=[7,4,8,11];
+let mSel=null;const mAssign={};const wordBtn={};
+AGES.forEach((n,i)=>{
+  const b=document.createElement('button');b.className='object-chip';b.textContent=sent(n);b.style.borderColor=COL[i];
+  b.onclick=()=>{mSel=n;Object.values(wordBtn).forEach(x=>x.style.background='');b.style.background=COL[i]+'33';};
+  $('matchWords').appendChild(b);wordBtn[n]=b;
+});
+const picEl={};
+shuf(AGES).forEach(n=>{
+  const d=document.createElement('div');d.className='pic';d.innerHTML=`🎂<small>${'🕯️'.repeat(n)}</small><small class="tag"></small>`;
+  d.onclick=()=>{
+    if(!mSel){$('fb8').textContent="First click a sentence, then click its cake. 🌈";$('fb8').className='feedback bad';return;}
+    for(const k in mAssign)if(mAssign[k]===mSel){mAssign[k]=null;picEl[k].style.borderColor='#ddd';picEl[k].querySelector('.tag').textContent='';}
+    const ci=AGES.indexOf(mSel);mAssign[n]=mSel;d.style.borderColor=COL[ci];d.className='pic';
+    const t=d.querySelector('.tag');t.textContent=NUMW[mSel-1];t.style.color=COL[ci];t.style.fontWeight='700';
+  };
+  $('matchPics').appendChild(d);picEl[n]=d;
+});
+function checkMatch(){
+  const fb=$('fb8');let c=0;
+  if(AGES.some(n=>!Object.values(mAssign).includes(n))){fb.textContent="Match all the sentences first. 🌈";fb.className='feedback bad';return;}
+  AGES.forEach(n=>{const g=mAssign[n]===n;picEl[n].classList.toggle('ok',g);picEl[n].classList.toggle('no',!g);if(g)c++;});
+  if(c===AGES.length){fb.textContent="Perfect! Every cake has its owner. 🎂🎉";fb.className='feedback good';earnStar(8);}
+  else{fb.textContent=`${c} out of ${AGES.length} correct. Fix the red ones!`;fb.className='feedback bad';}
+}
+
+/* ---------- 9. COPIA ---------- */
+AGES.slice(0,3).forEach(n=>{
+  const d=document.createElement('div');d.className='line-item';
+  d.innerHTML=`<i>${sent(n)}</i><br><input class="copy-in" type="text" data-answer="${sent(n)}" placeholder="copy here...">`;
+  $('copyGrid').appendChild(d);
+});
+
+/* ---------- 10. ¿CUÁNTOS AÑOS TIENES TÚ? ---------- */
+const cv=$('draw'),cx=cv.getContext('2d');let dr=false;
+cx.lineWidth=4;cx.lineCap='round';cx.lineJoin='round';
+function pos(e){const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height];}
+cv.addEventListener('pointerdown',e=>{dr=true;cx.strokeStyle=$('pen').value;const[x,y]=pos(e);cx.beginPath();cx.moveTo(x,y);cx.lineTo(x+.1,y);cx.stroke();});
+cv.addEventListener('pointermove',e=>{if(!dr)return;const[x,y]=pos(e);cx.lineTo(x,y);cx.stroke();});
+addEventListener('pointerup',()=>dr=false);
+function clearDraw(){cx.clearRect(0,0,cv.width,cv.height);}
+function checkAge(){
+  const a=normalize($('a1').value),b=normalize($('a2').value),c=normalize($('a3').value),fb=$('fb10');
+  const okN=NUMW.map(normalize).includes(b);
+  [['a1',a==='tengo'],['a2',okN],['a3',c==='anos']].forEach(([id,g])=>{$(id).classList.toggle('correct',g);$(id).classList.toggle('wrong',!g);});
+  if(a==='tengo'&&okN&&c==='anos'){fb.textContent=`¡Muy bien! Yo tengo ${$('a2').value.trim()} años. 🎂🌟`;fb.className='feedback good';earnStar(10);}
+  else{fb.textContent="Write: Yo tengo + your age in words (from uno to doce) + años.";fb.className='feedback bad';}
+}
+
+/* ---------- 11. ESCUCHA Y ELIGE ---------- */
+const lq=shuf([...Array(12)].map((_,i)=>i+1)).slice(0,6);let li=0;
+function lSay(){if(li<lq.length)speakSpanish(NUMW[lq[li]-1]);}
+function lShow(){
+  const fb=$('fb11'),box=$('lOpts');box.innerHTML='';
+  if(li>=lq.length){$('lPrompt').textContent='¡Muy bien! 🎉';fb.textContent="You listened really well! 🎧🌟";fb.className='feedback good';earnStar(11);return;}
+  $('lPrompt').textContent='👂 ¿Qué número es?';
+  const ans=lq[li];
+  shuf([ans,...shuf([...Array(12)].map((_,i)=>i+1).filter(x=>x!==ans)).slice(0,3)]).forEach(o=>{
+    const b=document.createElement('button');b.className='object-chip';b.style.fontSize='1.4rem';b.textContent=o;
+    b.onclick=()=>{
+      if(o===ans){li++;fb.textContent='';lShow();lSay();}
+      else{fb.textContent='Not that one. Listen again! 🔊';fb.className='feedback bad';}
+    };
+    box.appendChild(b);
+  });
+}
+lShow();
+
+/* ---------- 12. BINGO ---------- */
+const ALL=[...Array(12)].map((_,i)=>i+1);
+const card=shuf(ALL).slice(0,9);const called=[];const marked=new Set();
+card.forEach(n=>{
+  const b=document.createElement('button');b.textContent=n;
+  b.onclick=()=>{
+    const fb=$('fb12');
+    if(!called.includes(n)){fb.textContent="That number hasn't been called yet. 👂";fb.className='feedback bad';return;}
+    marked.add(n);b.classList.add('on');b.disabled=true;fb.textContent='';
+    if(marked.size===card.length){fb.textContent="¡BINGO! 🎉🎲 You filled your whole card!";fb.className='feedback good';earnStar(12);}
+  };
+  $('bingoGrid').appendChild(b);
+});
+function callNum(){
+  const left=ALL.filter(n=>!called.includes(n));
+  if(!left.length){$('bingoCall').textContent='All the numbers have been called.';return;}
+  const n=left[Math.random()*left.length|0];called.push(n);
+  $('bingoCall').innerHTML=`🎲 <b>${NUMW[n-1]}</b>`;speakSpanish(NUMW[n-1]);
+}
+</script>
+</body>
+</html>
