@@ -3,45 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>¡Yo sé! — Los días de la semana 🌈</title>
+<title>¡Los días de la semana! 📅</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap');
-:root{--ink:#29245d;--purple:#9748ff;--teal:#1e9e90;--coral:#ff6b5a;--yellow:#ffc857;--mint:#9ee4b8;--paper:#fffaf4;--line:#f2d9c9;--green:#16845b;--red:#c83c55}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#fff5ec,#f4f1ff 55%,#eefbf4);font-family:'Nunito',sans-serif;color:var(--ink)}
-.banner{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;padding:12px 10px 4px}.flag{font-family:'Baloo 2';font-weight:800;color:#fff;padding:7px 13px;clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%);background:var(--purple);min-width:65px;text-align:center}.flag:nth-child(3n+1){background:var(--coral)}.flag:nth-child(3n+2){background:var(--teal)}.flag:nth-child(3n){background:#e9a91d}
-header{text-align:center;padding:14px 16px 24px}header h1{font:800 clamp(2rem,6vw,3.5rem)/1 'Baloo 2';margin:10px 0;color:#4b2992}header p{margin:8px 0;color:#635c88;font-weight:800}
-main{max-width:1050px;margin:auto;padding:0 16px 45px}.hero{background:linear-gradient(135deg,#9748ff,#5b4be8);color:#fff;border-radius:26px;padding:25px;display:flex;align-items:center;justify-content:space-between;gap:20px;box-shadow:0 10px 0 #d9c5fa;margin-bottom:22px}.hero h2{font:800 2rem 'Baloo 2';margin:0 0 4px}.hero p{margin:0;line-height:1.5}.hero-emoji{font-size:4rem}
-.progress-wrap{margin-top:14px;background:#ffffff55;height:12px;border-radius:99px;overflow:hidden}.progress{height:100%;width:0;background:#ffe17b;transition:width .3s}
-.stats{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 0}.stat{background:#ffffff28;border-radius:99px;padding:6px 12px;font-weight:800}
-.card{background:#fff;border:2px solid #f5e2d7;border-radius:22px;padding:22px;margin:20px 0;box-shadow:0 7px 0 rgba(69,45,107,.06)}.card h2{font:800 1.55rem 'Baloo 2';margin:0 0 6px}.badge{display:inline-block;background:#f0e5ff;color:#6530b6;border-radius:99px;padding:4px 10px;font:800 .75rem 'Nunito';vertical-align:middle}.instructions{color:#716b8b;margin:4px 0 16px;line-height:1.55}.flip-grid,.day-grid,.memory-grid,.scramble-grid,.fill-grid,.sequence-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:12px}
-.flip-card{height:145px;perspective:900px;cursor:pointer}.flip-inner{position:relative;width:100%;height:100%;transition:transform .55s;transform-style:preserve-3d}.flip-card.flipped .flip-inner{transform:rotateY(180deg)}.flip-front,.flip-back{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:2px solid #ffd9c2;border-radius:17px;backface-visibility:hidden;padding:10px;text-align:center}.flip-front{background:#fff6ee;font-size:2.1rem}.flip-back{background:var(--teal);color:white;transform:rotateY(180deg)}.flip-back strong{font:800 1.3rem 'Baloo 2'}.flip-back small{opacity:.95}.hint{font-size:.72rem;color:#777;margin-top:5px}
-.btn{border:0;border-radius:13px;padding:11px 17px;background:var(--purple);color:white;font:800 1rem 'Nunito';cursor:pointer;box-shadow:0 4px 0 #6c2fc0;transition:transform .12s}.btn:hover{filter:brightness(1.05);transform:translateY(-1px)}.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #6c2fc0}.btn.secondary{background:var(--teal);box-shadow:0 4px 0 #11786d}.btn.light{background:#fff0cc;color:#72500a;box-shadow:0 4px 0 #e6c56e}.feedback{font-weight:800;margin-top:12px;min-height:24px}.good{color:var(--green)}.bad{color:var(--red)}
-.day-chip{border:2px solid #dfd4f7;background:#f8f4ff;border-radius:14px;padding:12px;text-align:center;font:800 1.1rem 'Baloo 2';cursor:pointer;color:var(--ink)}.day-chip.selected{background:#e7dcff;border-color:var(--purple);transform:scale(1.03)}.day-chip.correct{background:#e0f8e9;border-color:#4bb87d}.day-chip.wrong{background:#ffeaed;border-color:#e66a7d}.day-chip:disabled{cursor:default}
-.pool{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.pill{border:2px solid #dcd1f3;border-radius:99px;padding:9px 13px;background:#f8f4ff;font-weight:800;cursor:pointer}.pill.used{opacity:.35;pointer-events:none}.order-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:8px;margin:15px 0}.order-slot{min-height:64px;border:2px dashed #c9b4ef;border-radius:13px;background:#fbf9ff;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;font-weight:800}.order-slot.filled{border-style:solid;background:#e9fff0;border-color:#80d6a0}
-.field-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.field{background:#fff8f1;border:1px solid #f4dfd1;border-radius:14px;padding:13px}.field label{display:block;font-weight:800;margin-bottom:8px}.field input,.field select,.field textarea{width:100%;border:2px solid #e5dcf3;border-radius:10px;padding:10px;font:700 1rem 'Nunito';color:var(--ink);background:white}.field input:focus,.field select:focus{outline:2px solid #c9a9ff}
-.sequence-grid{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}.sequence{background:#f8f6ff;border-radius:15px;padding:14px;font-weight:800;line-height:2.5}.sequence select{max-width:145px;border:2px solid #d8c9f3;border-radius:9px;padding:7px;font:700 .95rem 'Nunito';background:white;color:var(--ink)}
-.scramble-item,.fill-item{border:2px solid #f2dfd1;border-radius:15px;padding:14px;text-align:center;background:#fffaf5}.scramble-word{font:800 1.2rem 'Baloo 2';letter-spacing:3px;color:#7a43c4;margin-bottom:8px}.scramble-item input{width:100%;padding:9px;border:2px solid #e6d9f4;border-radius:10px;font:700 1rem 'Nunito';text-align:center}.fill-item .letters{font:800 1.3rem 'Baloo 2';letter-spacing:2px}.fill-item input{width:45px;text-align:center;border:2px solid #d9c8f5;border-radius:8px;padding:7px;font:800 1.2rem 'Nunito'}
-.wordsearch-wrap{display:grid;grid-template-columns:minmax(250px,1fr) minmax(130px,.5fr);gap:18px;align-items:start}.ws-grid{display:grid;grid-template-columns:repeat(10,minmax(22px,1fr));gap:4px;max-width:520px}.ws-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:7px;background:#f5f0ff;border:1px solid #e1d5f6;font-weight:900;cursor:pointer;user-select:none}.ws-cell.selected{background:#ffe08b;border-color:#e8b62d}.ws-cell.found{background:#baf0cd;border-color:#60bd82}.ws-words{display:flex;flex-direction:column;gap:8px}.ws-word{padding:8px 10px;background:#f5f1ff;border-radius:10px;font-weight:800}.ws-word.found-word{text-decoration:line-through;background:#dff8e8;color:#247347}
-.memory-card{height:85px;border-radius:14px;background:#7551cf;color:white;display:flex;align-items:center;justify-content:center;text-align:center;font:800 1.05rem 'Baloo 2';padding:8px;cursor:pointer;box-shadow:0 4px 0 #5030a4}.memory-card.revealed{background:#fff4e8;color:var(--ink);border:2px solid #f1c8ad;box-shadow:none}.memory-card.matched{background:#dff8e8;color:#226f48;border:2px solid #8ed5a7;box-shadow:none;cursor:default}
-.video-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#17132d}.video-frame iframe{width:100%;height:100%;border:0;position:absolute;inset:0}.video-tasks{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:14px}
-.day-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin:12px 0}.cal-day{background:#f5efff;border-radius:10px;padding:10px 3px;text-align:center;font-weight:800}.cal-day:nth-child(6),.cal-day:nth-child(7){background:#e1f8e8}.mini{font-size:.8rem;color:#6f6788}
-footer{text-align:center;padding:25px;color:#756d8c;font-weight:700}
-@media(max-width:650px){.hero{align-items:flex-start}.hero-emoji{font-size:2.5rem}.card{padding:16px}.wordsearch-wrap{grid-template-columns:1fr}.ws-grid{gap:3px}.ws-cell{font-size:.8rem}.day-calendar{grid-template-columns:repeat(4,minmax(0,1fr))}.flag{min-width:54px;padding:6px 8px}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:18px 0}
+.flip-card{height:130px;perspective:1000px;cursor:pointer}
+.flip-card-inner{position:relative;width:100%;height:100%;text-align:center;transition:transform .6s;transform-style:preserve-3d}
+.flip-card.flipped .flip-card-inner{transform:rotateY(180deg)}
+.flip-card-front,.flip-card-back{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;backface-visibility:hidden;border-radius:16px;box-shadow:0 4px 10px rgba(0,0,0,.08);padding:10px;color:#fff}
+.flip-card-front{font-size:1.5rem;font-family:'Baloo 2',sans-serif;font-weight:800}
+.flip-card-back{background:#1E9E90;transform:rotateY(180deg)}
+.fc-word{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:1.3rem}
+.fc-translation{font-size:.85rem;opacity:.9}
+.flip-audio-btn{position:absolute;top:8px;right:8px;width:30px;height:30px;border:none;border-radius:50%;background:rgba(255,255,255,.3);color:#fff;cursor:pointer}
+.bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+.line-item{margin:12px 0;font-size:1.1rem}
+.art-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.txt{padding:8px;font-size:1.05rem;border-radius:10px;border:2px solid #1E9E90;width:140px;text-align:center}
+.dayband{border-radius:12px;color:#fff;font-weight:800;padding:8px 14px;font-family:'Baloo 2',sans-serif;font-size:1.2rem;margin:6px 0}
 </style>
 </head>
 <body>
 
-  <!-- BANDERINES DE PAPEL PICADO -->
-  <div class="banner" id="banner">
-    <div class="flag">¡HOLA!</div>
-    <div class="flag">ELE</div>
-    <div class="flag">CURSO</div>
-    <div class="flag">NIÑOS</div>
-    <div class="flag">JUEGA</div>
-    <div class="flag">APRENDE</div>
-  </div>
+<div class="banner" id="banner">
+  <div class="flag">¡HOLA!</div><div class="flag">ELE</div><div class="flag">CURSO</div>
+  <div class="flag">NIÑOS</div><div class="flag">JUEGA</div><div class="flag">APRENDE</div>
+</div>
 
 <header>
   <h1><a href="index.html" class="logo-link">MUNDO ELE</a></h1>
@@ -49,185 +38,327 @@ footer{text-align:center;padding:25px;color:#756d8c;font-weight:700}
 </header>
 
 <nav class="navbar" id="navbar-container"></nav>
+
 <main>
 
+  <section class="card" id="cardFlash">
+    <h2>0. 🔄 Flashcards <span class="badge">Días de la semana</span></h2>
+    <p class="instructions">Click each card to flip it and reveal the day in Spanish.</p>
+    <div class="flip-grid" id="flipGrid"></div>
+  </section>
 
-<section class="card" id="flashcards">
-<h2>0. 🔄 Flashcards <span class="badge">New vocabulary</span></h2><p class="instructions">Click each card to flip it, see the English meaning and hear the Spanish pronunciation.</p>
-<div class="flip-grid" id="flipGrid"></div><p class="hint">Tip: In Spanish, the days of the week are usually written with a lowercase letter.</p>
-</section>
+  <section class="card" id="card1">
+    <h2>1. 🎯 Sort the Days <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Click a group to select it, then click the days that belong there. Place them all!</p>
+    <div class="objects-pool" id="objectsPool"></div>
+    <div class="rooms-board" id="roomsBoard"></div>
+    <button class="check-btn" onclick="checkRooms()">Check</button>
+    <div class="feedback" id="fb1"></div>
+  </section>
 
-<section class="card" id="video">
-<h2>1. 🎵 Watch &amp; Listen <span class="badge">YouTube challenge</span></h2>
-<p class="instructions">Watch the song. Listen for all seven days, then answer the questions below.</p>
-<div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/NOf6i8LBFDk?rel=0" title="Siete días — Los días de la semana | Pinkfong" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
-<div class="video-tasks">
- <div class="field"><label for="v1">1. How many days are there in a week?</label><select id="v1"><option value="">Choose…</option><option value="5">Cinco / Five</option><option value="7">Siete / Seven</option><option value="10">Diez / Ten</option></select></div>
- <div class="field"><label for="v2">2. Which day comes after viernes?</label><select id="v2"><option value="">Choose…</option><option>jueves</option><option>sábado</option><option>martes</option></select></div>
- <div class="field"><label for="v3">3. Which day starts the week in this lesson?</label><select id="v3"><option value="">Choose…</option><option>lunes</option><option>domingo</option><option>viernes</option></select></div>
-</div>
-<button class="btn" onclick="checkVideo()">Check answers</button><div class="feedback" id="fbVideo"></div>
-</section>
+  <section class="card" id="card2">
+    <h2>2. ✍️ Write the Day <span class="badge">English → Español</span></h2>
+    <p class="instructions">Read each day in English and write it in Spanish.</p>
+    <div id="nameGrid"></div>
+    <button class="check-btn" onclick="grade('#nameGrid','fb2',2,'Excellent! You know all the days. 🌟')">Check</button>
+    <div class="feedback" id="fb2"></div>
+  </section>
 
-<section class="card" id="order">
-<h2>2. 🧩 Put the Days in Order <span class="badge">PDF activity</span></h2>
-<p class="instructions">Click a day from the word bank, then click the next empty box. Put the seven days in order, from lunes to domingo.</p>
-<div class="pool" id="orderPool"></div><div class="order-slots" id="orderSlots"></div>
-<button class="btn" onclick="checkOrder()">Check order</button> <button class="btn light" onclick="resetOrder()">Start again</button><div class="feedback" id="fbOrder"></div>
-</section>
+  <section class="card" id="card3">
+    <h2>3. 🗣️ Hoy, mañana, ayer <span class="badge">Build a Sentence</span></h2>
+    <p class="instructions">Choose a day and see what comes before and after it.</p>
+    <div class="birthday-box"><div class="cake">📅</div><div><select id="b1"></select></div><div class="birthday-sentence" id="s1"></div></div>
+  </section>
 
-<section class="card" id="sort">
-<h2>3. 🗓️ Sort the Days <span class="badge">Vocabulary</span></h2>
-<p class="instructions">Sort each day into the correct group: weekdays or weekend. Click a category first, then click the days.</p>
-<div class="pool" id="sortPool"></div>
-<div class="field-grid">
- <div class="field"><label>📚 Entre semana / Weekdays</label><div class="pool" id="weekdays"></div></div>
- <div class="field"><label>🎉 Fin de semana / Weekend</label><div class="pool" id="weekend"></div></div>
-</div>
-<button class="btn" onclick="checkSort()">Check categories</button><div class="feedback" id="fbSort"></div>
-</section>
+  <section class="card" id="card4">
+    <h2>4. ✏️ Complete the Missing Letter</h2>
+    <p class="instructions">Write the letter that's missing in each day.</p>
+    <div class="fill-grid" id="fillGrid"></div>
+    <button class="check-btn" onclick="grade('#fillGrid','fb4',4,'Amazing! You know all the days. 🏆')">Check</button>
+    <div class="feedback" id="fb4"></div>
+  </section>
 
-<section class="card" id="name">
-<h2>4. ✍️ Name the Day</h2><p class="instructions">Read the English clue and write the day in Spanish. Accents are recommended.</p>
-<div class="field-grid" id="nameGrid"></div><button class="btn" onclick="checkNames()">Check answers</button><div class="feedback" id="fbNames"></div>
-</section>
+  <section class="card" id="card5">
+    <h2>5. ☁️ Ordena las letras <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Put the letters in order to make the days of the week. Look at the example!</p>
+    <div class="scramble-grid" id="scrambleGrid"></div>
+    <button class="check-btn" onclick="grade('#scrambleGrid','fb5',5,'You unscrambled them all! ☁️🌟')">Check</button>
+    <div class="feedback" id="fb5"></div>
+  </section>
 
-<section class="card" id="missing">
-<h2>5. 🔍 ¿Qué día falta? <span class="badge">PDF activity</span></h2><p class="instructions">Complete each sequence with the missing day, just like the example in the worksheet.</p>
-<div class="sequence-grid" id="sequenceGrid"></div><button class="btn" onclick="checkMissing()">Check answers</button><div class="feedback" id="fbMissing"></div>
-</section>
+  <section class="card" id="card6">
+    <h2>6. 🔎 Sopa de letras <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Find the 7 days of the week. Click the letters in order (some words go backwards or upwards!). Click the last letter again to remove it.</p>
+    <div class="wordsearch-wrap">
+      <div class="ws-grid" id="wsGrid"></div>
+      <div class="ws-words" id="wsWords"></div>
+    </div>
+    <button class="check-btn" onclick="clearSel()">Clear selection</button>
+    <div class="feedback" id="fb6"></div>
+  </section>
 
-<section class="card" id="letters">
-<h2>6. 🔤 Unscramble the Letters <span class="badge">PDF activity</span></h2><p class="instructions">The letters are mixed up. Write the correct day of the week.</p>
-<div class="scramble-grid" id="scrambleGrid"></div><button class="btn" onclick="checkScramble()">Check answers</button><div class="feedback" id="fbScramble"></div>
-</section>
+  <section class="card" id="card7">
+    <h2>7. 🃏 Memory Match: Español and English</h2>
+    <p class="instructions">Find the pairs: the day in Spanish with the day in English.</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="memory-status" id="memoryStatus">Pairs found: 0 / 7</div>
+  </section>
 
-<section class="card" id="fill">
-<h2>7. ✏️ Complete the Missing Letter</h2><p class="instructions">Write the missing letter in each day.</p><div class="fill-grid" id="fillGrid"></div>
-<button class="btn" onclick="checkFill()">Check answers</button><div class="feedback" id="fbFill"></div>
-</section>
+  <section class="card" id="card8">
+    <h2>8. 🔢 Organiza los días de la semana <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Click the days in order, from 1 to 7. Start with <b>lunes</b>. Use ↺ to start again.</p>
+    <div class="bank" id="orgBank"></div>
+    <div class="birthday-sentence" id="orgSeq" style="min-height:2em;text-align:center"></div>
+    <button class="check-btn" onclick="checkOrg()">Check</button>
+    <button class="check-btn" onclick="resetOrg()">↺ Start again</button>
+    <div class="feedback" id="fb8"></div>
+  </section>
 
-<section class="card" id="wordsearch">
-<h2>8. 🔎 Word Search <span class="badge">PDF activity</span></h2><p class="instructions">Find the seven days. Click the letters in order, from left to right, top to bottom, or diagonally down-right. If you make a mistake, press “Clear selection”.</p>
-<div class="wordsearch-wrap"><div class="ws-grid" id="wsGrid"></div><div><h3>Find these words:</h3><div class="ws-words" id="wsWords"></div></div></div>
-<button class="btn secondary" onclick="clearSelection()">Clear selection</button><button class="btn light" onclick="newWordSearch()">New puzzle</button><div class="feedback" id="fbWS"></div>
-</section>
+  <section class="card" id="card9">
+    <h2>9. ❓ ¿Qué día falta? <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Write the day that is missing. Example: Lunes, <b>martes</b>, miércoles.</p>
+    <div id="faltaGrid"></div>
+    <button class="check-btn" onclick="grade('#faltaGrid','fb9',9,'Perfect! You know the order of the week. ❓🎉')">Check</button>
+    <div class="feedback" id="fb9"></div>
+  </section>
 
-<section class="card" id="memory">
-<h2>9. 🃏 Memory Match</h2><p class="instructions">Find the matching pairs: Spanish day and English meaning.</p>
-<div class="memory-grid" id="memoryGrid"></div><div class="feedback" id="memoryStatus">Pairs found: 0 / 7</div>
-</section>
+  <section class="card" id="card10">
+    <h2>10. 👂 Escucha y elige <span class="badge">Listening</span></h2>
+    <p class="instructions">Listen to the day and click its English name.</p>
+    <div class="birthday-sentence" id="lPrompt" style="text-align:center"></div>
+    <div class="bank" id="lOpts"></div>
+    <button class="check-btn" onclick="lSay()">🔊 Listen again</button>
+    <div class="feedback" id="fb10"></div>
+  </section>
 
-<section class="card" id="calendar">
-<h2>🔊 Bonus: Say the days aloud!</h2><p class="instructions">Click a day to hear it. Then answer: “¿Qué día es hoy?” Choose any day and say the complete sentence: “Hoy es…”.</p>
-<div class="day-calendar" id="calendarDays"></div>
-<div class="field"><label for="todaySelect">¿Qué día es hoy?</label><select id="todaySelect"></select><p id="todaySentence"><strong>Hoy es lunes.</strong></p><button class="btn secondary" onclick="speakSpanish(document.getElementById('todaySelect').value)">🔊 Listen</button></div>
-</section>
+  <section class="card" id="card11">
+    <h2>11. 📆 ¿Qué día es hoy? <span class="badge">Real time</span></h2>
+    <p class="instructions">Look at today's date on your device. What day is it?</p>
+    <div id="hoyGrid"></div>
+    <button class="check-btn" onclick="grade('#hoyGrid','fb11',11,'¡Muy bien! You know what day it is. 📆')">Check</button>
+    <div class="feedback" id="fb11"></div>
+  </section>
+
 </main>
+
 <div id="footer-container"></div>
+
 <script>
-// Cargar la misma navbar y el footer del sitio que utiliza yoSe.html.
-fetch('navbar.html')
-  .then(response => { if (!response.ok) throw new Error('No se pudo cargar navbar.html'); return response.text(); })
-  .then(data => {
-    document.getElementById('navbar-container').innerHTML = data;
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(item => {
-      const link = item.querySelector('.nav-link');
-      if (link) link.addEventListener('click', e => {
-        if (window.innerWidth <= 768) {
-          e.preventDefault();
-          navItems.forEach(other => { if (other !== item) other.classList.remove('active'); });
-          item.classList.toggle('active');
-        }
-      });
-    });
-    document.addEventListener('click', e => {
-      if (!e.target.closest('.nav-item')) navItems.forEach(item => item.classList.remove('active'));
-    });
-  })
-  .catch(error => console.error('Error al cargar la navbar:', error));
-fetch('footer.html')
-  .then(response => { if (!response.ok) throw new Error('No se pudo cargar footer.html'); return response.text(); })
-  .then(data => { document.getElementById('footer-container').innerHTML = data; })
-  .catch(error => console.error('Error al cargar el footer:', error));
+fetch('navbar.html').then(r=>r.text()).then(d=>{
+  document.getElementById('navbar-container').innerHTML=d;
+  const items=document.querySelectorAll('.nav-item');
+  items.forEach(it=>{const l=it.querySelector('.nav-link');
+    if(l)l.addEventListener('click',e=>{if(innerWidth<=768){e.preventDefault();items.forEach(o=>o!==it&&o.classList.remove('active'));it.classList.toggle('active');}});});
+  document.addEventListener('click',e=>{if(!e.target.closest('.nav-item'))items.forEach(i=>i.classList.remove('active'));});
+}).catch(e=>console.error('Error al cargar la navbar:',e));
+fetch('footer.html').then(r=>r.text()).then(d=>{document.getElementById('footer-container').innerHTML=d;}).catch(e=>console.error('Error al cargar el footer:',e));
 </script>
+
 <script>
-const DAYS=[
- {es:'lunes',en:'Monday',emoji:'🌙'},
- {es:'martes',en:'Tuesday',emoji:'⚽'},
- {es:'miércoles',en:'Wednesday',emoji:'🌈'},
- {es:'jueves',en:'Thursday',emoji:'📚'},
- {es:'viernes',en:'Friday',emoji:'🎉'},
- {es:'sábado',en:'Saturday',emoji:'☀️'},
- {es:'domingo',en:'Sunday',emoji:'🌻'}
-];
-const normalize=s=>String(s||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ');
-let completed=new Set(), stars=0;
-function markDone(key,ok,fb,msgGood,msgBad){
- const el=document.getElementById(fb);el.textContent=msgGood && ok?msgGood:msgBad(ok);el.className='feedback '+(ok?'good':'bad');
- if(ok&&!completed.has(key)){completed.add(key);stars++;document.getElementById('stars').textContent=stars;document.getElementById('done').textContent=completed.size;document.getElementById('progress').style.width=(completed.size/8*100)+'%';confetti();}
+/* ---------- VOCABULARY (Monday first, like a Spanish calendar) ---------- */
+const DAYS=[["lunes","Monday","#f0605d,#7b4dff"],["martes","Tuesday","#ffd84d,#ff9a3c"],["miércoles","Wednesday","#7b4dff,#4de0e0"],["jueves","Thursday","#1aa3a3,#7ddc4d"],["viernes","Friday","#ff5fb5,#ffd84d"],["sábado","Saturday","#8a4dff,#ff9a3c"],["domingo","Sunday","#ff3b30,#ff9a3c"]];
+const NAMES=DAYS.map(d=>d[0]);
+const grad=i=>`linear-gradient(90deg,${DAYS[i][2]})`;
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+const $=id=>document.getElementById(id);
+const shuf=a=>[...a].sort(()=>Math.random()-.5);
+function mkOpts(sel,arr){arr.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o);});}
+const S=(ans,opts)=>`<select data-answer="${ans}">${['',...opts].map(o=>`<option value="${o}">${o||'...'}</option>`).join('')}</select>`;
+function rows(id,items){items.forEach(h=>{const d=document.createElement('div');d.className='line-item';d.innerHTML=h;$(id).appendChild(d);});}
+
+function speakSpanish(text,rate=.85){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=rate;speechSynthesis.speak(u);
 }
-function confetti(){const layer=document.createElement('div');layer.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden';document.body.appendChild(layer);const colors=['#ff6b5a','#1e9e90','#ffc857','#9748ff','#9ee4b8'];for(let i=0;i<35;i++){const p=document.createElement('i');p.style.cssText=`position:absolute;left:${Math.random()*100}%;top:-15px;width:8px;height:12px;background:${colors[i%colors.length]};border-radius:3px;animation:fall ${1.4+Math.random()*1.5}s linear forwards`;layer.appendChild(p)}if(!document.getElementById('fallStyle')){let st=document.createElement('style');st.id='fallStyle';st.textContent='@keyframes fall{to{transform:translateY(110vh) rotate(650deg);opacity:.3}}';document.head.appendChild(st)}setTimeout(()=>layer.remove(),3200)}
-function speakSpanish(text){if(!('speechSynthesis'in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=.78;window.speechSynthesis.speak(u)}
-// Flashcards
-const flipGrid=document.getElementById('flipGrid');
-DAYS.forEach(d=>{const c=document.createElement('div');c.className='flip-card';c.innerHTML=`<div class="flip-inner"><div class="flip-front"><div>${d.emoji}</div><strong>${d.es}</strong><span class="hint">Click to flip</span></div><div class="flip-back"><strong>${d.es}</strong><small>${d.en}</small><span>🔊 Click to hear</span></div></div>`;c.onclick=()=>{c.classList.toggle('flipped');speakSpanish(d.es)};flipGrid.appendChild(c)});
-function checkVideo(){const ok=document.getElementById('v1').value==='7'&&document.getElementById('v2').value==='sábado'&&document.getElementById('v3').value==='lunes';markDone('video',ok,'fbVideo','¡Excelente escucha! 🎵',()=>`Review your answers. ${[document.getElementById('v1').value==='7',document.getElementById('v2').value==='sábado',document.getElementById('v3').value==='lunes'].filter(Boolean).length}/3 correct.`)}
-// Order days, click pool then next empty slot
-let orderChosen=[];
-function renderOrder(){const pool=document.getElementById('orderPool');pool.innerHTML='';const shuffled=[...DAYS].sort(()=>Math.random()-.5);shuffled.forEach(d=>{const b=document.createElement('button');b.className='pill';b.textContent=d.es;b.dataset.day=d.es;b.onclick=()=>{if(orderChosen.includes(d.es))return;orderChosen.push(d.es);renderOrder();document.getElementById('fbOrder').textContent='';};if(orderChosen.includes(d.es))b.classList.add('used');pool.appendChild(b)});const slots=document.getElementById('orderSlots');slots.innerHTML='';for(let i=0;i<7;i++){const s=document.createElement('button');s.className='order-slot'+(orderChosen[i]?' filled':'');s.textContent=(i+1)+'. '+(orderChosen[i]||'Click a day');s.onclick=()=>{if(orderChosen[i]){orderChosen.splice(i,1);renderOrder()}};slots.appendChild(s)}}
-function resetOrder(){orderChosen=[];renderOrder();document.getElementById('fbOrder').textContent=''}
-function checkOrder(){const ok=orderChosen.length===7&&orderChosen.every((d,i)=>d===DAYS[i].es);markDone('order',ok,'fbOrder','¡Perfecto! You ordered all seven days! 🎉',()=>`Not quite yet. ${orderChosen.filter((d,i)=>d===DAYS[i].es).length}/7 days are in the correct position.`)}
-renderOrder();
-// Sorting weekdays/weekend
-let sortAssignments={};const sortPool=document.getElementById('sortPool');
-DAYS.slice().sort(()=>Math.random()-.5).forEach(d=>{const b=document.createElement('button');b.className='pill';b.textContent=d.emoji+' '+d.es;b.onclick=()=>{const target=sortAssignments[d.es]==='weekdays'?'weekend':'weekdays';sortAssignments[d.es]=target;renderSort();};b.dataset.day=d.es;sortPool.appendChild(b)});
-function renderSort(){document.getElementById('weekdays').innerHTML='';document.getElementById('weekend').innerHTML='';DAYS.forEach(d=>{if(!sortAssignments[d.es])return;const b=document.createElement('button');b.className='pill';b.textContent=d.es;b.onclick=()=>{delete sortAssignments[d.es];renderSort()};document.getElementById(sortAssignments[d.es]).appendChild(b)});sortPool.querySelectorAll('button').forEach(b=>b.classList.toggle('used',!!sortAssignments[b.dataset.day]))}
-function checkSort(){const ok=DAYS.every((d,i)=>sortAssignments[d.es]===(i<5?'weekdays':'weekend'));markDone('sort',ok,'fbSort','Great sorting! 📅',()=>`Try again: ${DAYS.filter((d,i)=>sortAssignments[d.es]===(i<5?'weekdays':'weekend')).length}/7 correctly sorted.`)}
-// Name day from English clues
-const nameGrid=document.getElementById('nameGrid');const nameOrder=[3,0,6,2,5,1,4];
-nameOrder.forEach(i=>{const d=DAYS[i],div=document.createElement('div');div.className='field';div.innerHTML=`<label>${d.emoji} ${d.en}</label><input data-answer="${d.es}" placeholder="En español…">`;nameGrid.appendChild(div)});
-function checkNames(){const ins=nameGrid.querySelectorAll('input');let n=0;ins.forEach(i=>{let ok=normalize(i.value)===normalize(i.dataset.answer);i.style.borderColor=ok?'#3bb978':'#e66a7d';if(ok)n++});markDone('names',n===7,'fbNames','¡Muy bien! You know the days! 🌟',()=>`${n}/7 correct. Check the red answers.`)}
-// Missing day sequences based on worksheet patterns, cyclic sequences where needed
-const sequences=[
- {a:'martes',answer:'miércoles',b:'jueves'},
- {a:'viernes',answer:'sábado',b:'domingo'},
- {a:'miércoles',answer:'jueves',b:'viernes'},
- {a:'jueves',answer:'viernes',b:'sábado'},
- {a:'domingo',answer:'lunes',b:'martes'}
-];
-const sequenceGrid=document.getElementById('sequenceGrid');
-sequences.forEach((s,i)=>{const div=document.createElement('div');div.className='sequence';div.innerHTML=`${i+1}. ${s.a}, <select data-answer="${s.answer}"><option value="">?</option>${DAYS.map(d=>`<option value="${d.es}">${d.es}</option>`).join('')}</select>, ${s.b}.`;sequenceGrid.appendChild(div)});
-function checkMissing(){const ins=sequenceGrid.querySelectorAll('select');let n=0;ins.forEach(i=>{const ok=i.value===i.dataset.answer;i.style.borderColor=ok?'#3bb978':'#e66a7d';if(ok)n++});markDone('missing',n===5,'fbMissing','¡Correcto! You completed every sequence. 🎯',()=>`${n}/5 correct. Remember the order of the days.`)}
-// Scramble exact letter sets
-function shuffledLetters(word){let a=word.split(''),s=word;let tries=0;while(s===word&&tries++<20){a.sort(()=>Math.random()-.5);s=a.join('')}return s.toUpperCase()}
-const scrambleGrid=document.getElementById('scrambleGrid');
-[...DAYS].sort(()=>Math.random()-.5).forEach(d=>{const div=document.createElement('div');div.className='scramble-item';div.innerHTML=`<div class="scramble-word">${shuffledLetters(d.es)}</div><input data-answer="${d.es}" aria-label="Unscramble ${d.en}" placeholder="Write the day…">`;scrambleGrid.appendChild(div)});
-function checkScramble(){const ins=scrambleGrid.querySelectorAll('input');let n=0;ins.forEach(i=>{const ok=normalize(i.value)===normalize(i.dataset.answer);i.style.borderColor=ok?'#3bb978':'#e66a7d';if(ok)n++});markDone('scramble',n===7,'fbScramble','All the words are correct! 🔤',()=>`${n}/7 correct. Check the letters and accents.`)}
-// Missing letters
-const fillGrid=document.getElementById('fillGrid');const fillData=[['lunes',1],['martes',2],['miércoles',4],['jueves',2],['viernes',3],['sábado',2],['domingo',3]];
-fillData.forEach(([w,idx])=>{const d=document.createElement('div');d.className='fill-item';d.innerHTML=`<div class="letters">${w.slice(0,idx)}<input maxlength="1" data-answer="${w[idx]}" aria-label="Missing letter in ${w}">${w.slice(idx+1)}</div>`;fillGrid.appendChild(d)});
-function checkFill(){const ins=fillGrid.querySelectorAll('input');let n=0;ins.forEach(i=>{const ok=normalize(i.value)===normalize(i.dataset.answer);i.style.borderColor=ok?'#3bb978':'#e66a7d';if(ok)n++});markDone('fill',n===7,'fbFill','Amazing! You filled every gap! ✨',()=>`${n}/7 correct. Try the missing letters again.`)}
-// Word search with guaranteed forward/down/diagonal placements
-const WS=10;let wsData=[],wsPlacements={},wsSelected=[],wsFound=new Set();
-function newWordSearch(){wsFound=new Set();wsSelected=[];wsPlacements={};let grid=Array.from({length:WS},()=>Array(WS).fill(''));const words=DAYS.map(d=>d.es.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase());const dirs=[[0,1],[1,0],[1,1]];
- for(const w of words){let placed=false;for(let attempt=0;attempt<600&&!placed;attempt++){const [dr,dc]=dirs[Math.floor(Math.random()*dirs.length)];const r=Math.floor(Math.random()*(WS-(dr?w.length:0)));const c=Math.floor(Math.random()*(WS-(dc?w.length:0)));let cells=[],ok=true;for(let j=0;j<w.length;j++){let rr=r+dr*j,cc=c+dc*j;if(rr>=WS||cc>=WS||(grid[rr][cc]&&grid[rr][cc]!==w[j])){ok=false;break}cells.push([rr,cc])}if(ok){cells.forEach(([rr,cc],j)=>grid[rr][cc]=w[j]);wsPlacements[w]=cells;placed=true}}}
- const abc='ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';for(let r=0;r<WS;r++)for(let c=0;c<WS;c++)if(!grid[r][c])grid[r][c]=abc[Math.floor(Math.random()*abc.length)];wsData=grid;renderWS()}
-function renderWS(){const el=document.getElementById('wsGrid');el.innerHTML='';for(let r=0;r<WS;r++)for(let c=0;c<WS;c++){const b=document.createElement('button');b.className='ws-cell';b.textContent=wsData[r][c];b.dataset.r=r;b.dataset.c=c;b.onclick=()=>toggleWS(r,c);el.appendChild(b)}const words=document.getElementById('wsWords');words.innerHTML='';DAYS.forEach(d=>{const w=d.es.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();const el=document.createElement('div');el.className='ws-word'+(wsFound.has(w)?' found-word':'');el.id='word-'+w;el.textContent='• '+d.es;words.appendChild(el)});updateWSCells()}
-function toggleWS(r,c){if(wsFound.size===7)return;const idx=wsSelected.findIndex(p=>p[0]===r&&p[1]===c);if(idx===wsSelected.length-1&&idx>=0){wsSelected.pop()}else{wsSelected.push([r,c])}const word=wsSelected.map(([rr,cc])=>wsData[rr][cc]).join('');if(Object.keys(wsPlacements).includes(word)&&!wsFound.has(word)){wsFound.add(word);wsSelected=[];document.getElementById('word-'+word)?.classList.add('found-word');document.getElementById('fbWS').textContent=`¡Encontraste ${DAYS.find(d=>d.es.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase()===word).es}!`;if(wsFound.size===7)markDone('wordsearch',true,'fbWS','¡Sopa de letras completada! 🔎🎉',()=> '');}updateWSCells()}
-function updateWSCells(){document.querySelectorAll('.ws-cell').forEach(b=>{const r=+b.dataset.r,c=+b.dataset.c;b.classList.toggle('selected',wsSelected.some(p=>p[0]===r&&p[1]===c));b.classList.toggle('found',Array.from(wsFound).some(w=>(wsPlacements[w]||[]).some(p=>p[0]===r&&p[1]===c)))})}
-function clearSelection(){wsSelected=[];updateWSCells()}
-newWordSearch();
-// Memory
-let memoryDeck=[],memoryFlipped=[],memoryLock=false,matches=0;
-function initMemory(){const pairs=DAYS.flatMap((d,i)=>[{pair:i,label:d.es},{pair:i,label:d.en}]).sort(()=>Math.random()-.5);memoryDeck=pairs;memoryFlipped=[];matches=0;memoryLock=false;const grid=document.getElementById('memoryGrid');grid.innerHTML='';pairs.forEach((card,i)=>{const b=document.createElement('button');b.className='memory-card';b.textContent='?';b.dataset.state='hidden';b.onclick=()=>flipMemory(b,card);grid.appendChild(b)});document.getElementById('memoryStatus').textContent='Pairs found: 0 / 7'}
-function flipMemory(el,card){if(memoryLock||el.dataset.state!=='hidden')return;el.textContent=card.label;el.classList.add('revealed');el.dataset.state='revealed';memoryFlipped.push({el,card});if(memoryFlipped.length===2){memoryLock=true;const [a,b]=memoryFlipped;if(a.card.pair===b.card.pair){[a,b].forEach(x=>{x.el.classList.remove('revealed');x.el.classList.add('matched');x.el.dataset.state='matched'});matches++;document.getElementById('memoryStatus').textContent=`Pairs found: ${matches} / 7`;memoryFlipped=[];memoryLock=false;if(matches===7)markDone('memory',true,'memoryStatus','You found all the pairs! 🃏🎉',()=> '');}else setTimeout(()=>{[a,b].forEach(x=>{x.el.textContent='?';x.el.classList.remove('revealed');x.el.dataset.state='hidden'});memoryFlipped=[];memoryLock=false},850)}}
-initMemory();
-// Day calendar and speaking
-const calendar=document.getElementById('calendarDays'),todaySelect=document.getElementById('todaySelect');
-DAYS.forEach(d=>{const b=document.createElement('button');b.className='cal-day';b.innerHTML=`${d.emoji}<br>${d.es}`;b.onclick=()=>speakSpanish(d.es);calendar.appendChild(b);const o=document.createElement('option');o.value=d.es;o.textContent=d.es;todaySelect.appendChild(o)});
-todaySelect.onchange=()=>document.getElementById('todaySentence').innerHTML='<strong>Hoy es '+todaySelect.value+'.</strong>';todaySelect.value='lunes';
+let starsEarned=0;
+function earnStar(n){
+  if(n<=starsEarned)return;
+  starsEarned=n;
+  document.querySelectorAll('.star').forEach(s=>{if(parseInt(s.dataset.i)<=starsEarned)s.classList.add('on');});
+  launchConfetti();
+}
+function launchConfetti(){
+  const layer=document.createElement('div');layer.className='confetti-layer';document.body.appendChild(layer);
+  const colors=['#FF6B5A','#1E9E90','#FFC857','#FF8FA3','#5EA0D0'];
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');p.className='confetti-piece';
+    p.style.left=Math.random()*100+'vw';p.style.background=colors[Math.random()*5|0];
+    p.style.animationDuration=(2+Math.random()*1.5)+'s';p.style.borderRadius=Math.random()>.5?'50%':'2px';
+    layer.appendChild(p);
+  }
+  setTimeout(()=>layer.remove(),3600);
+}
+function normalize(s){
+  return s.trim().toLowerCase().replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i").replace(/ó/g,"o").replace(/ú/g,"u").replace(/[.,¿?¡!]/g,"").replace(/\s+/g," ");
+}
+/* Generic checker: every input/select inside `sel` has data-answer */
+function grade(sel,fb,n,ok){
+  const ins=document.querySelectorAll(sel+' input,'+sel+' select');let c=0;
+  ins.forEach(i=>{const g=normalize(i.value)===normalize(i.dataset.answer);i.classList.toggle('correct',g);i.classList.toggle('wrong',!g);if(g)c++;});
+  const f=$(fb),all=c===ins.length;
+  f.textContent=all?ok:`${c} out of ${ins.length} correct. The red ones need review.`;
+  f.className='feedback '+(all?'good':'bad');
+  if(all)earnStar(n);
+}
+
+/* ---------- 0. FLASHCARDS ---------- */
+DAYS.forEach(([es,en],i)=>{
+  const card=document.createElement('div');card.className='flip-card';
+  card.innerHTML=`<div class="flip-card-inner">
+    <div class="flip-card-front" style="background:${grad(i)}">${en}</div>
+    <div class="flip-card-back"><button type="button" class="flip-audio-btn" aria-label="Play pronunciation">🔊</button>
+      <div class="fc-word">${cap(es)}</div><div class="fc-translation">${en}</div></div></div>`;
+  card.onclick=()=>{const was=card.classList.contains('flipped');card.classList.toggle('flipped');if(!was)speakSpanish(es);};
+  card.querySelector('.flip-audio-btn').onclick=e=>{e.stopPropagation();speakSpanish(es);};
+  $('flipGrid').appendChild(card);
+});
+
+/* ---------- 1. SORT ---------- */
+const CATS=["w","f"],CAT_LABELS={w:"Entre semana (lunes a viernes)",f:"Fin de semana"},CAT_ICONS={w:"🏫",f:"🎉"};
+const catOf=w=>(w==='sábado'||w==='domingo')?'f':'w';
+let selCat=null;const placed={};const slots={};
+shuf(NAMES).forEach(w=>{
+  const b=document.createElement('button');b.className='object-chip';b.textContent=cap(w);
+  b.onclick=()=>{
+    if(!selCat){$('fb1').textContent="First click a group, then click the day. 🎯";$('fb1').className='feedback bad';return;}
+    const t=document.createElement('span');t.className='item-tag';t.dataset.word=w;t.textContent=cap(w);
+    slots[selCat].querySelector('.items').appendChild(t);placed[w]=selCat;b.disabled=true;
+  };
+  $('objectsPool').appendChild(b);
+});
+CATS.forEach(c=>{
+  const s=document.createElement('div');s.className='room-slot';
+  s.innerHTML=`<h3>${CAT_ICONS[c]} ${CAT_LABELS[c]}</h3><div class="items"></div><div class="hint-select">click to select</div>`;
+  s.onclick=()=>{Object.values(slots).forEach(x=>x.classList.remove('active'));s.classList.add('active');selCat=c;};
+  $('roomsBoard').appendChild(s);slots[c]=s;
+});
+function checkRooms(){
+  const fb=$('fb1');
+  if(Object.keys(placed).length<NAMES.length){fb.textContent="Place all 7 days first. 📅";fb.className='feedback bad';return;}
+  let c=0;
+  NAMES.forEach(w=>{const t=document.querySelector(`.item-tag[data-word="${w}"]`),g=placed[w]===catOf(w);
+    t.classList.toggle('correct',g);t.classList.toggle('wrong',!g);if(g)c++;});
+  if(c===7){fb.textContent="Perfect! 🎉 Every day is in the right group.";fb.className='feedback good';earnStar(1);}
+  else{fb.textContent=`You have ${c} out of 7 correct. Try again!`;fb.className='feedback bad';}
+}
+
+/* ---------- 2. ENGLISH → ESPAÑOL ---------- */
+DAYS.forEach(([es,en],i)=>{
+  rows('nameGrid',[`<span class="dayband" style="background:${grad(i)};display:inline-block;min-width:150px">${en}</span> <input class="txt" type="text" data-answer="${es}" placeholder="en español...">`]);
+});
+
+/* ---------- 3. HOY, MAÑANA, AYER ---------- */
+mkOpts($('b1'),NAMES.map(w=>[w,cap(w)]));
+function u1(){const i=NAMES.indexOf($('b1').value);
+  $('s1').innerHTML=`Hoy es <b>${NAMES[i]}</b>.<br>Mañana es <b>${NAMES[(i+1)%7]}</b>.<br>Ayer fue <b>${NAMES[(i+6)%7]}</b>.`;earnStar(3);}
+$('b1').onchange=u1;u1();
+
+/* ---------- 4. MISSING LETTER ---------- */
+[["lunes",1],["martes",2],["miércoles",4],["jueves",2],["viernes",3],["sábado",2],["domingo",3]].forEach(([w,i])=>{
+  const d=document.createElement('div');d.className='fill-item';
+  d.innerHTML=`<span>${w.slice(0,i)}</span><input maxlength="1" data-answer="${w[i]}"><span>${w.slice(i+1)}</span>`;
+  $('fillGrid').appendChild(d);
+});
+
+/* ---------- 5. ORDENA LAS LETRAS (scrambles from the worksheet) ---------- */
+[["S N U L E","lunes",1],["S A E R M T","martes"],["O E I L M S C R E","miércoles"],["S U E J E V","jueves"],["A S D B A O","sábado"],["I E V R S E N","viernes"],["O D G N O I M","domingo"]].forEach(([s,w,ex])=>{
+  const d=document.createElement('div');d.className='scramble-item';
+  d.innerHTML=`<div class="scramble-word">${s}</div><input type="text" data-answer="${w}" ${ex?`value="${w}" readonly`:'placeholder="write the day..."'}>`;
+  $('scrambleGrid').appendChild(d);
+});
+
+/* ---------- 6. SOPA DE LETRAS (grid from the worksheet) ---------- */
+/* Two small fixes to the original grid: VIERNES was missing its E, so it now sits on the last row */
+const ROWS=["LSELOCREIM","OUGHLLCSTO","GBNKONREDD","NJUEVESTSA","IYVISPLRAB","MJLGKÑCATA","OVIKNESMVS","DVIERNESEA"];
+const WW=["domingo","lunes","martes","miercoles","jueves","viernes","sabado"];
+const LBL={miercoles:"miércoles",sabado:"sábado"};
+const G=ROWS.map(r=>r.split(''));
+$('wsGrid').style.gridTemplateColumns='repeat(10,1fr)';
+const wsC=[];let wsSel=[];const wsFound=new Set();
+G.forEach((row,r)=>{wsC.push([]);row.forEach((ch,c)=>{
+  const el=document.createElement('div');el.className='ws-cell';el.textContent=ch;
+  el.onclick=()=>toggleCell(r,c,el);$('wsGrid').appendChild(el);wsC[r].push(el);
+});});
+WW.forEach(w=>{const d=document.createElement('div');d.id='wsword-'+w;d.textContent='• '+(LBL[w]||w);$('wsWords').appendChild(d);});
+function toggleCell(r,c,el){
+  if(el.classList.contains('found'))return;
+  const i=wsSel.findIndex(s=>s[0]===r&&s[1]===c);
+  if(i===wsSel.length-1&&i!==-1){wsSel.pop();el.classList.remove('selected');return;}
+  if(i!==-1)return;
+  wsSel.push([r,c]);el.classList.add('selected');
+  const w=wsSel.map(([y,x])=>G[y][x]).join('').toLowerCase();
+  if(WW.includes(w)&&!wsFound.has(w)){
+    wsFound.add(w);wsSel.forEach(([y,x])=>{wsC[y][x].classList.remove('selected');wsC[y][x].classList.add('found');});
+    $('wsword-'+w).classList.add('found-word');wsSel=[];
+    const fb=$('fb6');fb.className='feedback good';
+    if(wsFound.size===WW.length){fb.textContent="You found all 7 days! 🔎🎉";earnStar(6);}
+    else fb.textContent=`Nice! You found "${LBL[w]||w}". Keep looking.`;
+  }
+}
+function clearSel(){wsSel.forEach(([r,c])=>wsC[r][c].classList.remove('selected'));wsSel=[];}
+
+/* ---------- 7. MEMORY ---------- */
+let mf=[],mm=0,ml=false;
+shuf(DAYS.flatMap((d,i)=>[[i,cap(d[0])],[i,d[1]]])).forEach(([pair,label])=>{
+  const el=document.createElement('div');el.className='mem-card';el.textContent='?';
+  el.onclick=()=>{
+    if(ml||el.dataset.s)return;
+    el.textContent=label;el.classList.add('flipped');el.dataset.s=1;mf.push({el,pair});
+    if(mf.length<2)return;
+    ml=true;const[a,b]=mf;
+    if(a.pair===b.pair){
+      [a,b].forEach(x=>x.el.classList.replace('flipped','matched'));mm++;mf=[];ml=false;
+      $('memoryStatus').textContent=mm===7?"You found all the pairs! 🃏🎉":`Pairs found: ${mm} / 7`;
+      if(mm===7)earnStar(7);
+    }else setTimeout(()=>{[a,b].forEach(x=>{x.el.textContent='?';x.el.classList.remove('flipped');delete x.el.dataset.s;});mf=[];ml=false;},800);
+  };
+  $('memoryGrid').appendChild(el);
+});
+
+/* ---------- 8. ORGANIZA LOS DÍAS ---------- */
+/* Monday is number 1 (Spanish calendars start on Monday). Change DAYS order if you prefer to start on Sunday */
+let oSel=[];
+["jueves","sábado","viernes","lunes","domingo","miércoles","martes"].forEach(w=>{
+  const b=document.createElement('button');b.className='object-chip';b.textContent=cap(w);
+  b.onclick=()=>{oSel.push(w);b.disabled=true;$('orgSeq').innerHTML=oSel.map((x,i)=>`${i+1}. ${cap(x)}`).join(' &nbsp; ');speakSpanish(w);};
+  $('orgBank').appendChild(b);
+});
+function resetOrg(){oSel=[];$('orgSeq').textContent='';$('fb8').textContent='';document.querySelectorAll('#orgBank button').forEach(b=>b.disabled=false);}
+function checkOrg(){
+  const fb=$('fb8');
+  if(oSel.length<7){fb.textContent="Click all 7 days first. 🔢";fb.className='feedback bad';return;}
+  if(oSel.join()===NAMES.join()){fb.textContent="Perfect! The week is in order. 🔢🎉";fb.className='feedback good';earnStar(8);}
+  else{fb.textContent="Not quite. Remember: the week starts on lunes. Start again!";fb.className='feedback bad';}
+}
+
+/* ---------- 9. ¿QUÉ DÍA FALTA? ---------- */
+[["Martes","miércoles","jueves"],["Viernes","sábado","domingo"],["Miércoles","jueves","viernes"],["Jueves","viernes","sábado"],["Domingo","lunes","martes"]].forEach(([a,m,c],i)=>{
+  rows('faltaGrid',[`${i+1}. ${a}, <input class="txt" type="text" data-answer="${m}">, ${c}.`]);
+});
+
+/* ---------- 10. ESCUCHA Y ELIGE ---------- */
+const lq=shuf(DAYS).slice(0,6);let li=0;
+function lSay(){if(li<lq.length)speakSpanish(lq[li][0]);}
+function lShow(){
+  const fb=$('fb10'),box=$('lOpts');box.innerHTML='';
+  if(li>=lq.length){$('lPrompt').textContent='¡Muy bien! 🎉';fb.textContent="You listened really well! 🎧🌟";fb.className='feedback good';earnStar(10);return;}
+  $('lPrompt').textContent='👂 ¿Qué día es?';
+  const ans=lq[li];
+  shuf([ans,...shuf(DAYS.filter(p=>p!==ans)).slice(0,3)]).forEach(o=>{
+    const b=document.createElement('button');b.className='object-chip';b.textContent=o[1];
+    b.onclick=()=>{
+      if(o===ans){li++;fb.textContent='';lShow();lSay();}
+      else{fb.textContent='Not that one. Listen again! 🔊';fb.className='feedback bad';}
+    };
+    box.appendChild(b);
+  });
+}
+lShow();
+
+/* ---------- 11. ¿QUÉ DÍA ES HOY? ---------- */
+const BYJS=["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];const T=new Date().getDay();
+rows('hoyGrid',[`Hoy es ${S(BYJS[T],NAMES)}.`,`Mañana es ${S(BYJS[(T+1)%7],NAMES)}.`,`Ayer fue ${S(BYJS[(T+6)%7],NAMES)}.`]);
 </script>
 </body>
 </html>

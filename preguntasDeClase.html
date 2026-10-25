@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡En español! Preguntas de clase 🙋</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;margin:18px 0}
+.flip-card{height:150px;perspective:1000px;cursor:pointer}
+.flip-card-inner{position:relative;width:100%;height:100%;text-align:center;transition:transform .6s;transform-style:preserve-3d}
+.flip-card.flipped .flip-card-inner{transform:rotateY(180deg)}
+.flip-card-front,.flip-card-back{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;backface-visibility:hidden;border-radius:16px;border:2px solid #ffd9c2;box-shadow:0 4px 10px rgba(0,0,0,.08);padding:10px}
+.flip-card-front{background:#FFF6EE;font-size:2.6rem}
+.flip-card-back{background:#1E9E90;color:#fff;transform:rotateY(180deg)}
+.fc-word{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:1.15rem}
+.fc-translation,.flip-hint{font-size:.85rem;opacity:.9}
+.flip-audio-btn{position:absolute;top:8px;right:8px;width:30px;height:30px;border:none;border-radius:50%;background:rgba(255,255,255,.3);color:#fff;cursor:pointer}
+.bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+.line-item{margin:12px 0;font-size:1.1rem}
+.spell{font-family:'Baloo 2',sans-serif;font-size:1.3rem;letter-spacing:2px}
+.scene{border:3px solid #1E9E90;border-radius:14px;padding:8px 12px;background:#FFF6EE;cursor:pointer;font-size:2rem;text-align:center;min-width:120px}
+.scene small{display:block;font-size:.85rem}
+</style>
+</head>
+<body>
+
+<div class="banner" id="banner">
+  <div class="flag">¡HOLA!</div><div class="flag">ELE</div><div class="flag">CURSO</div>
+  <div class="flag">NIÑOS</div><div class="flag">JUEGA</div><div class="flag">APRENDE</div>
+</div>
+
+<header>
+  <h1><a href="index.html" class="logo-link">MUNDO ELE</a></h1>
+  <p>Aprende español de forma divertida 🌟</p>
+</header>
+
+<nav class="navbar" id="navbar-container"></nav>
+
+<main>
+
+  <section class="card" id="cardFlash">
+    <h2>0. 🔄 Flashcards <span class="badge">¡En español!</span></h2>
+    <p class="instructions">Click each card to flip it and reveal the word and its meaning.</p>
+    <div class="flip-grid" id="flipGrid"></div>
+  </section>
+
+  <section class="card" id="card1">
+    <h2>1. 🎯 Sort the Words <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Click a group to select it, then click the words that belong there. Place them all!</p>
+    <div class="objects-pool" id="objectsPool"></div>
+    <div class="rooms-board" id="roomsBoard"></div>
+    <button class="check-btn" onclick="checkRooms()">Check</button>
+    <div class="feedback" id="fb1"></div>
+  </section>
+
+  <section class="card" id="card2">
+    <h2>2. ✍️ Name the Picture <span class="badge">Vocabulary</span></h2>
+    <p class="instructions">Look at each picture and write the word in Spanish.</p>
+    <div class="num-grid" id="numGrid"></div>
+    <button class="check-btn" onclick="grade('#numGrid','fb2',2,'Excellent! You know your words. 🌟')">Check</button>
+    <div class="feedback" id="fb2"></div>
+  </section>
+
+  <section class="card" id="card3">
+    <h2>3. 🗣️ Ask and Answer <span class="badge">Se dice · Significa · Se escribe</span></h2>
+    <p class="instructions">Choose a word and see the three classroom questions and their answers.</p>
+    <div class="birthday-box">
+      <div class="cake">🙋</div>
+      <div><select id="b1"></select></div>
+      <div class="birthday-sentence" id="s1"></div>
+      <button class="check-btn" onclick="spellSay()">🔊 Listen to the spelling</button>
+    </div>
+  </section>
+
+  <section class="card" id="card4">
+    <h2>4. ✏️ Complete the Missing Letter</h2>
+    <p class="instructions">Write the letter that's missing in each word.</p>
+    <div class="fill-grid" id="fillGrid"></div>
+    <button class="check-btn" onclick="grade('#fillGrid','fb4',4,'Amazing! You know all the words. 🏆')">Check</button>
+    <div class="feedback" id="fb4"></div>
+  </section>
+
+  <section class="card" id="card5">
+    <h2>5. 🔤 Unscramble the Letters</h2>
+    <p class="instructions">The letters of each word are mixed up. Write the correct word!</p>
+    <div class="scramble-grid" id="scrambleGrid"></div>
+    <button class="check-btn" onclick="grade('#scrambleGrid','fb5',5,'You unscrambled them all! 🌟')">Check</button>
+    <div class="feedback" id="fb5"></div>
+  </section>
+
+  <section class="card" id="card6">
+    <h2>6. 🔎 Word Search</h2>
+    <p class="instructions">Click the letters, in order, to spell out each word on the list. Click the last letter again to remove it.</p>
+    <div class="wordsearch-wrap">
+      <div class="ws-grid" id="wsGrid"></div>
+      <div class="ws-words" id="wsWords"></div>
+    </div>
+    <button class="check-btn" onclick="clearSel()">Clear selection</button>
+    <div class="feedback" id="fb6"></div>
+  </section>
+
+  <section class="card" id="card7">
+    <h2>7. 🃏 Memory Match: Picture and Word</h2>
+    <p class="instructions">Find the pairs: the picture with its word.</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="memory-status" id="memoryStatus">Pairs found: 0 / 6</div>
+  </section>
+
+  <section class="card" id="card8">
+    <h2>8. 🔢 Review 11 – 15 <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Write the number in Spanish and choose the word that goes with the picture.</p>
+    <div id="revGrid"></div>
+    <button class="check-btn" onclick="grade('#revGrid','fb8',8,'Perfect review! 🔢🎉')">Check</button>
+    <div class="feedback" id="fb8"></div>
+  </section>
+
+  <section class="card" id="card9">
+    <h2>9. 🙋 ¿Qué quiere decir? <span class="badge">Classroom phrases</span></h2>
+    <p class="instructions">Choose the English meaning of each classroom phrase.</p>
+    <div id="phraseGrid"></div>
+    <button class="check-btn" onclick="grade('#phraseGrid','fb9',9,'Great! You can ask for help in Spanish. 🙋')">Check</button>
+    <div class="feedback" id="fb9"></div>
+  </section>
+
+  <section class="card" id="card10">
+    <h2>10. 💬 Pregunta y respuesta <span class="badge">Se dice · Significa · Se escribe</span></h2>
+    <p class="instructions">Choose how to start the answer: <b>Se dice...</b>, <b>Significa...</b> or <b>Se escribe...</b></p>
+    <div id="qaGrid"></div>
+    <button class="check-btn" onclick="grade('#qaGrid','fb10',10,'Perfect! You know how to answer. 💬')">Check</button>
+    <div class="feedback" id="fb10"></div>
+  </section>
+
+  <section class="card" id="card11">
+    <h2>11. 👂 Escucha, lee, repite, mira, escribe <span class="badge">Commands</span></h2>
+    <p class="instructions">Look at each picture and write the classroom command.</p>
+    <div class="num-grid" id="cmdGrid"></div>
+    <button class="check-btn" onclick="grade('#cmdGrid','fb11',11,'Great! You understand the teacher. 👂')">Check</button>
+    <div class="feedback" id="fb11"></div>
+  </section>
+
+  <section class="card" id="card12">
+    <h2>12. ❓ ¿Qué significa...? <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Choose the English meaning of each Spanish word.</p>
+    <div id="sigGrid"></div>
+    <button class="check-btn" onclick="grade('#sigGrid','fb12',12,'Excellent! You know what the words mean. ❓')">Check</button>
+    <div class="feedback" id="fb12"></div>
+  </section>
+
+  <section class="card" id="card13">
+    <h2>13. 🖼️ ¿Cómo se dice... en español? <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Look at the picture and choose the Spanish word.</p>
+    <div id="dicGrid"></div>
+    <button class="check-btn" onclick="grade('#dicGrid','fb13',13,'Perfect! You can say it in Spanish. 🖼️')">Check</button>
+    <div class="feedback" id="fb13"></div>
+  </section>
+
+  <section class="card" id="card14">
+    <h2>14. 🎧 Escucha y numera <span class="badge">Worksheet</span></h2>
+    <p class="instructions">Listen to the phrase and click the classroom situation where a student would say it.</p>
+    <div class="birthday-sentence" id="lPrompt" style="text-align:center"></div>
+    <div class="bank" id="lOpts"></div>
+    <button class="check-btn" onclick="lSay()">🔊 Listen again</button>
+    <div class="feedback" id="fb14"></div>
+  </section>
+
+</main>
+
+<div id="footer-container"></div>
+
+<script>
+fetch('navbar.html').then(r=>r.text()).then(d=>{
+  document.getElementById('navbar-container').innerHTML=d;
+  const items=document.querySelectorAll('.nav-item');
+  items.forEach(it=>{const l=it.querySelector('.nav-link');
+    if(l)l.addEventListener('click',e=>{if(innerWidth<=768){e.preventDefault();items.forEach(o=>o!==it&&o.classList.remove('active'));it.classList.toggle('active');}});});
+  document.addEventListener('click',e=>{if(!e.target.closest('.nav-item'))items.forEach(i=>i.classList.remove('active'));});
+}).catch(e=>console.error('Error al cargar la navbar:',e));
+fetch('footer.html').then(r=>r.text()).then(d=>{document.getElementById('footer-container').innerHTML=d;}).catch(e=>console.error('Error al cargar el footer:',e));
+</script>
+
+<script>
+/* ---------- VOCABULARY ---------- */
+const P="leche|milk|🥛|c;queso|cheese|🧀|c;lana|wool|🧶|o;cabaña|cabin|🛖|o;avión|airplane|✈️|o;oveja|sheep|🐑|a;gato|cat|🐱|a;jirafa|giraffe|🦒|a"
+  .split(';').map(s=>{const[word,en,icon,cat]=s.split('|');return{word,en,icon,cat};});
+const CMD=[["escucha","listen","👂"],["lee","read","📖"],["repite","repeat","🔁"],["mira","look","👀"],["escribe","write","✍️"]];
+const NUM=[["once",11,"leche","🥛"],["doce",12,"lana","🧶"],["trece",13,"cabaña","🛖"],["catorce",14,"queso","🧀"],["quince",15,"oveja","🐑"]];
+const CATS=["c","o","a"],CAT_LABELS={c:"Comida",o:"Cosas",a:"Animales"},CAT_ICONS={c:"🍽️",o:"📦",a:"🐾"};
+const $=id=>document.getElementById(id);
+const shuf=a=>[...a].sort(()=>Math.random()-.5);
+function mkOpts(sel,arr){arr.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o);});}
+const S=(ans,opts)=>`<select data-answer="${ans}">${['',...opts].map(o=>`<option value="${o}">${o||'...'}</option>`).join('')}</select>`;
+function rows(id,items){items.forEach(h=>{const d=document.createElement('div');d.className='line-item';d.innerHTML=h;$(id).appendChild(d);});}
+
+function speakSpanish(text,rate=.85){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=rate;speechSynthesis.speak(u);
+}
+let starsEarned=0;
+function earnStar(n){
+  if(n<=starsEarned)return;
+  starsEarned=n;
+  document.querySelectorAll('.star').forEach(s=>{if(parseInt(s.dataset.i)<=starsEarned)s.classList.add('on');});
+  launchConfetti();
+}
+function launchConfetti(){
+  const layer=document.createElement('div');layer.className='confetti-layer';document.body.appendChild(layer);
+  const colors=['#FF6B5A','#1E9E90','#FFC857','#FF8FA3','#5EA0D0'];
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');p.className='confetti-piece';
+    p.style.left=Math.random()*100+'vw';p.style.background=colors[Math.random()*5|0];
+    p.style.animationDuration=(2+Math.random()*1.5)+'s';p.style.borderRadius=Math.random()>.5?'50%':'2px';
+    layer.appendChild(p);
+  }
+  setTimeout(()=>layer.remove(),3600);
+}
+function normalize(s){
+  return s.trim().toLowerCase().replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i").replace(/ó/g,"o").replace(/ú/g,"u").replace(/[.,¿?¡!]/g,"").replace(/\s+/g," ");
+}
+/* Generic checker: every input/select inside `sel` has data-answer */
+function grade(sel,fb,n,ok){
+  const ins=document.querySelectorAll(sel+' input,'+sel+' select');let c=0;
+  ins.forEach(i=>{const g=normalize(i.value)===normalize(i.dataset.answer);i.classList.toggle('correct',g);i.classList.toggle('wrong',!g);if(g)c++;});
+  const f=$(fb),all=c===ins.length;
+  f.textContent=all?ok:`${c} out of ${ins.length} correct. The red ones need review.`;
+  f.className='feedback '+(all?'good':'bad');
+  if(all)earnStar(n);
+}
+
+/* ---------- 0. FLASHCARDS ---------- */
+[...P.map(p=>[p.word,p.en,p.icon]),...CMD].forEach(([word,en,icon])=>{
+  const card=document.createElement('div');card.className='flip-card';
+  card.innerHTML=`<div class="flip-card-inner">
+    <div class="flip-card-front"><div>${icon}</div><div class="flip-hint">${en}</div></div>
+    <div class="flip-card-back"><button type="button" class="flip-audio-btn" aria-label="Play pronunciation">🔊</button>
+      <div class="fc-word">${word}</div><div class="fc-translation">${en}</div></div></div>`;
+  card.onclick=()=>{const was=card.classList.contains('flipped');card.classList.toggle('flipped');if(!was)speakSpanish(word);};
+  card.querySelector('.flip-audio-btn').onclick=e=>{e.stopPropagation();speakSpanish(word);};
+  $('flipGrid').appendChild(card);
+});
+
+/* ---------- 1. SORT ---------- */
+let selCat=null;const placed={};const slots={};
+shuf(P).forEach(o=>{
+  const b=document.createElement('button');b.className='object-chip';b.textContent=o.icon+' '+o.word;
+  b.onclick=()=>{
+    if(!selCat){$('fb1').textContent="First click a group, then click the word. 🎯";$('fb1').className='feedback bad';return;}
+    const t=document.createElement('span');t.className='item-tag';t.dataset.word=o.word;t.textContent=o.word;
+    slots[selCat].querySelector('.items').appendChild(t);placed[o.word]=selCat;b.disabled=true;
+  };
+  $('objectsPool').appendChild(b);
+});
+CATS.forEach(c=>{
+  const s=document.createElement('div');s.className='room-slot';
+  s.innerHTML=`<h3>${CAT_ICONS[c]} ${CAT_LABELS[c]}</h3><div class="items"></div><div class="hint-select">click to select</div>`;
+  s.onclick=()=>{Object.values(slots).forEach(x=>x.classList.remove('active'));s.classList.add('active');selCat=c;};
+  $('roomsBoard').appendChild(s);slots[c]=s;
+});
+function checkRooms(){
+  const fb=$('fb1');
+  if(Object.keys(placed).length<P.length){fb.textContent=`Place all ${P.length} words first. 🍽️`;fb.className='feedback bad';return;}
+  let c=0;
+  P.forEach(o=>{const t=document.querySelector(`.item-tag[data-word="${o.word}"]`),g=placed[o.word]===o.cat;
+    t.classList.toggle('correct',g);t.classList.toggle('wrong',!g);if(g)c++;});
+  if(c===P.length){fb.textContent="Perfect! 🎉 Every word is in the right group.";fb.className='feedback good';earnStar(1);}
+  else{fb.textContent=`You have ${c} out of ${P.length} correct. Try again!`;fb.className='feedback bad';}
+}
+
+/* ---------- 2. NAME THE PICTURE ---------- */
+P.forEach(p=>{
+  const d=document.createElement('div');d.className='num-item';
+  d.innerHTML=`<div class="digit">${p.icon}</div><input type="text" data-answer="${p.word}" placeholder="write here...">`;
+  $('numGrid').appendChild(d);
+});
+
+/* ---------- 3. ASK AND ANSWER ---------- */
+const LETTER={a:"a",b:"be",c:"ce",d:"de",e:"e",f:"efe",g:"ge",h:"hache",i:"i",j:"jota",k:"ka",l:"ele",m:"eme",n:"ene",ñ:"eñe",o:"o",p:"pe",q:"cu",r:"erre",s:"ese",t:"te",u:"u",v:"uve",w:"uve doble",x:"equis",y:"i griega",z:"zeta"};
+const spellOf=w=>[...w].map(l=>LETTER[l]||l);
+mkOpts($('b1'),P.map(p=>[p.word,p.icon+' '+p.word]));
+function u1(){const p=P.find(x=>x.word===$('b1').value);
+  $('s1').innerHTML=`¿Cómo se dice ${p.icon} en español? → <b>Se dice</b> ${p.word}.<br>¿Qué significa ${p.word}? → <b>Significa</b> ${p.en}.<br>¿Cómo se escribe ${p.word}? → <b>Se escribe</b>... <span class="spell">${spellOf(p.word).join('-')}</span>`;earnStar(3);}
+function spellSay(){speakSpanish(spellOf($('b1').value).join(', '),.7);}
+$('b1').onchange=u1;u1();
+
+/* ---------- 4. MISSING LETTER ---------- */
+[["leche",2],["queso",1],["lana",1],["cabaña",3],["avión",2],["oveja",2],["gato",1],["jirafa",2],["escucha",3],["repite",2]].forEach(([w,i])=>{
+  const d=document.createElement('div');d.className='fill-item';
+  d.innerHTML=`<span>${w.slice(0,i)}</span><input maxlength="1" data-answer="${w[i]}"><span>${w.slice(i+1)}</span>`;
+  $('fillGrid').appendChild(d);
+});
+
+/* ---------- 5. UNSCRAMBLE ---------- */
+function scramble(w){let r;do{r=shuf(w.split('')).join('');}while(r===w);return r;}
+["leche","queso","oveja","lana","jirafa","avión"].forEach(w=>{
+  const d=document.createElement('div');d.className='scramble-item';
+  d.innerHTML=`<div class="scramble-word">${scramble(w).toUpperCase()}</div><input type="text" data-answer="${w}" placeholder="write the word...">`;
+  $('scrambleGrid').appendChild(d);
+});
+
+/* ---------- 6. WORD SEARCH ---------- */
+const WS=10,WW=["leche","lana","queso","oveja","gato","jirafa"];
+const G=Array.from({length:WS},()=>Array(WS).fill(null));
+WW.forEach(w=>{for(let t=0;t<300;t++){
+  const d=[[0,1],[1,0],[1,1]][Math.random()*3|0];
+  const r=Math.random()*(d[0]?WS-w.length+1:WS)|0,c=Math.random()*(d[1]?WS-w.length+1:WS)|0;
+  const cells=[...w].map((_,i)=>[r+d[0]*i,c+d[1]*i]);
+  if(cells.every(([y,x],i)=>!G[y][x]||G[y][x]===w[i])){cells.forEach(([y,x],i)=>G[y][x]=w[i]);break;}
+}});
+const ABC="ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+const wsC=[];let wsSel=[];const wsFound=new Set();
+for(let r=0;r<WS;r++){wsC.push([]);for(let c=0;c<WS;c++){
+  if(!G[r][c])G[r][c]=ABC[Math.random()*ABC.length|0];
+  const el=document.createElement('div');el.className='ws-cell';el.textContent=G[r][c].toUpperCase();
+  el.onclick=()=>toggleCell(r,c,el);$('wsGrid').appendChild(el);wsC[r].push(el);
+}}
+WW.forEach(w=>{const d=document.createElement('div');d.id='wsword-'+w;d.textContent='• '+w;$('wsWords').appendChild(d);});
+function toggleCell(r,c,el){
+  if(el.classList.contains('found'))return;
+  const i=wsSel.findIndex(s=>s[0]===r&&s[1]===c);
+  if(i===wsSel.length-1&&i!==-1){wsSel.pop();el.classList.remove('selected');return;}
+  if(i!==-1)return;
+  wsSel.push([r,c]);el.classList.add('selected');
+  const w=wsSel.map(([y,x])=>G[y][x]).join('');
+  if(WW.includes(w)&&!wsFound.has(w)){
+    wsFound.add(w);wsSel.forEach(([y,x])=>{wsC[y][x].classList.remove('selected');wsC[y][x].classList.add('found');});
+    $('wsword-'+w).classList.add('found-word');wsSel=[];
+    const fb=$('fb6');fb.className='feedback good';
+    if(wsFound.size===WW.length){fb.textContent="You found all the hidden words! 🔎🎉";earnStar(6);}
+    else fb.textContent=`Nice! You found "${w}". Keep looking.`;
+  }
+}
+function clearSel(){wsSel.forEach(([r,c])=>wsC[r][c].classList.remove('selected'));wsSel=[];}
+
+/* ---------- 7. MEMORY ---------- */
+const MP=[["🥛","leche"],["🧶","lana"],["🧀","queso"],["🐑","oveja"],["🐱","gato"],["🦒","jirafa"]];
+let mf=[],mm=0,ml=false;
+shuf(MP.flatMap((p,i)=>[[i,p[0]],[i,p[1]]])).forEach(([pair,label])=>{
+  const el=document.createElement('div');el.className='mem-card';el.textContent='?';
+  el.onclick=()=>{
+    if(ml||el.dataset.s)return;
+    el.textContent=label;el.classList.add('flipped');el.dataset.s=1;mf.push({el,pair});
+    if(mf.length<2)return;
+    ml=true;const[a,b]=mf;
+    if(a.pair===b.pair){
+      [a,b].forEach(x=>x.el.classList.replace('flipped','matched'));mm++;mf=[];ml=false;
+      $('memoryStatus').textContent=mm===MP.length?"You found all the pairs! 🃏🎉":`Pairs found: ${mm} / ${MP.length}`;
+      if(mm===MP.length)earnStar(7);
+    }else setTimeout(()=>{[a,b].forEach(x=>{x.el.textContent='?';x.el.classList.remove('flipped');delete x.el.dataset.s;});mf=[];ml=false;},800);
+  };
+  $('memoryGrid').appendChild(el);
+});
+
+/* ---------- 8. REVIEW 11-15 ---------- */
+NUM.forEach(([nw,n,w,i])=>{
+  rows('revGrid',[`<b>${n}</b> ${i} ${S(nw,NUM.map(x=>x[0]))} = ${S(w,NUM.map(x=>x[2]))}`]);
+});
+
+/* ---------- 9. CLASSROOM PHRASES ---------- */
+const PH=[["¿Puedo ir al servicio, por favor?","Can I go to the bathroom, please?"],["¿Cómo se escribe...?","How do you write...?"],["¿Qué significa...?","What is the meaning of...?"],["No entiendo. ¿Puedes repetir?","I don't understand. Can you repeat?"],["¿Cómo se dice... en español?","How do you say... in Spanish?"]];
+PH.forEach(([es,en])=>{
+  rows('phraseGrid',[`<b>${es}</b><br>${S(en,PH.map(x=>x[1]))}`]);
+});
+
+/* ---------- 10. PREGUNTA Y RESPUESTA ---------- */
+[["¿Cómo se escribe leche?","Se escribe","l-e-c-h-e"],["¿Qué significa cabaña?","Significa","cabin"],["¿Cómo se dice 🧀 en español?","Se dice","queso"],["¿Qué significa oveja?","Significa","sheep"],["¿Cómo se dice 🐑 en español?","Se dice","oveja"],["¿Cómo se escribe gato?","Se escribe","g-a-t-o"]].forEach(([q,a,r])=>{
+  rows('qaGrid',[`${q} → ${S(a,['Se dice','Significa','Se escribe'])} <b>${r}</b>.`]);
+});
+
+/* ---------- 11. COMMANDS ---------- */
+CMD.forEach(([w,en,i])=>{
+  const d=document.createElement('div');d.className='num-item';
+  d.innerHTML=`<div class="digit">${i}</div><small>${en}</small><input type="text" data-answer="${w}" placeholder="write here...">`;
+  $('cmdGrid').appendChild(d);
+});
+
+/* ---------- 12. ¿QUÉ SIGNIFICA...? ---------- */
+const ENS=P.map(p=>p.en);
+shuf(P).forEach(p=>{rows('sigGrid',[`¿Qué significa <b>${p.word}</b>? ${S(p.en,ENS)}`]);});
+
+/* ---------- 13. ¿CÓMO SE DICE...? ---------- */
+const WORDS=P.map(p=>p.word);
+shuf(P).forEach(p=>{rows('dicGrid',[`¿Cómo se dice <span style="font-size:1.8rem">${p.icon}</span> en español? ${S(p.word,WORDS)}`]);});
+
+/* ---------- 14. ESCUCHA Y NUMERA ---------- */
+/* The worksheet pictures (a–f) have no text, so these pairings are my reading of them. Edit if yours differ */
+const SC=[["No entiendo. ¿Puedes repetir?","🤔👩‍🏫","student doesn't understand the teacher"],["¿Puedo ir al servicio, por favor?","🚽","student needs the bathroom"],["¿Cómo se dice doce en español?","🔢","student looks at the number 12"],["¿Qué significa flor?","🌸","student reads the word 'Flor'"],["Escucha.","📻👩‍🏫","kids listen to the radio with the teacher"],["Lee.","📚👩‍🏫","kids read books with the teacher"]];
+const lq=shuf(SC);let li=0;
+function lSay(){if(li<lq.length)speakSpanish(lq[li][0]);}
+function lShow(){
+  const fb=$('fb14'),box=$('lOpts');box.innerHTML='';
+  if(li>=lq.length){$('lPrompt').textContent='¡Muy bien! 🎉';fb.textContent="You understood every situation! 🎧🌟";fb.className='feedback good';earnStar(14);return;}
+  $('lPrompt').textContent=`👂 ${li+1} / ${lq.length}`;
+  shuf(SC).forEach(o=>{
+    const b=document.createElement('div');b.className='scene';b.innerHTML=`${o[1]}<small>${o[2]}</small>`;
+    b.onclick=()=>{
+      if(o===lq[li]){li++;fb.textContent='';lShow();lSay();}
+      else{fb.textContent='Not that one. Listen again! 🔊';fb.className='feedback bad';}
+    };
+    box.appendChild(b);
+  });
+}
+lShow();
+</script>
+</body>
+</html>
